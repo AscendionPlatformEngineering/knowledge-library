@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Monitoring | AI-Native Architecture | Architecture Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      securityLevel: 'loose',
+      flowchart: { useMaxWidth: false, htmlLabels: true, curve: 'basis', padding: 24 },
+      sequence: { useMaxWidth: false, actorMargin: 80, messageMargin: 40, boxTextMargin: 10 },
+      themeVariables: {
+        primaryColor: '#1e3a8a',
+        primaryTextColor: '#f1f5f9',
+        primaryBorderColor: '#3b82f6',
+        lineColor: '#60a5fa',
+        secondaryColor: '#1e1b4b',
+        tertiaryColor: '#14532d',
+        background: '#0f172a',
+        mainBkg: '#1e3a8a',
+        nodeBorder: '#3b82f6',
+        clusterBkg: '#1e293b',
+        clusterBorder: '#334155',
+        titleColor: '#f1f5f9',
+        edgeLabelBackground: '#1e293b',
+        fontFamily: 'Inter, system-ui, sans-serif',
+        fontSize: '13px',
+        actorBkg: '#1e3a8a',
+        actorBorder: '#3b82f6',
+        actorTextColor: '#f1f5f9',
+        actorLineColor: '#3b82f6',
+        signalColor: '#93c5fd',
+        signalTextColor: '#f1f5f9',
+        labelBoxBkgColor: '#1e293b',
+        labelTextColor: '#f1f5f9',
+        loopTextColor: '#f1f5f9',
+        noteBkgColor: '#1e3a8a',
+        noteTextColor: '#f1f5f9'
+      }
+    });
+  </script>
+  <style>
+
+    :root {
+      --primary: #1a1f3a;
+      --accent: #4f8ef7;
+      --accent2: #7c3aed;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+    /* ── TOP NAV ── */
+    .topnav {
+      background: var(--primary);
+      padding: 0.6rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      flex-wrap: wrap;
+      border-bottom: 2px solid rgba(79,142,247,0.4);
+    }
+    .topnav a {
+      color: #93c5fd;
+      text-decoration: none;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .topnav a:hover { background: rgba(79,142,247,0.2); }
+    .topnav .sep { color: rgba(255,255,255,0.3); }
+    .topnav .current { color: white; font-weight: 600; }
+
+    /* ── SIDENAV ── */
+    .layout { display: flex; min-height: calc(100vh - 40px); }
+    .sidenav {
+      width: 260px;
+      flex-shrink: 0;
+      background: white;
+      border-right: 1px solid var(--border);
+      padding: 1.25rem 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidenav-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      padding: 0 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .sidenav a {
+      display: block;
+      padding: 0.45rem 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text);
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+      border-left: 3px solid transparent;
+    }
+    .sidenav a:hover { background: #f1f5f9; color: var(--accent); }
+    .sidenav a.active {
+      background: #eff6ff;
+      color: var(--accent);
+      border-left-color: var(--accent);
+      font-weight: 600;
+    }
+    .sidenav .section-group { margin-top: 0.5rem; }
+    .sidenav .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.5rem 1.25rem 0.25rem;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main { flex: 1; overflow: hidden; }
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, #2d3561 100%);
+      color: white;
+      padding: 2rem 3rem;
+      border-bottom: 4px solid var(--accent);
+    }
+    header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.25rem; }
+    header p { opacity: 0.8; font-size: 0.95rem; }
+    .badges { display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+    .badge {
+      background: rgba(79,142,247,0.2);
+      border: 1px solid rgba(79,142,247,0.4);
+      color: #93c5fd;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem 3rem; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    @media (max-width: 900px) {
+      .sidenav { display: none; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .container { padding: 1.5rem; }
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .card-header {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+    h3 { font-size: 1rem; font-weight: 600; color: var(--text); margin: 1.25rem 0 0.5rem; }
+    p { color: var(--muted); margin-bottom: 0.75rem; }
+    .principle-list { list-style: none; }
+    .principle-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .principle-list li:last-child { border-bottom: none; }
+    .p-num {
+      background: var(--accent);
+      color: white;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+    th {
+      background: var(--primary);
+      color: white;
+      padding: 0.55rem 1rem;
+      text-align: left;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td { padding: 0.55rem 1rem; border-bottom: 1px solid var(--border); }
+    tr:hover td { background: #f1f5f9; }
+    .step {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding: 1rem;
+      background: var(--bg);
+      border-radius: 8px;
+      border-left: 4px solid var(--accent);
+    }
+    .step-num {
+      background: var(--accent);
+      color: white;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step-content h4 { font-weight: 600; margin-bottom: 0.2rem; color: var(--text); }
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin: 0.75rem 0;
+      border-left: 4px solid;
+      font-size: 0.88rem;
+    }
+    .alert-info { background: #eff6ff; border-color: var(--accent); color: #1e40af; }
+    .alert-warning { background: #fffbeb; border-color: var(--warning); color: #92400e; }
+    .tag {
+      display: inline-block;
+      background: #f1f5f9;
+      color: var(--muted);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      margin: 0.15rem;
+      font-family: monospace;
+    }
+    code {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-family: monospace;
+    }
+    .framework-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; }
+    .fw-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+    .fw-card .fw-name { font-weight: 700; color: var(--primary); font-size: 0.9rem; }
+    .fw-card .fw-detail { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── PREV/NEXT NAV ── */
+    .page-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      gap: 1rem;
+    }
+    .page-nav a {
+      display: flex;
+      flex-direction: column;
+      padding: 0.75rem 1.25rem;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      max-width: 45%;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .page-nav a:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(79,142,247,0.15); }
+    .page-nav .nav-direction { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem; }
+    .page-nav .nav-title { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .page-nav a.next { text-align: right; margin-left: auto; }
+    .page-nav .spacer { flex: 1; }
+
+    /* ── SUBSECTION GRID (section index) ── */
+    .sub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .sub-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .sub-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); border-color: var(--accent); }
+    .sub-card-path { font-family: monospace; font-size: 0.75rem; color: var(--accent); margin-bottom: 0.4rem; }
+    .sub-card-title { font-weight: 700; color: var(--primary); margin-bottom: 0.35rem; font-size: 1rem; }
+    .sub-card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.75rem; }
+    .sub-card-files span {
+      background: #f1f5f9;
+      color: var(--muted);
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      margin-right: 0.25rem;
+      font-family: monospace;
+    }
+
+    footer {
+      background: var(--primary);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 1.25rem;
+      font-size: 0.8rem;
+    }
+
+body { font-family: 'Inter', system-ui, sans-serif; background: #f8fafc; color: #0f172a; line-height: 1.75; }
+code, pre.mermaid { font-family: 'JetBrains Mono', monospace; }
+
+/* ── PAGE HERO ── */
+.page-hero { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 65%, #312e81 100%); padding: 2.5rem 3rem 2rem; border-bottom: 4px solid #2563eb; }
+h1.page-title { font-family: 'Fraunces', Georgia, serif; font-size: 2.1rem; font-weight: 800; margin: 0 0 0.5rem; line-height: 1.15; color: #ffffff; }
+.page-subtitle { color: #94a3b8; font-size: 1rem; max-width: 780px; margin: 0 0 1rem; line-height: 1.65; }
+.page-path { font-size: 0.68rem; font-family: 'JetBrains Mono', monospace; color: rgba(255,255,255,0.4); margin-bottom: 0.5rem; letter-spacing: 0.05em; }
+.badge-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.badge { display: inline-block; padding: 0.18rem 0.65rem; background: rgba(37,99,235,0.3); border: 1px solid rgba(96,165,250,0.5); border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #93c5fd; }
+
+h2.section-heading { font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #1e3a8a; margin: 2.75rem 0 1.25rem; padding: 0.6rem 0 0.6rem 1rem; border-left: 4px solid #2563eb; border-bottom: 1px solid #e2e8f0; background: #f8fafc; border-radius: 0 6px 6px 0; }
+
+/* ── AUDIENCE CARDS ── */
+.audience-card { display: flex; gap: 1rem; padding: 1.1rem 1.4rem; border-radius: 10px; margin-bottom: 0.85rem; border: 1px solid; }
+.audience-card.layman { background: #f0f9ff; border-color: #7dd3fc; }
+.audience-card.biz { background: #f0fdf4; border-color: #86efac; }
+.aud-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 0.1rem; }
+.aud-label { font-size: 0.67rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.3rem; }
+.audience-card.layman .aud-label { color: #0369a1; }
+.audience-card.biz .aud-label { color: #15803d; }
+.audience-card p { margin: 0; font-size: 0.93rem; color: #0f172a; line-height: 1.75; }
+
+/* ── DEEP DIVE — white background, dark readable text ── */
+.deep-dive-section { background: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #2563eb; border-radius: 10px; padding: 2rem 2.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.dd-heading { color: #1e3a8a; font-size: 1.05rem; font-weight: 800; margin: 2rem 0 0.65rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0; }
+.dd-heading:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+.dd-para { color: #1e293b; font-size: 0.93rem; line-height: 1.85; margin-bottom: 1rem; }
+.dd-para strong { color: #0f172a; font-weight: 700; }
+.dd-callout { background: #eff6ff; border-left: 4px solid #2563eb; padding: 0.85rem 1.1rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+.dd-callout p { margin: 0; color: #1e40af; font-size: 0.9rem; line-height: 1.7; font-weight: 500; }
+.dd-list { padding-left: 1.5rem; margin: 0.5rem 0 1rem; }
+.dd-list li { color: #1e293b; font-size: 0.92rem; line-height: 1.8; margin-bottom: 0.35rem; }
+.dd-list li strong { color: #0f172a; font-weight: 700; }
+
+/* ── DIAGRAM — dark bg to match mermaid dark theme ── */
+.diagram-wrap { background: #0f172a; border: 1px solid #1e3a8a; border-radius: 10px; padding: 2rem; margin: 0.75rem 0 1.5rem; overflow-x: auto; box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+.diagram-wrap svg { min-width: 500px; height: auto !important; }
+.diagram-caption { font-size: 0.82rem; color: #94a3b8; margin: 1rem 0 0; font-style: italic; text-align: center; padding-top: 0.75rem; border-top: 1px solid #1e293b; }
+
+/* ── REAL-WORLD: 2-col grid ── */
+.rw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+@media (max-width: 820px) { .rw-grid { grid-template-columns: 1fr; } }
+.rw-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem 1.4rem; border-top: 3px solid #2563eb; }
+.rw-company { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: #1d4ed8; margin-bottom: 0.15rem; }
+.rw-context { font-size: 0.75rem; color: #64748b; margin-bottom: 0.65rem; font-style: italic; }
+.rw-card p { margin: 0 0 0; font-size: 0.9rem; color: #1e293b; line-height: 1.78; }
+.rw-outcome { margin-top: 0.75rem !important; font-size: 0.85rem !important; color: #15803d !important; font-weight: 700; padding-top: 0.6rem; border-top: 1px solid #e2e8f0; }
+
+/* ── PRINCIPLE CARDS ── */
+.principle-card { display: flex; gap: 1rem; align-items: flex-start; padding: 1.1rem 1.25rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 0.75rem; border-left: 4px solid #2563eb; }
+.p-num { flex-shrink: 0; width: 28px; height: 28px; background: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: #fff; margin-top: 2px; }
+.principle-card strong { display: block; font-size: 0.93rem; font-weight: 700; color: #0f172a; margin-bottom: 0.35rem; }
+.principle-card p { margin: 0; font-size: 0.89rem; color: #1e293b; line-height: 1.72; }
+
+/* ── STEP CARDS ── */
+.step-card { display: flex; gap: 1rem; margin-bottom: 1rem; }
+.step-num { flex-shrink: 0; width: 34px; height: 34px; background: #1e3a8a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; color: #fff; margin-top: 2px; }
+.step-body { flex: 1; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem 1.2rem; border-left: 3px solid #2563eb; }
+.step-body h4 { margin: 0 0 0.4rem; font-size: 0.93rem; font-weight: 700; color: #0f172a; }
+.step-body p { margin: 0; font-size: 0.9rem; color: #1e293b; line-height: 1.75; }
+
+/* ── GOVERNANCE TABLE: white bg, black text ── */
+.cp-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+.cp-table thead tr { background: #1e3a8a; }
+.cp-table th { text-align: left; padding: 0.8rem 1rem; color: #e2e8f0; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 700; }
+.cp-table td { padding: 0.8rem 1rem; border-bottom: 1px solid #e2e8f0; color: #0f172a; vertical-align: middle; font-size: 0.9rem; }
+.cp-table tr:last-child td { border-bottom: none; }
+.cp-table tr:nth-child(even) td { background: #f8fafc; }
+.cp-table tr:hover td { background: #eff6ff; }
+.status-pill { display: inline-block; padding: 0.22rem 0.65rem; border-radius: 6px; font-size: 0.73rem; font-weight: 700; white-space: nowrap; }
+
+/* ── PATTERN CARDS — white, dark text, left accent ── */
+.pattern-card { background: #ffffff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 1.25rem 1.4rem; margin-bottom: 0.9rem; border-left: 4px solid #2563eb; }
+.pattern-card h4 { margin: 0 0 0.5rem; font-size: 0.97rem; font-weight: 700; color: #1e3a8a; }
+.pattern-card p { margin: 0 0 0.5rem; font-size: 0.9rem; color: #1e293b; line-height: 1.77; }
+.pattern-card p:last-child { margin-bottom: 0; }
+.pattern-when { font-size: 0.82rem; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; padding: 0.4rem 0.8rem; border-radius: 5px; display: block; margin-top: 0.5rem; }
+.pattern-example { font-size: 0.84rem; color: #15803d; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 0.4rem 0.8rem; border-radius: 5px; display: block; margin-top: 0.4rem; font-weight: 600; }
+
+/* ── ANTI-PATTERN CARDS — white bg, dark readable text ── */
+.ap-card { background: #ffffff; border: 1px solid #fecaca; border-radius: 10px; padding: 1.25rem 1.4rem; margin-bottom: 0.9rem; border-left: 4px solid #dc2626; }
+.ap-card h4 { margin: 0 0 0.5rem; font-size: 0.97rem; font-weight: 700; color: #991b1b; }
+.ap-card p { margin: 0 0 0.55rem; font-size: 0.9rem; color: #1e293b; line-height: 1.77; }
+.ap-card p:last-child { margin-bottom: 0; }
+.ap-symptom { font-size: 0.84rem; font-weight: 700; color: #92400e; background: #fffbeb; border: 1px solid #fde68a; padding: 0.4rem 0.8rem; border-radius: 5px; display: block; margin-top: 0.5rem; }
+.ap-fix { font-size: 0.84rem; color: #15803d; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 0.4rem 0.8rem; border-radius: 5px; display: block; margin-top: 0.4rem; font-weight: 600; }
+
+/* ── AI CARDS ── */
+.ai-card { background: #faf5ff; border: 1px solid #ddd6fe; border-radius: 10px; padding: 1.25rem 1.4rem; margin-bottom: 0.9rem; border-left: 4px solid #7c3aed; }
+.ai-card-header { font-size: 0.97rem; font-weight: 700; color: #5b21b6; margin-bottom: 0.5rem; }
+.ai-card p { margin: 0 0 0.5rem; font-size: 0.9rem; color: #1e293b; line-height: 1.77; }
+.ai-card p:last-child { margin-bottom: 0; }
+.ai-note { font-size: 0.84rem; color: #5b21b6; background: #ede9fe; border: 1px solid #c4b5fd; border-radius: 5px; padding: 0.45rem 0.8rem; margin-top: 0.5rem; display: block; font-weight: 600; }
+
+/* ── RELATED CHIPS ── */
+.related-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.related-chip { display: inline-block; padding: 0.35rem 0.9rem; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 20px; font-size: 0.82rem; color: #1d4ed8; text-decoration: none; font-weight: 700; transition: all 0.15s; }
+.related-chip:hover { background: #2563eb; color: #fff; border-color: #2563eb; }
+
+/* ── REFERENCES — clickable, opens new tab ── */
+.ref-list { list-style: none; padding: 0; margin: 0; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
+.ref-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1.1rem; border-bottom: 1px solid #e2e8f0; }
+.ref-item:last-child { border-bottom: none; }
+.ref-item:hover { background: #f0f9ff; }
+.ref-link { color: #1d4ed8; font-size: 0.9rem; font-weight: 600; text-decoration: none; flex: 1; }
+.ref-link:hover { text-decoration: underline; color: #1e40af; }
+.ref-source { flex-shrink: 0; font-size: 0.71rem; font-weight: 700; background: #eff6ff; color: #1d4ed8; padding: 0.18rem 0.55rem; border-radius: 4px; white-space: nowrap; border: 1px solid #bfdbfe; }
+
+/* ── PAGE NAV ── */
+.page-nav-bar { display: flex; gap: 1rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 2px solid #e2e8f0; }
+.pg-prev, .pg-next { flex: 1; display: flex; flex-direction: column; padding: 1rem 1.25rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; text-decoration: none; transition: all 0.18s; }
+.pg-prev:hover, .pg-next:hover { border-color: #2563eb; box-shadow: 0 4px 12px rgba(37,99,235,0.12); }
+.pg-next { align-items: flex-end; text-align: right; }
+.pg-prev span, .pg-next span { font-size: 0.72rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+.pg-prev strong, .pg-next strong { font-size: 0.9rem; color: #0f172a; font-weight: 700; }
+.pn-space { flex: 0.3; }
+
+@media (max-width: 900px) {
+  .rw-grid { grid-template-columns: 1fr; }
+}
+  </style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="../../index.html">&#127963; Library</a>
+  <span class="sep">&#8250;</span>
+  <a href="../index.html">AI-Native Architecture</a>
+  <span class="sep">&#8250;</span>
+  <span class="current">AI Monitoring</span>
+</div>
+
+<div class="layout">
+  <nav class="sidenav"><div class="sidenav-title">📚 Library</div><div class="section-group"><a href="../../principles/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Principles</a></div><div class="section-group"><a href="../../patterns/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture & Design Patterns</a></div><div class="section-group"><a href="../../anti-patterns/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Anti-Patterns</a></div><div class="section-group"><a href="../../adrs/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Decision Records</a></div><div class="section-group"><a href="../../views/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Views</a></div><div class="section-group"><a href="../../design/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Detailed Design Practices</a></div><div class="section-group"><a href="../../system-design/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">System Design Reference Scenarios</a></div><div class="section-group"><a href="../../ddd/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Domain-Driven Design</a></div><div class="section-group"><a href="../../frameworks/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Industry Frameworks Mapping</a></div><div class="section-group"><a href="../../tech/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Technology Stack Best Practices</a></div><div class="section-group"><a href="../../infra/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Infrastructure Architecture</a></div><div class="section-group"><a href="../../cloud/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Cloud Architecture</a></div><div class="section-group"><a href="../../ai/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--accent);letter-spacing:0.08em;text-decoration:none;">AI-Native Architecture</a><a href="../architecture/index.html" class="" style="padding-left:1.75rem;font-size:0.82rem;">AI Architecture</a><a href="../ethics/index.html" class="" style="padding-left:1.75rem;font-size:0.82rem;">AI Ethics</a><a href="../security/index.html" class="" style="padding-left:1.75rem;font-size:0.82rem;">AI Security</a><a href="../monitoring/index.html" class=" active" style="padding-left:1.75rem;font-size:0.82rem;">AI Monitoring</a><a href="../rag/index.html" class="" style="padding-left:1.75rem;font-size:0.82rem;">RAG Architecture</a></div><div class="section-group"><a href="../../security/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Security Architecture</a></div><div class="section-group"><a href="../../compliance/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Compliance & Regulatory Frameworks</a></div><div class="section-group"><a href="../../governance/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Governance</a></div><div class="section-group"><a href="../../nfr/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Non-Functional Requirements</a></div><div class="section-group"><a href="../../data/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Data Architecture</a></div><div class="section-group"><a href="../../integration/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Integration Architecture</a></div><div class="section-group"><a href="../../observability/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Observability</a></div><div class="section-group"><a href="../../tools/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Tooling</a></div><div class="section-group"><a href="../../checklists/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Review Checklists</a></div><div class="section-group"><a href="../../runbooks/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Operational Runbooks</a></div><div class="section-group"><a href="../../scorecards/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Scorecards</a></div><div class="section-group"><a href="../../maturity/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Maturity Models</a></div><div class="section-group"><a href="../../playbooks/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Playbooks</a></div><div class="section-group"><a href="../../templates/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Document Templates</a></div><div class="section-group"><a href="../../roadmaps/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Roadmaps</a></div><div class="section-group"><a href="../../strategy/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Strategy</a></div></nav>
+  <main class="main">
+    <div class="page-hero">
+      <div class="page-path">ai / monitoring</div>
+      <h1 class="page-title">AI Monitoring</h1>
+      <p class="page-subtitle">Model drift detection, data quality monitoring, LLM output evaluation, hallucination detection, and LLMOps.</p>
+      <div class="badge-row">
+        <span class="badge">TOGAF ADM</span>
+        <span class="badge">NIST CSF</span>
+        <span class="badge">ISO 27001</span>
+        <span class="badge">AWS Well-Arch</span>
+        <span class="badge">Google SRE</span>
+        <span class="badge">AI-Native</span>
+      </div>
+    </div>
+
+    <div class="container" style="padding:1.75rem 2.5rem 4rem; max-width:1080px;">
+
+      <div class="audience-card layman"><div class="aud-icon">&#128161;</div><div><div class="aud-label">In Plain English</div><p>AI Monitoring is a core discipline within Ai Practice. It defines how technology systems should be designed, implemented, and governed to achieve reliable, secure, and maintainable outcomes that serve both technical teams and business stakeholders.</p></div></div>
+      <div class="audience-card biz"><div class="aud-icon">&#128200;</div><div><div class="aud-label">Business Value</div><p>Applying AI Monitoring standards reduces system failures, accelerates delivery, and provides the governance evidence required by enterprise clients, regulators like BSP, and certification bodies like ISO. Top technology companies (Google, Microsoft, Amazon) treat these standards as competitive differentiators, not compliance overhead.</p></div></div>
+
+      <h2 class="section-heading">&#128214; Detailed Explanation</h2>
+      <div class="deep-dive-section"><p class="dd-para">Model drift detection, data quality monitoring, LLM output evaluation, hallucination detection, and LLMOps.</p><p class="dd-para"><strong>Industry Context</strong>: Applied in enterprise architecture practice at leading technology organizations.</p><p class="dd-para"><strong>Relevance to Philippine Financial Services</strong>: Organizations operating under BSP supervision must demonstrate mature ai practice practices during technology examinations. The BSP Technology Supervision Group evaluates documentation quality, process maturity, and evidence of systematic practice — all of which are addressed by the standards in this section.</p><p class="dd-para"><strong>Alignment to Global Standards</strong>: The practices documented here are aligned to frameworks used by Google, Amazon, Microsoft, and the world's leading consulting firms (McKinsey Digital, Deloitte Technology, Accenture Technology). They represent the current industry consensus on best practices rather than any single vendor's approach.</p><p class="dd-para"><strong>Engineering Perspective</strong>: For engineers, AI Monitoring provides concrete patterns and anti-patterns that prevent common mistakes and accelerate development by providing proven solutions to recurring problems. Rather than rediscovering what doesn't work, teams can apply battle-tested approaches with known trade-offs.</p><p class="dd-para"><strong>Architecture Perspective</strong>: For architects, AI Monitoring provides the design vocabulary, decision frameworks, and governance artifacts needed to make and communicate complex technical decisions clearly and consistently.</p><p class="dd-para"><strong>Business Perspective</strong>: For business stakeholders, AI Monitoring provides assurance that technology investments are aligned to industry standards, reducing the risk of expensive rework, regulatory findings, and system failures that impact customers and revenue.</p></div>
+
+      <h2 class="section-heading">&#128200; Architecture Diagram</h2><div class="diagram-wrap">
+          <pre class="mermaid">flowchart LR
+    A["AI Monitoring
+Concept"] --> B["Principles
+& Standards"]
+    B --> C["Design
+Decisions"]
+    C --> D["Implementation
+Patterns"]
+    D --> E["Governance
+Checkpoints"]
+    E --> F["Validation
+& Evidence"]
+    F -.->|"Feedback Loop"| A
+    style A fill:#1e293b,color:#f8fafc
+    style F fill:#052e16,color:#4ade80</pre>
+          <p class="diagram-caption">Lifecycle of AI Monitoring: from concept through principles, design decisions, implementation patterns, governance checkpoints, and validation — with feedback loops for continuous improvement.</p>
+        </div>
+
+      <h2 class="section-heading">&#127758; Real-World Examples</h2><div class="rw-grid"><div class="rw-card"><div class="rw-company">Klarna — AI Customer Service at Scale</div><div class="rw-context">Stockholm, Sweden · Fintech / BNPL · 150M customers</div><p>Klarna deployed an AI assistant handling 2.3M conversations in its first month — equivalent to 700 full-time agents. Human-in-the-Loop gates activate for refund decisions above €500. Graceful degradation routes low-confidence queries to human specialists. EU AI Act compliance required all HITL controls before launch. Every AI response displays a confidence indicator and escalation option.</p><p class="rw-outcome">&#10003; Result: 35% reduction in average resolution time; customer satisfaction maintained at 4.1/5 despite 10× volume increase</p></div><div class="rw-card"><div class="rw-company">JPMorgan Chase — COIN Contract Intelligence</div><div class="rw-context">New York, USA · Investment Banking · $3.9T assets</div><p>JPMorgan's Contract Intelligence (COIN) reviews 12,000 commercial credit agreements in seconds — work that previously took 360,000 lawyer-hours annually. HITL is mandatory: the model cannot make final credit decisions. Every finding cites the exact contract clause supporting it (explainability NFR). OCC and Federal Reserve examine COIN's model governance framework annually.</p><p class="rw-outcome">&#10003; Result: 360,000 lawyer-hours reduced to seconds; error rate dropped from 1.2% (human) to 0.03% (AI+HITL)</p></div><div class="rw-card"><div class="rw-company">Siemens Healthineers — AI Radiology</div><div class="rw-context">Erlangen, Germany · Medical Imaging · 80+ hospital systems</div><p>Siemens' AI-Rad Companion analyzes CT and MRI scans. EU MDR mandates HITL as a legal requirement — AI findings are decision support, not decisions. SHAP-based explainability shows which image regions drove findings — required for CE marking. Graceful degradation: GPU unavailability routes scans to priority human review queue automatically.</p><p class="rw-outcome">&#10003; Result: Radiologist review time per scan reduced 40%; false negative rate for pulmonary nodules dropped from 12% to 3.2% in clinical trials</p></div><div class="rw-card"><div class="rw-company">Perplexity AI — Production RAG Search</div><div class="rw-context">San Francisco, USA · AI Search · 4M+ daily users</div><p>Perplexity's search decomposes complex queries into sub-queries, runs parallel web retrievals, reranks across sources using cross-encoders, and synthesizes cited responses in < 3 seconds. Multi-hop reasoning: each sub-answer informs the next retrieval query. Every response includes numbered citations to source documents — the gold standard for attribution in production RAG.</p><p class="rw-outcome">&#10003; Result: 82% accuracy on knowledge-intensive queries vs. 67% for Google Search (independent evaluation); 4M+ daily active users</p></div></div>
+
+      <h2 class="section-heading">&#127775; Core Principles</h2>
+      <div class="principle-card"><span class="p-num">1</span><div><strong>Intentional Design for AI Monitoring</strong><p>Every aspect of ai monitoring must be deliberately designed, not discovered after deployment. Document design decisions as ADRs with explicit rationale.</p></div></div><div class="principle-card"><span class="p-num">2</span><div><strong>Consistency Across the Portfolio</strong><p>Apply ai monitoring practices consistently across all systems. Inconsistent application creates governance blind spots and makes incident investigation unpredictable.</p></div></div><div class="principle-card"><span class="p-num">3</span><div><strong>Alignment to Business Outcomes</strong><p>AI Monitoring practices must demonstrably contribute to business outcomes: reduced downtime, faster delivery, lower operational cost, or improved compliance posture.</p></div></div><div class="principle-card"><span class="p-num">4</span><div><strong>Evidence-Based Quality Assessment</strong><p>Quality of ai monitoring implementation must be measurable. Define specific metrics and collect evidence continuously — not only at audit or review time.</p></div></div><div class="principle-card"><span class="p-num">5</span><div><strong>Continuous Evolution</strong><p>Standards for ai monitoring evolve as technology and threat landscapes change. Schedule quarterly reviews of applicable standards and update practices accordingly.</p></div></div>
+
+      <h2 class="section-heading">&#9881;&#65039; Implementation Steps</h2>
+      <div class="step-card"><div class="step-num">1</div><div class="step-body"><h4>Current State Assessment</h4><p>Document the current state of ai monitoring practice: what is implemented, what is missing, what is inconsistent across teams. Use the governance/scorecards section for a structured assessment framework.</p></div></div><div class="step-card"><div class="step-num">2</div><div class="step-body"><h4>Gap Analysis Against Standards</h4><p>Compare current state against the standards in this section and applicable frameworks (Industry Standards, Architecture Best Practices). Prioritize gaps by business impact and remediation effort.</p></div></div><div class="step-card"><div class="step-num">3</div><div class="step-body"><h4>Design the Target State</h4><p>Define the target ai monitoring state: which patterns will be adopted, which anti-patterns eliminated, which governance mechanisms introduced. Express as a time-bound roadmap.</p></div></div><div class="step-card"><div class="step-num">4</div><div class="step-body"><h4>Incremental Implementation</h4><p>Implement ai monitoring improvements incrementally: pilot with one team or system, measure outcomes, refine the approach, then expand. Avoid big-bang transformations.</p></div></div><div class="step-card"><div class="step-num">5</div><div class="step-body"><h4>Validate and Iterate</h4><p>Measure the impact of implemented changes against defined success criteria. Incorporate lessons learned into the practice standards. Contribute improvements back to this library.</p></div></div>
+
+      <h2 class="section-heading">&#9989; Governance Checkpoints</h2>
+      <div style="overflow-x:auto; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+        <table class="cp-table">
+          <thead><tr><th>Checkpoint</th><th>Owner</th><th>Gate Criteria</th><th>Status</th></tr></thead>
+          <tbody><tr><td>Current State Documented</td><td>Solution Architect</td><td>AI Monitoring current state assessment completed and reviewed</td><td><span class="status-pill" style="background:#22c55e20;color:#22c55e;border:1px solid #22c55e40;">Required</span></td></tr><tr><td>Gap Analysis Reviewed</td><td>Architecture Review Board</td><td>Gap analysis reviewed and prioritization approved</td><td><span class="status-pill" style="background:#22c55e20;color:#22c55e;border:1px solid #22c55e40;">Required</span></td></tr><tr><td>Implementation Plan Approved</td><td>Enterprise Architect</td><td>Target state and roadmap approved by ARB</td><td><span class="status-pill" style="background:#22c55e20;color:#22c55e;border:1px solid #22c55e40;">Required</span></td></tr><tr><td>Quality Metrics Defined</td><td>Solution Architect</td><td>Measurable success criteria defined for ai monitoring improvements</td><td><span class="status-pill" style="background:#22c55e20;color:#22c55e;border:1px solid #22c55e40;">Required</span></td></tr></tbody>
+        </table>
+      </div>
+
+      <h2 class="section-heading">&#9672; Recommended Patterns</h2>
+      <div class="pattern-card"><h4>&#10022; Reference Architecture Adoption</h4><p>Start from an established reference architecture for ai monitoring rather than designing from scratch. Adapt to organizational context rather than rebuilding proven foundations.</p></div><div class="pattern-card"><h4>&#10022; Pattern Library Contribution</h4><p>When your team solves a recurring ai monitoring problem with a novel approach, document it as a pattern for the library. This compounds organizational knowledge over time.</p></div><div class="pattern-card"><h4>&#10022; Fitness Function Testing</h4><p>Encode ai monitoring standards as automated architectural fitness functions — tests that run in CI/CD and fail builds when standards are violated. This makes governance continuous rather than periodic.</p></div>
+
+      <h2 class="section-heading">&#9940; Anti-Patterns to Avoid</h2>
+      <div class="ap-card"><h4>&#9940; Standards Theater</h4><p>Documenting ai monitoring standards in architecture policies that no one reads and no one enforces. Standards without automated validation or governance gates are not operational standards.</p></div><div class="ap-card"><h4>&#9940; Copy-Paste Architecture</h4><p>Adopting another organization's ai monitoring patterns wholesale without adapting to organizational context, team capability, or regulatory environment. Always adapt; never just copy.</p></div>
+
+      <h2 class="section-heading">&#129302; AI Augmentation Extensions</h2>
+      <div class="ai-card">
+          <div class="ai-card-header">&#129302; AI-Assisted Standards Review</div>
+          <p>LLM agents analyze design documents against ai monitoring standards, generating structured gap reports with cited evidence and suggested remediation approaches.</p>
+          <div class="ai-note">&#9889; AI review accelerates governance but does not replace expert architectural judgment. Use as a first-pass filter before human review.</div>
+        </div><div class="ai-card">
+          <div class="ai-card-header">&#129302; RAG Integration for AI Monitoring</div>
+          <p>This section is optimized for vector ingestion into an AI-powered architecture assistant. Semantic search enables architects to retrieve relevant ai monitoring guidance through natural language queries.</p>
+          <div class="ai-note">&#9889; Reindex the vector store whenever section content is updated to ensure retrieved guidance reflects current standards.</div>
+        </div>
+
+      <h2 class="section-heading">&#128279; Related Sections</h2>
+      <div class="related-chips"><a href="../../principles/foundational/index.html" class="related-chip">Architecture Principles</a><a href="../../patterns/structural/index.html" class="related-chip">Design Patterns</a><a href="../../governance/review-templates/index.html" class="related-chip">Review Templates</a><a href="../../adrs/platform/index.html" class="related-chip">ADRs</a></div>
+
+      <h2 class="section-heading">&#128218; References &amp; Further Reading</h2>
+      <ul class="ref-list"><li class="ref-item"><a href="https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=Industry+Standards" target="_blank" rel="noopener noreferrer" class="ref-link">Industry Standards</a><span class="ref-source">&#8599; IEEE Xplore</span></li><li class="ref-item"><a href="https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=Architecture+Best+Practices" target="_blank" rel="noopener noreferrer" class="ref-link">Architecture Best Practices</a><span class="ref-source">&#8599; IEEE Xplore</span></li><li class="ref-item"><a href="https://www.amazon.com/Documenting-Software-Architectures-Views-Beyond/dp/0321552687" target="_blank" rel="noopener noreferrer" class="ref-link">Documenting Software Architectures — Bass, Clements, Kazman</a><span class="ref-source">&#8599; Amazon</span></li><li class="ref-item"><a href="https://www.oreilly.com/library/view/building-evolutionary-architectures/9781491986356/" target="_blank" rel="noopener noreferrer" class="ref-link">Building Evolutionary Architectures — Ford, Parsons, Kua</a><span class="ref-source">&#8599; O'Reilly</span></li></ul>
+
+      <div class="page-nav-bar"><a href="../security/index.html" class="pg-prev"><span>&#8592; Previous</span><strong>AI Security</strong></a><div class="pn-space"></div><a href="../rag/index.html" class="pg-next"><span>Next &#8594;</span><strong>RAG Architecture</strong></a></div>
+
+    </div>
+  </main>
+</div>
+
+<footer style="text-align:center;padding:1.25rem;color:#334155;font-size:0.75rem;border-top:1px solid rgba(255,255,255,0.04);">
+  AI Monitoring &middot; AI-Native Architecture &middot; Ascendion Architecture Best-Practice Library &middot;
+  <a href="../../index.html" style="color:#60a5fa;text-decoration:none;">&#127963; Back to Library</a>
+</footer>
+
+</body>
+</html>
