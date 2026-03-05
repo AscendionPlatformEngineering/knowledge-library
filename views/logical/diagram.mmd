@@ -1,0 +1,58 @@
+classDiagram
+    class LogicalView {
+        +String title
+        +String section
+        +String subsection
+        +List~Principle~ principles
+        +List~Pattern~ patterns
+        +List~Risk~ risks
+        +validate() bool
+        +review() ReviewResult
+        +score() ScorecardResult
+    }
+
+    class Principle {
+        +String name
+        +String rationale
+        +String framework
+        +apply() Guidance
+    }
+
+    class Pattern {
+        +String name
+        +String context
+        +String solution
+        +String consequences
+        +matches(Context) bool
+    }
+
+    class ADR {
+        +String title
+        +String status
+        +String context
+        +String decision
+        +String consequences
+        +Date reviewDate
+    }
+
+    class GovernanceCheckpoint {
+        +String name
+        +String owner
+        +String criteria
+        +Boolean required
+        +pass() bool
+    }
+
+    class NFRRequirement {
+        +String category
+        +String metric
+        +String target
+        +String measurement
+        +evaluate() Score
+    }
+
+    LogicalView "1" --> "many" Principle : governed by
+    LogicalView "1" --> "many" Pattern : applies
+    LogicalView "1" --> "many" ADR : documents
+    LogicalView "1" --> "many" GovernanceCheckpoint : gates
+    LogicalView "1" --> "many" NFRRequirement : satisfies

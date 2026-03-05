@@ -1,0 +1,43 @@
+sequenceDiagram
+    autonumber
+    participant SA as Solution Architect
+    participant ARB as Arch Review Board
+    participant SEC as Security Architect
+    participant SYS as Process_View
+    participant OBS as Observability
+
+    SA->>SYS: Initiate Design Session
+    activate SYS
+    SYS-->>SA: Current State Assessment
+
+    SA->>SA: Apply Principles from principles/foundational
+    SA->>SA: Select Patterns from patterns/
+
+    SA->>ARB: Submit Architecture for Review
+    activate ARB
+    ARB->>SEC: Request Security Review
+    activate SEC
+    SEC->>SEC: Threat Model Evaluation (STRIDE)
+    SEC->>SEC: Controls Gap Assessment
+    SEC-->>ARB: Security Review Complete
+    deactivate SEC
+
+    ARB->>ARB: Evaluate ADRs & NFRs
+    ARB->>ARB: Score against scorecards/
+
+    alt Review Passed
+        ARB-->>SA: Approval with Conditions
+        SA->>SYS: Implement Approved Design
+        SYS->>OBS: Instrument Logs, Metrics, Traces
+        OBS-->>SA: Observability Confirmed
+        SA-->>ARB: Deployment Complete
+    else Review Failed
+        ARB-->>SA: Rejection with Feedback
+        SA->>SA: Revise Design
+        SA->>ARB: Resubmit for Review
+    end
+    deactivate ARB
+    deactivate SYS
+
+    SA->>SA: Post-Deployment Validation
+    SA->>ARB: Close Governance Record

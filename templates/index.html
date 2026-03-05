@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Templates | Architecture Library</title>
+  <style>
+    :root {
+      --primary: #1a1f3a;
+      --accent: #4f8ef7;
+      --accent2: #7c3aed;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+    /* ── TOP NAV ── */
+    .topnav {
+      background: var(--primary);
+      padding: 0.6rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      flex-wrap: wrap;
+      border-bottom: 2px solid rgba(79,142,247,0.4);
+    }
+    .topnav a {
+      color: #93c5fd;
+      text-decoration: none;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .topnav a:hover { background: rgba(79,142,247,0.2); }
+    .topnav .sep { color: rgba(255,255,255,0.3); }
+    .topnav .current { color: white; font-weight: 600; }
+
+    /* ── SIDENAV ── */
+    .layout { display: flex; min-height: calc(100vh - 40px); }
+    .sidenav {
+      width: 260px;
+      flex-shrink: 0;
+      background: white;
+      border-right: 1px solid var(--border);
+      padding: 1.25rem 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidenav-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      padding: 0 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .sidenav a {
+      display: block;
+      padding: 0.45rem 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text);
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+      border-left: 3px solid transparent;
+    }
+    .sidenav a:hover { background: #f1f5f9; color: var(--accent); }
+    .sidenav a.active {
+      background: #eff6ff;
+      color: var(--accent);
+      border-left-color: var(--accent);
+      font-weight: 600;
+    }
+    .sidenav .section-group { margin-top: 0.5rem; }
+    .sidenav .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.5rem 1.25rem 0.25rem;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main { flex: 1; overflow: hidden; }
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, #2d3561 100%);
+      color: white;
+      padding: 2rem 3rem;
+      border-bottom: 4px solid var(--accent);
+    }
+    header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.25rem; }
+    header p { opacity: 0.8; font-size: 0.95rem; }
+    .badges { display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+    .badge {
+      background: rgba(79,142,247,0.2);
+      border: 1px solid rgba(79,142,247,0.4);
+      color: #93c5fd;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem 3rem; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    @media (max-width: 900px) {
+      .sidenav { display: none; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .container { padding: 1.5rem; }
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .card-header {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+    h3 { font-size: 1rem; font-weight: 600; color: var(--text); margin: 1.25rem 0 0.5rem; }
+    p { color: var(--muted); margin-bottom: 0.75rem; }
+    .principle-list { list-style: none; }
+    .principle-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .principle-list li:last-child { border-bottom: none; }
+    .p-num {
+      background: var(--accent);
+      color: white;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+    th {
+      background: var(--primary);
+      color: white;
+      padding: 0.55rem 1rem;
+      text-align: left;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td { padding: 0.55rem 1rem; border-bottom: 1px solid var(--border); }
+    tr:hover td { background: #f1f5f9; }
+    .step {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding: 1rem;
+      background: var(--bg);
+      border-radius: 8px;
+      border-left: 4px solid var(--accent);
+    }
+    .step-num {
+      background: var(--accent);
+      color: white;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step-content h4 { font-weight: 600; margin-bottom: 0.2rem; color: var(--text); }
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin: 0.75rem 0;
+      border-left: 4px solid;
+      font-size: 0.88rem;
+    }
+    .alert-info { background: #eff6ff; border-color: var(--accent); color: #1e40af; }
+    .alert-warning { background: #fffbeb; border-color: var(--warning); color: #92400e; }
+    .tag {
+      display: inline-block;
+      background: #f1f5f9;
+      color: var(--muted);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      margin: 0.15rem;
+      font-family: monospace;
+    }
+    code {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-family: monospace;
+    }
+    .framework-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; }
+    .fw-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+    .fw-card .fw-name { font-weight: 700; color: var(--primary); font-size: 0.9rem; }
+    .fw-card .fw-detail { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── PREV/NEXT NAV ── */
+    .page-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      gap: 1rem;
+    }
+    .page-nav a {
+      display: flex;
+      flex-direction: column;
+      padding: 0.75rem 1.25rem;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      max-width: 45%;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .page-nav a:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(79,142,247,0.15); }
+    .page-nav .nav-direction { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem; }
+    .page-nav .nav-title { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .page-nav a.next { text-align: right; margin-left: auto; }
+    .page-nav .spacer { flex: 1; }
+
+    /* ── SUBSECTION GRID (section index) ── */
+    .sub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .sub-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .sub-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); border-color: var(--accent); }
+    .sub-card-path { font-family: monospace; font-size: 0.75rem; color: var(--accent); margin-bottom: 0.4rem; }
+    .sub-card-title { font-weight: 700; color: var(--primary); margin-bottom: 0.35rem; font-size: 1rem; }
+    .sub-card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.75rem; }
+    .sub-card-files span {
+      background: #f1f5f9;
+      color: var(--muted);
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      margin-right: 0.25rem;
+      font-family: monospace;
+    }
+
+    footer {
+      background: var(--primary);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 1.25rem;
+      font-size: 0.8rem;
+    }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="../index.html">🏛️ Library</a>
+  <span class="sep">›</span>
+  <span class="current">Document Templates</span>
+</div>
+
+<div class="layout">
+  <nav class="sidenav"><div class="sidenav-title">📚 Library</div><div class="section-group"><a href="../principles/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Principles</a></div><div class="section-group"><a href="../patterns/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture & Design Patterns</a></div><div class="section-group"><a href="../anti-patterns/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Anti-Patterns</a></div><div class="section-group"><a href="../adrs/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Decision Records</a></div><div class="section-group"><a href="../views/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Views</a></div><div class="section-group"><a href="../design/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Detailed Design Practices</a></div><div class="section-group"><a href="../system-design/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">System Design Reference Scenarios</a></div><div class="section-group"><a href="../ddd/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Domain-Driven Design</a></div><div class="section-group"><a href="../frameworks/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Industry Frameworks Mapping</a></div><div class="section-group"><a href="../tech/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Technology Stack Best Practices</a></div><div class="section-group"><a href="../infra/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Infrastructure Architecture</a></div><div class="section-group"><a href="../cloud/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Cloud Architecture</a></div><div class="section-group"><a href="../ai/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">AI-Native Architecture</a></div><div class="section-group"><a href="../security/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Security Architecture</a></div><div class="section-group"><a href="../compliance/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Compliance & Regulatory Frameworks</a></div><div class="section-group"><a href="../governance/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Governance</a></div><div class="section-group"><a href="../nfr/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Non-Functional Requirements</a></div><div class="section-group"><a href="../data/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Data Architecture</a></div><div class="section-group"><a href="../integration/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Integration Architecture</a></div><div class="section-group"><a href="../observability/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Observability</a></div><div class="section-group"><a href="../tools/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Tooling</a></div><div class="section-group"><a href="../checklists/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Review Checklists</a></div><div class="section-group"><a href="../runbooks/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Operational Runbooks</a></div><div class="section-group"><a href="../scorecards/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Scorecards</a></div><div class="section-group"><a href="../maturity/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Maturity Models</a></div><div class="section-group"><a href="../playbooks/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Playbooks</a></div><div class="section-group"><a href="index.html" class="section-label active" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--accent);letter-spacing:0.08em;text-decoration:none;">Document Templates</a><a href="adr-template/index.html" class="" style="padding-left:1.75rem;font-size:0.82rem;">ADR Template</a><a href="review-template/index.html" class="" style="padding-left:1.75rem;font-size:0.82rem;">Review Template</a><a href="scorecard-template/index.html" class="" style="padding-left:1.75rem;font-size:0.82rem;">Scorecard Template</a></div><div class="section-group"><a href="../roadmaps/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Roadmaps</a></div><div class="section-group"><a href="../strategy/index.html" class="section-label" style="display:block;padding:0.4rem 1.25rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:0.08em;text-decoration:none;">Architecture Strategy</a></div></nav>
+  <div class="main">
+    <header>
+      <div style="font-size:0.78rem;opacity:0.6;font-family:monospace;margin-bottom:0.3rem;">templates/</div>
+      <h1>Document Templates</h1>
+      <p>Document templates for reviews, ADRs, and scorecards.</p>
+      <div class="badges">
+        <span class="badge">TOGAF ADM</span>
+        <span class="badge">NIST CSF</span>
+        <span class="badge">ISO 27001</span>
+        <span class="badge">AWS Well-Architected</span>
+        <span class="badge">AI-Native</span>
+        <span class="badge">3 subsections</span>
+      </div>
+    </header>
+    <div class="container">
+      <h2>Subsections</h2>
+      <p style="color:var(--muted);font-size:0.9rem;">Select a subsection to view its full documentation, HTML reference, and Mermaid diagram.</p>
+      <div class="sub-grid">
+        <a href="adr-template/index.html" class="sub-card">
+          <div class="sub-card-path">templates/adr-template/</div>
+          <div class="sub-card-title">ADR Template</div>
+          <div class="sub-card-desc">Structured ADR template: Title, Status, Context, Decision, Consequences, Alternatives, and Review Date.</div>
+          <div class="sub-card-files">
+            <span>README.md</span>
+            <span>index.html</span>
+            <span>diagram.mmd</span>
+          </div>
+        </a>
+        <a href="review-template/index.html" class="sub-card">
+          <div class="sub-card-path">templates/review-template/</div>
+          <div class="sub-card-title">Review Template</div>
+          <div class="sub-card-desc">Architecture review document template covering system context, design decisions, risks, and sign-off matrix.</div>
+          <div class="sub-card-files">
+            <span>README.md</span>
+            <span>index.html</span>
+            <span>diagram.mmd</span>
+          </div>
+        </a>
+        <a href="scorecard-template/index.html" class="sub-card">
+          <div class="sub-card-path">templates/scorecard-template/</div>
+          <div class="sub-card-title">Scorecard Template</div>
+          <div class="sub-card-desc">Reusable scorecard template with weighted criteria, scoring rubric, and aggregate maturity rating.</div>
+          <div class="sub-card-files">
+            <span>README.md</span>
+            <span>index.html</span>
+            <span>diagram.mmd</span>
+          </div>
+        </a></div>
+    </div>
+  </div>
+</div>
+
+<footer>Document Templates | Ascendion Architecture Best-Practice Library | <a href="../index.html" style="color:#93c5fd;">← Back to Library</a></footer>
+</body>
+</html>
