@@ -41,9 +41,8 @@ jobs:
             --cache-control "public, max-age=300"
 
       - name: Invalidate CloudFront cache
-        if: false
         env:
-          CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
+          CLOUDFRONT_DISTRIBUTION_ID: E2O2I6L3GV59TM
         run: |
           aws cloudfront create-invalidation \
             --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
