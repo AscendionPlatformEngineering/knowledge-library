@@ -1,0 +1,63 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Domain-Specific Principles emblem.
+
+  Visual metaphor: two distinct bounded contexts (one speaks in
+  CIRCLES, one speaks in SQUARES — different ubiquitous languages
+  for the same business reality). They keep to their own territories
+  most of the time, then DRIFT TOWARD EACH OTHER, briefly OVERLAP at
+  the centre (translation moment — terracotta spark appears), and
+  RETURN to their own territories. The cycle repeats.
+
+  Motion mechanic: SHAPE OSCILLATION.
+  The whole shapes move as units — there are no traveling particles
+  inside static structures, no pulses on a fixed scaffold. The shapes
+  themselves are the animation. Distinct from ai-native's particle-flow
+  mechanic and foundational's rotation mechanic.
+
+  Meaning: bounded contexts are integral wholes that periodically meet
+  to translate, then return to their own internal coherence.
+-->
+
+<!-- ─── Subtle horizontal anchor — the shared business reality below ─── -->
+<line x1="20" y1="78" x2="100" y2="78"
+      stroke="#D6D2C8" stroke-width="0.8" opacity="0.45"/>
+
+<!-- ─── Subtle vertical reference — the axis where translation happens ─── -->
+<line x1="60" y1="22" x2="60" y2="74"
+      stroke="#D6D2C8" stroke-width="0.7" opacity="0.3"
+      stroke-dasharray="2 3"/>
+
+<!-- ═══ LEFT BOUNDED CONTEXT — circle (one ubiquitous language) ═══ -->
+<!-- Drifts: rest at x=28, drifts to centre x=60, holds, drifts back -->
+<circle cy="45" r="14" fill="#FFFFFF"
+        stroke="#C96330" stroke-width="2.2" opacity="0.92">
+  <animate attributeName="cx"
+           values="28; 60; 60; 28; 28"
+           keyTimes="0; 0.35; 0.5; 0.85; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ═══ RIGHT BOUNDED CONTEXT — square (different language) ═══ -->
+<!-- Drifts: rest at x=80 (left edge), drifts to centre x=48, holds, returns -->
+<rect y="31" width="24" height="24" rx="2"
+      fill="#FFFFFF" stroke="#C96330" stroke-width="2.2" opacity="0.92">
+  <animate attributeName="x"
+           values="80; 48; 48; 80; 80"
+           keyTimes="0; 0.35; 0.5; 0.85; 1"
+           dur="6s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── TRANSLATION SPARK — appears only when shapes overlap at centre ─── -->
+<!-- Visible from t=0.35 to t=0.5 (the moment the contexts meet to translate) -->
+<circle cx="60" cy="45" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.34; 0.4; 0.5; 0.55; 1"
+           dur="6s" repeatCount="indefinite"/>
+  <animate attributeName="r"
+           values="3; 3; 5.5; 5.5; 3; 3"
+           keyTimes="0; 0.34; 0.4; 0.5; 0.55; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+</svg>

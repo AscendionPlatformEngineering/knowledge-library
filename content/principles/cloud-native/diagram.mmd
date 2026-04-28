@@ -1,0 +1,101 @@
+flowchart TB
+
+    %% ─── Entry ───
+    USER([User Traffic])
+
+    %% ─── Cloud platform owns infra concerns ───
+    subgraph PLATFORM [Cloud Platform &mdash; infrastructure concerns]
+        direction TB
+        INGRESS[Ingress / Load Balancer<br/>TLS &middot; Routing]
+        MESH[Service Mesh<br/>mTLS &middot; Retries &middot; Telemetry]
+        AUTOSCALER[Autoscaler<br/>HPA &middot; Cluster Autoscaler]
+    end
+
+    %% ─── Stateless application pods ───
+    subgraph APPS [Stateless Application Pods]
+        direction LR
+        SVC1[Service A<br/>replicas: N]
+        SVC2[Service B<br/>replicas: N]
+    end
+
+    %% ─── Backing services hold persistent state ───
+    subgraph BACKING [Backing Services &mdash; attached resources]
+        direction LR
+        DB[(Database)]
+        CACHE[(Cache)]
+        MQ[(Message Broker)]
+    end
+
+    %% ─── Configuration mounted at runtime ───
+    CONFIG[Configuration<br/>Secrets &middot; ConfigMaps]
+
+    %% ─── Observability emitted continuously ───
+    OBS[Observability<br/>Logs &middot; Metrics &middot; Traces]
+
+    %% ─── Supply chain feeds the runtime ───
+    REGISTRY[Signed Image Registry<br/>SBOM &middot; Scanned &middot; Admitted by Policy]
+
+    %% ─── Outcome: SLO met ───
+    SLO([Service-Level Objective Met])
+
+    %% ─── Traffic flow ───
+    USER --> INGRESS
+    INGRESS --> MESH
+    MESH --> SVC1
+    MESH --> SVC2
+
+    %% ─── App ↔ backing services ───
+    SVC1 --> DB
+    SVC1 --> CACHE
+    SVC2 --> CACHE
+    SVC2 --> MQ
+
+    %% ─── Config flows in at runtime ───
+    CONFIG -.mounts.-> SVC1
+    CONFIG -.mounts.-> SVC2
+
+    %% ─── Telemetry flows out ───
+    SVC1 -.emits.-> OBS
+    SVC2 -.emits.-> OBS
+
+    %% ─── Supply chain feeds the pods ───
+    REGISTRY -.deploys.-> SVC1
+    REGISTRY -.deploys.-> SVC2
+
+    %% ─── Platform manages app lifecycle ───
+    AUTOSCALER -.scales.-> APPS
+
+    %% ─── Outcome ───
+    SVC1 --> SLO
+    SVC2 --> SLO
+
+    %% ─── NODE STYLES ───
+    %% Entry: bright blue
+    style USER fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Platform components: emphasised blue (the architectural substrate)
+    style INGRESS    fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+    style MESH       fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+    style AUTOSCALER fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+
+    %% Application pods: cream (the running capability)
+    style SVC1 fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+    style SVC2 fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+
+    %% Backing services: amber (the state the apps deliberately don't own)
+    style DB    fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style CACHE fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style MQ    fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+
+    %% Cross-cutting: cream (config, telemetry, supply chain)
+    style CONFIG   fill:#FAF6EE,stroke:#D4C8B0,stroke-width:1.5px,color:#3A2410
+    style OBS      fill:#FAF6EE,stroke:#D4C8B0,stroke-width:1.5px,color:#3A2410
+    style REGISTRY fill:#FAF6EE,stroke:#D4C8B0,stroke-width:1.5px,color:#3A2410
+
+    %% Outcome: vivid green exit
+    style SLO fill:#1ABC9C,stroke:#138D75,stroke-width:2px,color:#FFFFFF
+
+    %% ─── CLUSTER STYLES ───
+    style PLATFORM fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840
+    style APPS     fill:#FAF6EE,stroke:#D4C8B0,stroke-width:1.2px,color:#3A2410
+    style BACKING  fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316

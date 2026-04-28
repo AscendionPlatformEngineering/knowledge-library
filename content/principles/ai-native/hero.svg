@@ -1,0 +1,139 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  AI-Native emblem.
+  Two colors only: warm neutral (#D6D2C8) + terracotta (#C96330).
+  Animation built with the simplest reliable SMIL primitives:
+  <animate> on cx/cy/r/opacity attributes. No animateMotion/mpath
+  (which has known compatibility quirks). Works in any browser
+  that supports SMIL at all.
+
+  Cycle: 6 seconds total. Six dots fire inward in sequence (one per
+  second), each travelling from its outer node to the central core.
+  When ANY dot reaches the core, all six outer nodes briefly expand
+  outward — a synchronised ripple — and a shockwave ring emanates
+  from the core.
+-->
+
+<!-- ─── STATIC STRUCTURE ─── -->
+
+<!-- Six connecting lines (warm neutral) -->
+<line x1="60" y1="45" x2="60" y2="14" stroke="#D6D2C8" stroke-width="1.5" stroke-linecap="round"/>
+<line x1="60" y1="45" x2="93" y2="27" stroke="#D6D2C8" stroke-width="1.5" stroke-linecap="round"/>
+<line x1="60" y1="45" x2="93" y2="63" stroke="#D6D2C8" stroke-width="1.5" stroke-linecap="round"/>
+<line x1="60" y1="45" x2="60" y2="76" stroke="#D6D2C8" stroke-width="1.5" stroke-linecap="round"/>
+<line x1="60" y1="45" x2="27" y2="63" stroke="#D6D2C8" stroke-width="1.5" stroke-linecap="round"/>
+<line x1="60" y1="45" x2="27" y2="27" stroke="#D6D2C8" stroke-width="1.5" stroke-linecap="round"/>
+
+<!-- Six outer nodes — each pulses outward (radius grows) at every impact moment.
+     Impact moments occur at 0.95s, 1.95s, 2.95s, 3.95s, 4.95s, 5.95s of the
+     master 6-second cycle. The 'begin' attribute lists all impact times so
+     the animation re-fires on each one. -->
+<circle cx="60" cy="14" r="3.8" fill="#FFFFFF" stroke="#D6D2C8" stroke-width="1.6">
+  <animate attributeName="r" values="3.8;6.5;3.8" dur="0.6s"
+           begin="0.7s; 1.7s; 2.7s; 3.7s; 4.7s; 5.7s" repeatCount="indefinite" fill="freeze"/>
+</circle>
+<circle cx="93" cy="27" r="3.8" fill="#FFFFFF" stroke="#D6D2C8" stroke-width="1.6">
+  <animate attributeName="r" values="3.8;6.5;3.8" dur="0.6s"
+           begin="0.7s; 1.7s; 2.7s; 3.7s; 4.7s; 5.7s" repeatCount="indefinite" fill="freeze"/>
+</circle>
+<circle cx="93" cy="63" r="3.8" fill="#FFFFFF" stroke="#D6D2C8" stroke-width="1.6">
+  <animate attributeName="r" values="3.8;6.5;3.8" dur="0.6s"
+           begin="0.7s; 1.7s; 2.7s; 3.7s; 4.7s; 5.7s" repeatCount="indefinite" fill="freeze"/>
+</circle>
+<circle cx="60" cy="76" r="3.8" fill="#FFFFFF" stroke="#D6D2C8" stroke-width="1.6">
+  <animate attributeName="r" values="3.8;6.5;3.8" dur="0.6s"
+           begin="0.7s; 1.7s; 2.7s; 3.7s; 4.7s; 5.7s" repeatCount="indefinite" fill="freeze"/>
+</circle>
+<circle cx="27" cy="63" r="3.8" fill="#FFFFFF" stroke="#D6D2C8" stroke-width="1.6">
+  <animate attributeName="r" values="3.8;6.5;3.8" dur="0.6s"
+           begin="0.7s; 1.7s; 2.7s; 3.7s; 4.7s; 5.7s" repeatCount="indefinite" fill="freeze"/>
+</circle>
+<circle cx="27" cy="27" r="3.8" fill="#FFFFFF" stroke="#D6D2C8" stroke-width="1.6">
+  <animate attributeName="r" values="3.8;6.5;3.8" dur="0.6s"
+           begin="0.7s; 1.7s; 2.7s; 3.7s; 4.7s; 5.7s" repeatCount="indefinite" fill="freeze"/>
+</circle>
+
+<!-- ─── INBOUND DOTS ───
+     Each dot is a circle whose cx/cy attributes animate from the outer
+     node position to the centre over the visible 0.7s window of its
+     1-second slot. Outside that window, opacity is 0.
+
+     Dot 1: visible 0.0–0.7s,  travels (60,14) → (60,45)
+     Dot 2: visible 1.0–1.7s,  travels (93,27) → (60,45)
+     Dot 3: visible 2.0–2.7s,  travels (93,63) → (60,45)
+     Dot 4: visible 3.0–3.7s,  travels (60,76) → (60,45)
+     Dot 5: visible 4.0–4.7s,  travels (27,63) → (60,45)
+     Dot 6: visible 5.0–5.7s,  travels (27,27) → (60,45)
+-->
+
+<!-- Dot 1 -->
+<circle cx="60" cy="14" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.95;1"
+           dur="0.7s" begin="0s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="14;45" dur="0.7s"
+           begin="0s" repeatCount="indefinite" fill="freeze"/>
+</circle>
+
+<!-- Dot 2 -->
+<circle cx="93" cy="27" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.95;1"
+           dur="0.7s" begin="1s" repeatCount="indefinite"/>
+  <animate attributeName="cx" values="93;60" dur="0.7s"
+           begin="1s" repeatCount="indefinite" fill="freeze"/>
+  <animate attributeName="cy" values="27;45" dur="0.7s"
+           begin="1s" repeatCount="indefinite" fill="freeze"/>
+</circle>
+
+<!-- Dot 3 -->
+<circle cx="93" cy="63" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.95;1"
+           dur="0.7s" begin="2s" repeatCount="indefinite"/>
+  <animate attributeName="cx" values="93;60" dur="0.7s"
+           begin="2s" repeatCount="indefinite" fill="freeze"/>
+  <animate attributeName="cy" values="63;45" dur="0.7s"
+           begin="2s" repeatCount="indefinite" fill="freeze"/>
+</circle>
+
+<!-- Dot 4 -->
+<circle cx="60" cy="76" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.95;1"
+           dur="0.7s" begin="3s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="76;45" dur="0.7s"
+           begin="3s" repeatCount="indefinite" fill="freeze"/>
+</circle>
+
+<!-- Dot 5 -->
+<circle cx="27" cy="63" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.95;1"
+           dur="0.7s" begin="4s" repeatCount="indefinite"/>
+  <animate attributeName="cx" values="27;60" dur="0.7s"
+           begin="4s" repeatCount="indefinite" fill="freeze"/>
+  <animate attributeName="cy" values="63;45" dur="0.7s"
+           begin="4s" repeatCount="indefinite" fill="freeze"/>
+</circle>
+
+<!-- Dot 6 -->
+<circle cx="27" cy="27" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.95;1"
+           dur="0.7s" begin="5s" repeatCount="indefinite"/>
+  <animate attributeName="cx" values="27;60" dur="0.7s"
+           begin="5s" repeatCount="indefinite" fill="freeze"/>
+  <animate attributeName="cy" values="27;45" dur="0.7s"
+           begin="5s" repeatCount="indefinite" fill="freeze"/>
+</circle>
+
+<!-- ─── SHOCKWAVE RING from core, fired at each impact moment ─── -->
+<circle cx="60" cy="45" r="9" fill="none" stroke="#C96330" stroke-width="1.5" opacity="0">
+  <animate attributeName="r" values="9;24" dur="0.7s"
+           begin="0.7s; 1.7s; 2.7s; 3.7s; 4.7s; 5.7s" repeatCount="indefinite"/>
+  <animate attributeName="opacity" values="0.85;0" dur="0.7s"
+           begin="0.7s; 1.7s; 2.7s; 3.7s; 4.7s; 5.7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── CENTRAL CORE ─── -->
+<circle cx="60" cy="45" r="9" fill="#FFFFFF" stroke="#C96330" stroke-width="2">
+  <animate attributeName="r" values="9;10.5;9" dur="0.5s"
+           begin="0.7s; 1.7s; 2.7s; 3.7s; 4.7s; 5.7s" repeatCount="indefinite"/>
+</circle>
+<circle cx="60" cy="45" r="3.2" fill="#C96330"/>
+</svg>

@@ -1,0 +1,63 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Foundational Principles emblem.
+
+  Visual metaphor: a PENDULUM.
+    - The PIVOT is fixed at the top — the timeless principle that
+      never changes. It is the anchor of everything.
+    - The ARM hangs down from the pivot.
+    - The BOB swings left and right in a rhythmic arc — the repeated
+      application of the principle across projects, teams, decades.
+    - The CYCLE never ends. Foundational principles are not consumed
+      by being applied; they renew with every swing.
+
+  Motion mechanic: ROTATION OF A RIGID BODY around a fixed axis.
+  Not particle flow (ai-native), not shape oscillation in/out
+  (domain-specific) — this is a single coupled assembly rotating.
+  Smooth ease-in-out at the extremes (keySplines) gives the bob
+  natural pendulum physics: slow at the turn, fast through centre.
+
+  The pivot dot is terracotta (the principle, fixed). The arm is
+  warm neutral (the structure that connects principle to practice).
+  The bob is terracotta (the act of applying it, repeated).
+-->
+
+<!-- ─── Faint arc tracing the bob's path (the space of applications) ─── -->
+<path d="M 28 60 A 35 35 0 0 0 92 60"
+      fill="none" stroke="#D6D2C8" stroke-width="0.8"
+      opacity="0.35" stroke-dasharray="2 3"/>
+
+<!-- ─── Ground reference line at the bottom ─── -->
+<line x1="20" y1="80" x2="100" y2="80"
+      stroke="#D6D2C8" stroke-width="0.8" opacity="0.45"/>
+
+<!-- ─── Pivot mount (small bracket at top — the framework of practice) ─── -->
+<rect x="54" y="11" width="12" height="3" fill="#D6D2C8" opacity="0.85"/>
+
+<!-- ═══ THE PENDULUM — single coupled assembly that rotates around pivot ═══ -->
+<g>
+  <!-- Smooth ease-in-out rotation (slow at extremes, fast through centre) -->
+  <animateTransform attributeName="transform" type="rotate"
+                    values="-32 60 16; 32 60 16; -32 60 16"
+                    keyTimes="0; 0.5; 1"
+                    calcMode="spline"
+                    keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+                    dur="3s" repeatCount="indefinite"/>
+
+  <!-- Pivot point: terracotta, fixed at the top (the timeless principle) -->
+  <circle cx="60" cy="16" r="2.8" fill="#C96330"/>
+
+  <!-- Arm: warm neutral line from pivot down to the bob -->
+  <line x1="60" y1="16" x2="60" y2="62"
+        stroke="#D6D2C8" stroke-width="2"/>
+
+  <!-- Bob: terracotta filled circle (the applied principle) -->
+  <!-- Slight pulse at the swing extremes marks the rhythmic beat -->
+  <circle cx="60" cy="65" r="5.5" fill="#C96330">
+    <animate attributeName="r"
+             values="5.5; 6.5; 5.5; 5.5; 6.5; 5.5"
+             keyTimes="0; 0.03; 0.08; 0.5; 0.53; 1"
+             dur="3s" repeatCount="indefinite"/>
+  </circle>
+</g>
+</svg>

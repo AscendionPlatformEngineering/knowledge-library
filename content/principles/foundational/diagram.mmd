@@ -1,0 +1,76 @@
+flowchart TB
+
+    %% ─── Entry ───
+    REQ([Change Request])
+
+    %% ─── Volatile Periphery (changes often) ───
+    subgraph VOLATILE [Volatile Periphery]
+        direction TB
+        FW[Frameworks &amp; Tools]
+        VEN[Vendor APIs]
+        DB[(Database)]
+    end
+
+    %% ─── Adapter Layer (translation boundary) ───
+    subgraph ADAPT [Adapter Layer]
+        direction TB
+        IN[Inbound Adapters<br/>UI · API · CLI]
+        OUT[Outbound Adapters<br/>Persistence · Bus · External]
+    end
+
+    %% ─── Stable Core (changes rarely) ───
+    subgraph CORE [Stable Core]
+        direction TB
+        UC[Application Use Cases]
+        DOM[Domain Model]
+    end
+
+    %% ─── Architectural governance (decisions, fitness) ───
+    GOV[Architectural Governance<br/>ADRs · Fitness Functions · Reviews]
+
+    %% ─── Outcome ───
+    SYS([Maintainable System])
+
+    %% ─── Primary flow ───
+    REQ --> IN
+    IN --> UC
+    UC --> DOM
+    UC --> OUT
+    OUT --> DB
+    OUT --> VEN
+    OUT --> FW
+
+    %% ─── Governance gates the architectural layers ───
+    GOV -.gates.-> CORE
+    GOV -.gates.-> ADAPT
+
+    %% ─── Outcome ───
+    UC --> SYS
+
+    %% ─── NODE STYLES ───
+    %% Entry: bright blue
+    style REQ fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Stable core: emphasised blue (the protected centre)
+    style DOM fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2.5px,color:#1A2840
+    style UC  fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+
+    %% Adapter layer: cream (translation boundary)
+    style IN  fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+    style OUT fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+
+    %% Volatile periphery: amber (caution — replace at will)
+    style FW  fill:#FEF3C7,stroke:#92722C,stroke-width:1.4px,color:#5C4316
+    style VEN fill:#FEF3C7,stroke:#92722C,stroke-width:1.4px,color:#5C4316
+    style DB  fill:#FEF3C7,stroke:#92722C,stroke-width:1.4px,color:#5C4316
+
+    %% Governance: distinctive neutral grey
+    style GOV fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+
+    %% Outcome: vivid green (success exit)
+    style SYS fill:#1ABC9C,stroke:#138D75,stroke-width:2px,color:#FFFFFF
+
+    %% ─── CLUSTER STYLES — light blue / light cream alternating ───
+    style CORE     fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840
+    style ADAPT    fill:#FAF6EE,stroke:#D4C8B0,stroke-width:1.2px,color:#3A2410
+    style VOLATILE fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316

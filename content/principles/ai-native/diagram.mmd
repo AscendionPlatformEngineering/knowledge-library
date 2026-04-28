@@ -1,0 +1,85 @@
+flowchart TB
+
+    %% ─── Entry point ───
+    U([User or upstream service])
+
+    %% ─── Reasoning Layer (light blue cluster) ───
+    subgraph REASON [Reasoning Layer]
+        direction TB
+        P[Prompt composition]
+        M[Model routing]
+        T[Tool / function use]
+    end
+
+    %% ─── Knowledge Layer (light cream cluster) ───
+    subgraph KNOW [Knowledge Layer]
+        direction TB
+        R[Retrieval]
+        E[Embedding model]
+        K[Source documents]
+    end
+
+    %% ─── Trust Layer (light blue cluster) ───
+    subgraph TRUST [Trust Layer]
+        direction TB
+        G[Guardrails]
+        EV[Continuous evaluation]
+        H[Human handoff]
+    end
+
+    %% ─── Exit points ───
+    O([Response])
+    C([Confidence signal])
+    A([Abstention path])
+
+    %% ─── Primary flow ───
+    U --> P
+    P --> R
+    R --> E
+    E --> K
+    K --> P
+    P --> M
+    M --> T
+    M --> G
+    T --> G
+    G --> O
+    G --> C
+    G --> A
+
+    %% ─── Cross-layer signals ───
+    M -.eval signals.-> EV
+    G -.low confidence.-> H
+    EV -.regression alerts.-> M
+
+    %% ─── NODE STYLES ───
+    %% Entry: BRIGHT BLUE rounded (matches reference: solid medium-blue, white text)
+    style U  fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Primary success exit: VIVID TEAL-GREEN (matches reference: solid bright green, white text)
+    style O  fill:#1ABC9C,stroke:#138D75,stroke-width:2px,color:#FFFFFF
+
+    %% Secondary exit: standard blue
+    style C  fill:#DCEAFC,stroke:#3D6395,stroke-width:1.5px,color:#1A2840
+
+    %% Caution exit: amber
+    style A  fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+
+    %% Reasoning layer nodes (medium blue)
+    style P  fill:#DCEAFC,stroke:#3D6395,stroke-width:1.5px,color:#1A2840
+    style M  fill:#DCEAFC,stroke:#3D6395,stroke-width:1.5px,color:#1A2840
+    style T  fill:#DCEAFC,stroke:#3D6395,stroke-width:1.5px,color:#1A2840
+
+    %% Knowledge layer nodes (medium cream)
+    style R  fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+    style E  fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+    style K  fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+
+    %% Trust layer nodes (medium blue)
+    style G  fill:#DCEAFC,stroke:#3D6395,stroke-width:1.5px,color:#1A2840
+    style EV fill:#DCEAFC,stroke:#3D6395,stroke-width:1.5px,color:#1A2840
+    style H  fill:#DCEAFC,stroke:#3D6395,stroke-width:1.5px,color:#1A2840
+
+    %% ─── CLUSTER (subgraph) STYLES — light blue + light cream grouping ───
+    style REASON fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840
+    style KNOW   fill:#FAF6EE,stroke:#D4C8B0,stroke-width:1.2px,color:#3A2410
+    style TRUST  fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840

@@ -1,0 +1,85 @@
+flowchart TB
+
+    %% ─── Entry ───
+    USER([User Traffic])
+
+    %% ─── Strangler routing facade ───
+    subgraph FACADE [Strangler Routing Facade]
+        ROUTE[Traffic Router<br/>Feature Flags &middot; % Split]
+    end
+
+    %% ─── Legacy system (deprecating) ───
+    subgraph LEGACY [Legacy System &mdash; decommissioning]
+        direction LR
+        LMONO[Legacy Monolith]
+        LDB[(Legacy Database)]
+    end
+
+    %% ─── Modern services (growing) ───
+    subgraph NEW [Modern Domain Services &mdash; growing]
+        direction LR
+        SVC1[Bounded Context A]
+        SVC2[Bounded Context B]
+        NDB[(Modern Database)]
+    end
+
+    %% ─── Cross-boundary translation ───
+    ACL[Anti-Corruption Layer<br/>Translation &middot; Validation]
+
+    %% ─── Data sync between stores during transition ───
+    CDC[Change Data Capture<br/>Event Sync]
+
+    %% ─── Outcome ───
+    OUT([Customer Outcome])
+
+    %% ─── Routing ───
+    USER --> ROUTE
+    ROUTE -->|legacy paths| LMONO
+    ROUTE -->|migrated paths| SVC1
+    ROUTE -->|migrated paths| SVC2
+
+    %% ─── System internals ───
+    LMONO --> LDB
+    SVC1 --> NDB
+    SVC2 --> NDB
+
+    %% ─── ACL: new reads legacy when needed, but never writes back ───
+    SVC1 -.read-only.-> ACL
+    ACL -.->LMONO
+
+    %% ─── Data sync: legacy → new while transition in progress ───
+    LDB --> CDC
+    CDC --> NDB
+
+    %% ─── Outcome ───
+    SVC1 --> OUT
+    SVC2 --> OUT
+    LMONO -.retiring.-> OUT
+
+    %% ─── NODE STYLES ───
+    %% Entry: bright blue
+    style USER fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Routing facade: blue (the architectural control point)
+    style ROUTE fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+
+    %% Legacy: amber (caution &mdash; deprecating, fading)
+    style LMONO fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style LDB   fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+
+    %% New services: blue (the future)
+    style SVC1 fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.5px,color:#1A2840
+    style SVC2 fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.5px,color:#1A2840
+    style NDB  fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.5px,color:#1A2840
+
+    %% ACL + CDC: cream (translation/integration boundary)
+    style ACL fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+    style CDC fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+
+    %% Outcome: green exit
+    style OUT fill:#1ABC9C,stroke:#138D75,stroke-width:2px,color:#FFFFFF
+
+    %% ─── CLUSTER STYLES ───
+    style FACADE fill:#FAF6EE,stroke:#D4C8B0,stroke-width:1.2px,color:#3A2410
+    style LEGACY fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316
+    style NEW    fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840

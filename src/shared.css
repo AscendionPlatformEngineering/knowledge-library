@@ -1,0 +1,1002 @@
+/* ═══════════════════════════════════════════════════════════════
+   Ascendion Engineering — Design System v4
+   Changes from v3:
+   1. Single --max shell — hero + content share same left edge
+   2. Grid ghost boxes removed — cards own their borders
+   3. Diagrams — Figma/Gliffy light theme, centered, no dead space
+   4. Section hero — expanded two-column SVG illustration
+   5. Footer text — full white, fully readable
+   6. Base font size raised to 18px across all content
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* ── TOKENS ── */
+:root {
+  --bg:           #FFFFFF;
+  --bg-subtle:    #F9F8F6;
+  --ink:          #0E0E0E;
+  --ink-2:        #3C3C3C;
+  --ink-3:        #6E6E6E;
+  --ink-4:        #B0B0AA;
+  --border:       #E8E8E4;
+  --border-md:    #C4C4BE;
+  --accent:       #C96330;
+  --nav-bg:       #0E0E0E;
+  --nav-text:     rgba(255,255,255,0.58);
+  --nav-hover:    #FFFFFF;
+  --nav-border:   rgba(255,255,255,0.07);
+  --font:         'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono:         'IBM Plex Mono', 'Courier New', monospace;
+  --r:            6px;
+  --r-lg:         10px;
+  --max:          1140px;   /* ONE width used everywhere */
+  --prose:        880px;    /* article reading column */
+  --t:            0.18s ease;
+
+  /* Diagram light-theme — Figma/Gliffy palette */
+  --dg-bg:        #F4F7FB;
+  --dg-border:    #D8E2F0;
+  --dg-node:      #FFFFFF;
+  --dg-stroke:    #4A72A8;
+  --dg-text:      #1A2840;
+  --dg-line:      #7AAAD8;
+  --dg-accent:    #C96330;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  font-size: 18px;                 /* FIX 6: raised from 17px */
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── WORDMARK ANIMATION ── */
+@keyframes wm-char {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.wm-char { display: inline-block; animation: wm-char 0.4s ease both; }
+
+/* ── NAV ── */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--nav-bg); border-bottom: 1px solid var(--nav-border);
+  height: 58px; display: flex; align-items: center; padding: 0 2.5rem;
+}
+.nav-wordmark {
+  font-size: 1rem; font-weight: 600; color: #FFFFFF;
+  text-decoration: none; letter-spacing: 0.01em; flex-shrink: 0;
+  font-family: var(--font); display: flex; align-items: center; gap: 0.5rem;
+}
+.nav-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.1); margin: 0 1.5rem; }
+.nav-links { display: flex; align-items: center; flex: 1; overflow: hidden; }
+.nav-links a {
+  font-size: 0.88rem; font-weight: 400; color: var(--nav-text);
+  text-decoration: none; padding: 0.32rem 0.7rem; border-radius: var(--r);
+  transition: color var(--t); white-space: nowrap;
+}
+.nav-links a:hover { color: var(--nav-hover); }
+.nav-links a.active { color: #FFFFFF; font-weight: 500; }
+.nav-cta {
+  margin-left: auto; flex-shrink: 0; font-size: 0.84rem; font-weight: 500;
+  color: var(--ink); background: #FFFFFF; padding: 0.38rem 1.1rem;
+  border-radius: 99px; text-decoration: none; transition: opacity var(--t); font-family: var(--font);
+}
+.nav-cta:hover { opacity: 0.8; }
+/* When two CTAs sit next to each other, the second loses the auto-margin
+   (it would push it off-screen) and gains a small gap from the first. */
+.nav-cta + .nav-cta { margin-left: 0.5rem; }
+
+/* ── SHELL ────────────────────────────────────────────────────────
+   FIX 1: every element on every page uses this one container.
+   Hero left edge = filter bar left edge = content left edge.
+   ─────────────────────────────────────────────────────────────── */
+.shell {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+/* ── BREADCRUMB ── */
+.breadcrumb {
+  display: flex; align-items: center; gap: 0.45rem;
+  font-size: 0.84rem; color: var(--ink-3);
+  margin-bottom: 1.25rem; font-family: var(--mono);
+}
+.breadcrumb a { color: var(--ink-3); text-decoration: none; transition: color var(--t); }
+.breadcrumb a:hover { color: var(--ink); }
+.breadcrumb .sep { color: var(--ink-4); }
+.breadcrumb .curr { color: var(--ink-2); }
+
+/* ── HERO: LANDING ── */
+.hero { border-bottom: 1px solid var(--border); padding: 4.5rem 0 4rem; }
+.hero-label {
+  font-family: var(--mono); font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 1rem;
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 300;
+  letter-spacing: -0.025em; color: var(--ink); line-height: 1.12; margin-bottom: 1.1rem;
+}
+.hero h1 strong { font-weight: 600; }
+.hero-desc { font-size: 1.1rem; color: var(--ink); line-height: 1.72; max-width: 600px; }
+
+/* ── HERO: SECTION ────────────────────────────────────────────────
+   FIX 4: two-column layout — text left, expanded SVG art right.
+   SVG is 3× the card size, vertically centered on the title.
+   ─────────────────────────────────────────────────────────────── */
+.hero-section { border-bottom: 1px solid var(--border); padding: 4.5rem 0 4rem; }
+.hero-section-inner {
+  display: flex; align-items: center; gap: 4rem;
+}
+.hero-section-text { flex: 1; min-width: 0; }
+.hero-section-art {
+  flex-shrink: 0; width: 240px; height: 180px;
+  display: flex; align-items: center; justify-content: center;
+}
+.hero-section-art svg { width: 100%; height: 100%; overflow: visible; }
+
+/* ── HERO: ARTICLE ── */
+.hero-article { border-bottom: 1px solid var(--border); padding: 4rem 0 3.5rem; }
+.hero-article h1 {
+  font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 500;
+  letter-spacing: -0.02em; color: var(--ink); line-height: 1.2; margin-bottom: 0.75rem;
+}
+.hero-desc { font-size: 1.1rem; color: var(--ink); line-height: 1.72; max-width: 600px; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.5rem; }
+
+/* Hero chip — covers both <a class="hero-tag"> (clickable) and
+   <span class="hero-tag-static"> (non-interactive). Same visual baseline.
+   On hover/focus, interactive chips invert to black bg + white text. */
+.hero-tag {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  padding: 0.32rem 0.78rem;
+  border: 1px solid var(--border-md);
+  border-radius: 99px;
+  color: var(--ink);
+  background: var(--bg);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background var(--t), color var(--t), border-color var(--t);
+  letter-spacing: 0.01em;
+}
+a.hero-tag { cursor: pointer; }
+a.hero-tag:hover,
+a.hero-tag:focus-visible {
+  background: var(--ink);
+  color: #FFFFFF;
+  border-color: var(--ink);
+}
+a.hero-tag:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.hero-tag-static { cursor: default; }
+
+/* ── FILTER BAR ── */
+.filter-bar { border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+.filter-bar::-webkit-scrollbar { display: none; }
+.filter-bar .shell { display: flex; align-items: stretch; white-space: nowrap; padding-top: 0; padding-bottom: 0; }
+.filter-tag {
+  font-size: 0.86rem; color: var(--ink-3); padding: 0.9rem 0.85rem;
+  border: none; background: none; cursor: pointer; font-family: var(--font);
+  text-decoration: none; border-bottom: 2px solid transparent; display: inline-block;
+  transition: color var(--t), border-color var(--t);
+}
+.filter-tag:hover { color: var(--ink); }
+.filter-tag.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
+
+/* ── STATS ROW ── */
+.stats-row {
+  padding-top: 2.5rem; padding-bottom: 2rem;
+  display: flex; gap: 4rem; border-bottom: 1px solid var(--border);
+}
+.stat-n { font-size: 2.2rem; font-weight: 300; color: var(--ink); letter-spacing: -0.04em; line-height: 1; }
+.stat-l { font-size: 0.78rem; color: var(--ink-3); margin-top: 0.3rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.07em; }
+
+/* ── GROUP LABEL ── */
+.group-section { padding-top: 2.5rem; }
+.group-section:last-of-type { padding-bottom: 5rem; }
+.group-label {
+  font-family: var(--mono); font-size: 0.74rem; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3);
+  margin-bottom: 1rem; padding-bottom: 0.65rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: baseline; justify-content: space-between;
+}
+.group-label-desc {
+  color: var(--ink-4); font-weight: 400; letter-spacing: 0;
+  text-transform: none; font-size: 0.84rem; font-family: var(--font);
+}
+
+/* ── SECTION CARD GRID ────────────────────────────────────────────
+   FIX 2: no background on grid container — cards own every border.
+   Empty grid cells = transparent. Zero ghost boxes.
+   ─────────────────────────────────────────────────────────────── */
+.section-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* outer border on container top + left only */
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+  background: transparent;  /* NO background — kills ghost boxes */
+}
+.section-card {
+  background: var(--bg); display: block; text-decoration: none;
+  padding: 1.75rem 1.75rem 1.5rem; position: relative; overflow: hidden;
+  /* Each card closes its own right + bottom edge */
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--t);
+}
+.section-card:hover { background: var(--bg-subtle); }
+.section-card:hover .sc-arrow { opacity: 1; transform: translateX(0); }
+
+.sc-illustration {
+  position: absolute; top: 1.25rem; right: 1.25rem;
+  width: 82px; height: 58px; opacity: 0.68; pointer-events: none;
+}
+.sc-path { font-family: var(--mono); font-size: 0.74rem; color: var(--accent); letter-spacing: 0.02em; margin-bottom: 0.5rem; }
+.sc-title { font-size: 1.02rem; font-weight: 600; color: var(--ink); line-height: 1.35; margin-bottom: 0.45rem; padding-right: 92px; }
+.sc-desc { font-size: 0.88rem; color: var(--ink-3); line-height: 1.62; margin-bottom: 1rem; }
+.sc-footer { display: flex; align-items: center; justify-content: flex-end; }
+.sc-arrow { font-size: 0.9rem; color: var(--accent); opacity: 0; transform: translateX(-5px); transition: opacity var(--t), transform var(--t); }
+
+/* ── ARTICLE LIST ── */
+.article-list { padding-top: 2.5rem; padding-bottom: 5rem; }
+.list-label {
+  font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-3);
+  padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+}
+.article-row {
+  display: grid; grid-template-columns: 1fr 1.5rem;
+  align-items: center; gap: 1rem;
+  padding: 1.6rem 0; border-bottom: 1px solid var(--border);
+  text-decoration: none; max-width: var(--prose);
+}
+.article-row:hover .ar-arrow { opacity: 1; transform: translateX(0); }
+.ar-label { font-family: var(--mono); font-size: 0.73rem; color: var(--accent); margin-bottom: 0.3rem; }
+.ar-title { font-size: 1.08rem; font-weight: 600; color: var(--ink); margin-bottom: 0.3rem; line-height: 1.3; }
+.ar-desc { font-size: 0.9rem; color: var(--ink-3); line-height: 1.6; }
+.ar-arrow { font-size: 1rem; color: var(--accent); opacity: 0; transform: translateX(-4px); transition: opacity var(--t), transform var(--t); align-self: center; }
+
+/* ── ARTICLE BODY ── */
+.article-body { max-width: none; padding-top: 3rem; padding-bottom: 3rem; }
+.article-body h2 { font-size: 1.4rem; font-weight: 600; color: var(--ink); margin: 2.75rem 0 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+.article-body h3 { font-size: 1.18rem; font-weight: 600; color: var(--ink); margin: 2rem 0 0.55rem; }
+.article-body h4 { font-family: var(--mono); font-size: 0.82rem; font-weight: 500; color: var(--ink); text-transform: uppercase; letter-spacing: 0.08em; margin: 1.5rem 0 0.4rem; }
+.article-body p { font-size: 1.1rem; color: var(--ink); line-height: 1.74; margin-bottom: 1.2rem; }
+.article-body p:first-of-type { color: var(--ink); font-size: 1.1rem; }
+.article-body a { color: var(--accent); text-underline-offset: 3px; }
+.article-body a:hover { opacity: 0.75; }
+.article-body ul, .article-body ol { margin: 0 0 1.1rem 1.5rem; }
+.article-body li { font-size: 1.1rem; color: var(--ink); line-height: 1.7; margin-bottom: 0.4rem; }
+.article-body code { font-family: var(--mono); font-size: 0.84em; background: var(--bg-subtle); padding: 0.12em 0.42em; border-radius: 3px; color: var(--ink); border: 1px solid var(--border); }
+.article-body pre { background: var(--bg-subtle); border-radius: var(--r-lg); padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0; border: 1px solid var(--border); }
+.article-body pre code { background: none; border: none; padding: 0; font-size: 0.86rem; color: var(--ink); line-height: 1.65; }
+.article-body blockquote { border-left: 2px solid var(--border-md); margin: 1.5rem 0; padding: 0.7rem 1.2rem; background: var(--bg-subtle); border-radius: 0 var(--r) var(--r) 0; }
+.article-body blockquote p { margin: 0; font-size: 1.05rem; color: var(--ink); }
+.article-body blockquote strong { color: var(--ink); }
+.article-body table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 1rem; border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.article-body th { background: var(--bg-subtle); color: var(--ink); font-weight: 600; font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-md); }
+.article-body td { padding: 0.7rem 1rem; color: var(--ink); border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.58; font-size: 1.02rem; }
+.article-body tr:last-child td { border-bottom: none; }
+
+/* ── DIAGRAM — LIGHT THEME ────────────────────────────────────────
+   FIX 3: Figma/Gliffy aesthetic — light blue-grey canvas,
+   white nodes, dark text, muted steel connectors.
+   FIX 3b: flex centering removes ALL Mermaid top dead-space.
+   ─────────────────────────────────────────────────────────────── */
+.diagram-label {
+  font-family: var(--mono); font-size: 0.74rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+  margin-bottom: 0.75rem; padding-bottom: 0.65rem; border-bottom: 1px solid var(--border);
+}
+.diagram-wrap {
+  background: #FFFFFF;
+  border: 1px solid #8A8A88;
+  border-radius: var(--r-lg);
+  padding: 1.5rem 1.5rem;
+  margin: 0 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 200px;
+}
+/* Mermaid renders into a child div — flex it to fill + center */
+.diagram-wrap > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Strip Mermaid's injected top margin/padding from the SVG */
+.diagram-wrap svg {
+  max-width: 100%;
+  height: auto !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  display: block;
+}
+
+/* ── RELATED ── */
+.related { max-width: var(--prose); padding-top: 1.75rem; padding-bottom: 3.5rem; border-top: 1px solid var(--border); }
+.related h4 { font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 0.85rem; }
+.related-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.related-link { font-family: var(--mono); font-size: 0.8rem; padding: 0.42rem 0.9rem; border: 1px solid var(--border-md); border-radius: 99px; text-decoration: none; color: var(--ink-2); transition: background var(--t), border-color var(--t), color var(--t); }
+.related-link:hover { background: var(--ink); border-color: var(--ink); color: #FFF; }
+
+/* ── FOOTER ────────────────────────────────────────────────────────
+   FIX 5: all footer text is pure white — fully readable for
+   engineers working in any lighting condition.
+   ─────────────────────────────────────────────────────────────── */
+.footer {
+  background: var(--nav-bg);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 2.75rem 0;
+  cursor: pointer;
+  transition: background var(--t);
+}
+.footer:hover { background: #1a1a1a; }
+.footer:focus-visible {
+  outline: 2px solid #FFFFFF;
+  outline-offset: -4px;
+}
+.footer .shell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;   /* copyright on right */
+  gap: 2rem;
+}
+
+/* Footer meta (right side): styled to match the header nav-link
+   (same font, size, weight, color, hover behavior). */
+.footer-meta {
+  font-family: var(--font);
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--nav-text);
+  text-align: right;
+  letter-spacing: 0;
+  transition: color var(--t);
+  text-decoration: none;
+}
+.footer:hover .footer-meta { color: var(--nav-hover); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .section-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 680px) {
+  body { font-size: 17px; }
+  .nav { padding: 0 1.25rem; }
+  .nav-links { display: none; }
+  .shell { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .section-grid { grid-template-columns: 1fr; }
+  .section-card { border-right: none; }
+  .hero-section-inner { flex-direction: column; gap: 2rem; }
+  .hero-section-art { width: 100%; height: 160px; }
+  .sc-illustration { display: none; }
+  .sc-title { padding-right: 0; }
+  .footer .shell { flex-direction: column; text-align: center; }
+  .footer-meta { text-align: center; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   v6 additions — UX system (cards, flip, accessibility, chips)
+   Following Laws of UX:
+     - Miller's Law: chunked principle cards
+     - Von Restorff: distinct pitfall + checklist treatments
+     - Law of Common Region: bounded card containers
+     - Aesthetic-Usability: refined color, depth, breathing room
+   Design rules:
+     - Box system: light-grey bg (--bg-subtle) + thin border + accent left edge
+     - 2-color palette: terracotta (--accent) + neutral; no rainbow tints
+     - Readable text always pure black (--ink)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── ARTICLE HERO — optional emblem on the right ── */
+.hero-article-inner {
+  display: flex; align-items: center; gap: 3rem;
+  max-width: var(--max); margin: 0 auto;
+}
+.hero-article-text { flex: 1; min-width: 0; }
+.hero-article-art {
+  flex-shrink: 0; width: 280px; height: 210px;
+  display: flex; align-items: center; justify-content: center;
+}
+.hero-article-art svg { width: 100%; height: 100%; overflow: visible; }
+@media (max-width: 880px) {
+  .hero-article-inner { flex-direction: column; gap: 1.5rem; align-items: stretch; }
+  .hero-article-art { width: 100%; height: 180px; }
+}
+
+/* ── BASE BOX — for any non-flip content boxes that need the same styling.
+   Principle and pitfall cards inherit from .flip-card faces (see below). */
+.box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-lg);
+}
+
+/* ── FLIP CARD — 3D rotateY with dynamic, content-driven height ──
+   Faces are absolute-positioned over each other (back rotated 180°).
+   Card height is JS-managed: equals the visible face's height, so
+   the card grows when content is taller and shrinks when shorter
+   — no fixed/empty space.
+   prefers-reduced-motion skips the transition (handled below). */
+.flip-card {
+  margin: 1.5rem 0;
+  cursor: pointer;
+  perspective: 1400px;
+  position: relative;
+  background: transparent;
+  border: none;
+  /* JS sets explicit height on this element; CSS animates between values */
+  transition: height 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+.flip-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--r-lg);
+}
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+.flip-card.is-flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  padding: 1.6rem 1.85rem 1.4rem;
+  box-sizing: border-box;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-lg);
+  transition: border-color var(--t);
+  overflow: hidden;
+}
+.flip-card:hover .flip-card-front,
+.flip-card:hover .flip-card-back {
+  border-color: var(--ink);
+  border-left-color: var(--accent);
+}
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+/* These two are the JS measurement targets — JS reads scrollHeight
+   off them to size the parent. */
+.flip-card-front-inner,
+.flip-card-back-inner {
+  width: 100%;
+}
+.flip-card-hint {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink);
+  opacity: 0.6;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  user-select: none;
+}
+.flip-card .flip-arrow { color: var(--accent); }
+
+/* ── PRINCIPLE CARD ── */
+.principle-card h3 {
+  margin-top: 0 !important;
+  font-size: 1.18rem !important;
+  letter-spacing: -0.005em;
+  color: var(--ink) !important;
+  font-weight: 600;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0.6rem !important;
+}
+.principle-card .flip-card-front p {
+  font-size: 1.05rem !important;
+  color: var(--ink) !important;
+  line-height: 1.65 !important;
+  margin: 0 !important;
+}
+.principle-card h4 {
+  font-family: var(--mono);
+  font-size: 0.78rem !important;
+  letter-spacing: 0.08em;
+  color: var(--ink) !important;
+  text-transform: uppercase;
+  margin-top: 1.1rem !important;
+  margin-bottom: 0.5rem !important;
+  font-weight: 500;
+}
+.principle-card .flip-card-back ul {
+  margin: 0 0 0.6rem 1.2rem;
+}
+.principle-card .flip-card-back li {
+  font-size: 0.98rem;
+  color: var(--ink);
+  line-height: 1.6;
+  margin-bottom: 0.3rem;
+}
+.principle-card .flip-card-back p {
+  font-size: 0.98rem;
+  color: var(--ink);
+  line-height: 1.65;
+  margin: 0.6rem 0;
+}
+.principle-card blockquote {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 0.7rem 1rem;
+  margin: 0.7rem 0;
+  font-size: 0.98rem;
+  color: var(--ink);
+  font-style: italic;
+}
+.principle-card blockquote p {
+  margin: 0;
+  font-size: inherit;
+  color: var(--ink);
+}
+
+/* ── PITFALL CARD ──
+   Same box treatment as principle card so both feel consistent.
+   The red icon (drawn inline by the generator) communicates "do not do". */
+.pitfall-card h3 {
+  margin-top: 0 !important;
+  margin-bottom: 0.6rem !important;
+  font-size: 1.12rem !important;
+  color: var(--ink) !important;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+.pitfall-icon {
+  flex-shrink: 0;
+  width: 1.15rem;
+  height: 1.15rem;
+}
+.pitfall-card .flip-card-front p {
+  font-size: 1.05rem !important;
+  color: var(--ink) !important;
+  line-height: 1.65 !important;
+  margin: 0 !important;
+}
+.pitfall-card h4 {
+  font-family: var(--mono);
+  font-size: 0.78rem !important;
+  letter-spacing: 0.08em;
+  color: var(--ink) !important;
+  text-transform: uppercase;
+  margin-top: 0 !important;
+  margin-bottom: 0.5rem !important;
+  font-weight: 500;
+}
+.pitfall-card .flip-card-back p {
+  font-size: 0.98rem;
+  color: var(--ink);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── CHECKLIST — distinguished closing element with clearly visible grey border ── */
+.article-body table.checklist {
+  border: 2px solid #6E6E6E;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin: 2rem 0;
+}
+.article-body table.checklist th {
+  background: #2C2C2C;
+  color: var(--bg);
+  font-family: var(--mono);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  padding: 0.85rem 1rem;
+}
+.article-body table.checklist td {
+  padding: 0.85rem 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 1.05rem;
+  color: var(--ink);
+  line-height: 1.55;
+}
+.article-body table.checklist tr:nth-child(even) td { background: var(--bg-subtle); }
+.article-body table.checklist td:first-child {
+  width: 2.5rem; text-align: center;
+  color: var(--ink); font-family: var(--mono);
+}
+.article-body table.checklist td:last-child {
+  width: 3.5rem; text-align: center;
+  color: var(--ink); font-family: var(--mono);
+}
+
+/* ── ADOPTION CHECKLIST — CARD VARIANT ──
+   Used when the source markdown's checklist rows use the '‖' separator
+   to provide front + back content. Each row becomes a flippable card
+   inside a single bordered container (matches the table-variant border
+   so both forms look like part of the same visual system). */
+.checklist-cards {
+  border: 2px solid #6E6E6E;
+  border-radius: var(--r-lg);
+  padding: 0.85rem 1rem;
+  background: var(--bg);
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.check-card {
+  /* Inherits .flip-card 3D-flip behaviour and JS-driven dynamic height.
+     Override the default vertical margin (which would create gaps inside
+     the container — gap is provided by parent flexbox instead). */
+  margin: 0;
+}
+
+.check-card .flip-card-front,
+.check-card .flip-card-back {
+  /* More compact than principle cards — checklist rows are short. */
+  padding: 0.95rem 1.15rem 0.85rem;
+}
+
+.check-card-row {
+  display: flex;
+  align-items: center;
+  gap: 0.95rem;
+}
+
+.check-card-num {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  background: var(--accent);
+  color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.check-card-criterion {
+  flex: 1;
+  font-size: 0.92rem;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.check-card-checkbox {
+  flex-shrink: 0;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--accent);
+  user-select: none;
+  cursor: pointer;
+  padding: 0.2rem 0.3rem;
+  border-radius: 4px;
+  transition: background var(--t);
+}
+.check-card-checkbox:hover { background: rgba(201, 99, 48, 0.08); }
+.check-card-checkbox[data-checked="true"] {
+  /* Visual confirmation when ticked */
+  color: #1ABC9C;  /* matches the green accent used elsewhere */
+}
+
+.check-card .flip-card-back-inner p.check-card-explanation {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.check-card .flip-card-hint {
+  margin-top: 0.6rem;
+  font-size: 0.68rem;
+}
+
+/* ── RELATED CHIPS — chip styling for the Related-section link list ── */
+.related-chips-row {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+}
+.related-chip {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--border-md);
+  border-radius: 99px;
+  color: var(--ink);
+  background: var(--bg);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background var(--t), color var(--t), border-color var(--t);
+  letter-spacing: 0.01em;
+}
+.related-chip:hover,
+.related-chip:focus-visible {
+  background: var(--ink);
+  color: #FFFFFF;
+  border-color: var(--ink);
+  /* Keep the external-link arrow visible against dark bg */
+}
+.related-chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.related-chip:hover::after,
+.related-chip:focus-visible::after {
+  /* When inverted, the external-link arrow needs lighter color */
+  color: rgba(255, 255, 255, 0.7);
+}
+/* Suppress the body-wide external-link arrow inside chips — chips are short
+   and the global arrow visually crowds them. */
+.related-chips-row a[target="_blank"]::after { content: ""; }
+
+/* ── REFERENCED-BY — auto-generated reverse cross-references ──
+   Renders identically to .related-chips-row but with a subtle intro line
+   so users understand it's incoming references rather than curated ones. */
+.referenced-by-intro {
+  font-size: 0.88rem;
+  color: var(--ink-3, #6E6E6E);
+  margin-bottom: 0.75rem;
+  margin-top: 0;
+}
+.referenced-by-chips {
+  margin-bottom: 1.5rem;
+}
+
+/* ── KNOWLEDGE GRAPH PAGE ───────────────────────────────────────
+   D3 force-directed graph of substantive pages and their alignment
+   standards. Visual language matches the rest of the site: terracotta
+   accent for pages, neutral grey for standards, dashed lines for
+   "related" edges, solid for "alignment" edges. */
+.kg-summary {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.kg-summary-stat {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--ink);
+}
+.kg-summary-stat strong {
+  font-size: 1.08rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+.kg-shell {
+  background: #FFFFFF;
+  border: 1px solid var(--border, #E0DED7);
+  border-radius: var(--r-lg);
+  padding: 1.25rem;
+  margin: 1rem 0 2rem;
+}
+.kg-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border, #E0DED7);
+}
+.kg-legend {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.kg-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink);
+}
+.kg-legend-swatch {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+}
+.kg-swatch-page {
+  background: var(--accent);
+  border-radius: 50%;
+}
+.kg-swatch-standard {
+  background: #B8B5AC;
+  transform: rotate(45deg);
+}
+.kg-legend-line {
+  width: 24px;
+  height: 1.5px;
+  display: inline-block;
+}
+.kg-line-alignment { background: #B8B5AC; }
+.kg-line-related {
+  background: linear-gradient(to right,
+    var(--accent) 0%, var(--accent) 50%,
+    transparent 50%, transparent 100%);
+  background-size: 6px 1.5px;
+  height: 1.5px;
+}
+.kg-hint {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--ink-3, #6E6E6E);
+  letter-spacing: 0.04em;
+}
+.kg-canvas-wrap {
+  position: relative;
+  background: var(--bg-subtle, #F9F8F6);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+#kg-svg {
+  width: 100%;
+  height: 620px;
+  display: block;
+}
+.kg-tooltip {
+  position: absolute;
+  background: #1A1A1A;
+  color: #FFFFFF;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  max-width: 260px;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+.kg-tooltip strong { display: block; margin-bottom: 0.2rem; }
+.kg-tooltip span { color: rgba(255, 255, 255, 0.78); font-size: 0.76rem; }
+.kg-note {
+  margin-top: 1rem;
+  font-size: 0.84rem;
+  color: var(--ink-3, #6E6E6E);
+  line-height: 1.5;
+}
+
+/* D3 graph node + link styling */
+.kg-link {
+  stroke: #B8B5AC;
+  stroke-width: 1.4px;
+  fill: none;
+}
+.kg-link-related {
+  stroke: var(--accent);
+  stroke-dasharray: 5 4;
+  stroke-opacity: 0.65;
+}
+.kg-node circle, .kg-node rect {
+  stroke: #FFFFFF;
+  stroke-width: 1.5px;
+  transition: stroke-width 0.15s ease, filter 0.15s ease;
+}
+.kg-node-page circle {
+  fill: var(--accent);
+}
+.kg-node-page:hover circle {
+  stroke-width: 3px;
+  filter: drop-shadow(0 0 6px rgba(201, 99, 48, 0.5));
+}
+.kg-node-standard rect {
+  fill: #B8B5AC;
+}
+.kg-node-standard:hover rect {
+  fill: #8E8B82;
+  stroke-width: 3px;
+}
+.kg-label {
+  font-family: var(--font);
+  font-size: 11px;
+  fill: var(--ink);
+  pointer-events: none;
+  user-select: none;
+}
+.kg-node-page .kg-label { font-weight: 600; font-size: 12px; }
+
+/* ── EXTERNAL-LINK INDICATOR — subtle "↗" after links that open new tab ── */
+.article-body a[target="_blank"]::after {
+  content: " ↗";
+  font-size: 0.78em;
+  color: var(--accent);
+  opacity: 0.6;
+  margin-left: 0.1em;
+}
+
+/* ── DIAGRAM LABEL — caption above diagram ── */
+.diagram-label {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+  margin-top: 1.5rem;
+}
+
+/* ── MERMAID SUBGRAPH — let Mermaid handle native rendering.
+   We don't override .cluster-label positioning because it confuses
+   Mermaid's own layout math and stacks labels on top of each other. */
+.mermaid .cluster rect {
+  rx: 8 !important;
+  ry: 8 !important;
+}
+
+/* ── ACCESSIBILITY ──
+   Honor reduced-motion preference: skip flip transition, skip wordmark fade,
+   skip emblem animations. Content remains fully accessible without motion. */
+@media (prefers-reduced-motion: reduce) {
+  .flip-card-inner { transition: none !important; }
+  .wm-char { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .hero-article-art svg * { animation: none !important; }
+  .mermaid * { animation: none !important; }
+}
+
+/* ── Skip-to-content link — keyboard users land here first ── */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 1rem;
+  background: var(--ink);
+  color: #FFFFFF;
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 var(--r) var(--r);
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  z-index: 200;
+  transition: top var(--t);
+}
+.skip-link:focus { top: 0; }
+
+/* ── Universal focus-visible ── */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

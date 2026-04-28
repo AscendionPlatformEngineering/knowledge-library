@@ -1,0 +1,101 @@
+flowchart TB
+
+    %% ─── External actors and systems ───
+    USR([Customer / Partner])
+    VEN[Vendor API]
+    LEG[Legacy Mainframe]
+
+    %% ─── Anti-Corruption Layers ───
+    ACL_V[ACL: Vendor Adapter]
+    ACL_L[ACL: Legacy Adapter]
+
+    %% ─── Strategic Core (the differentiating domain) ───
+    subgraph CORE [Strategic Core]
+        direction TB
+        BOOK[Booking Domain]
+        PRC[Pricing Engine]
+    end
+
+    %% ─── Supporting Subdomains ───
+    subgraph SUPP [Supporting Subdomains]
+        direction TB
+        INV[Inventory]
+        FUL[Fulfillment]
+        BIL[Billing]
+    end
+
+    %% ─── Generic Subdomains (commodity capabilities) ───
+    subgraph GEN [Generic Subdomains]
+        direction TB
+        IAM[Identity & Access]
+        NOT[Notifications]
+        AUD[Audit Trail]
+    end
+
+    %% ─── Event backbone ───
+    EVT[(Event Stream Backbone)]
+
+    %% ─── Outcome ───
+    OUT([Customer Outcome])
+
+    %% ─── Primary flow ───
+    USR --> BOOK
+    VEN --> ACL_V --> PRC
+    LEG --> ACL_L --> BOOK
+
+    BOOK --> PRC
+    BOOK --> INV
+    BOOK --> FUL
+    FUL --> BIL
+
+    %% ─── Event publication (dotted = async) ───
+    BOOK -.OrderPlaced.-> EVT
+    PRC  -.PriceQuoted.-> EVT
+    INV  -.StockReserved.-> EVT
+    FUL  -.OrderShipped.-> EVT
+    BIL  -.PaymentSettled.-> EVT
+
+    %% ─── Event consumption ───
+    EVT -.events.-> NOT
+    EVT -.events.-> AUD
+    EVT -.events.-> IAM
+
+    %% ─── Final outcome ───
+    FUL --> OUT
+
+    %% ─── NODE STYLES ───
+    %% Entry: bright blue
+    style USR fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% External systems: amber (caution — outside our model)
+    style VEN fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style LEG fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+
+    %% Anti-corruption layers: cream (translation boundary)
+    style ACL_V fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+    style ACL_L fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+
+    %% Strategic core nodes: medium-blue with stronger border (emphasis)
+    style BOOK fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+    style PRC  fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+
+    %% Supporting subdomain nodes: medium cream
+    style INV fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+    style FUL fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+    style BIL fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.5px,color:#3A2410
+
+    %% Generic subdomain nodes: light blue
+    style IAM fill:#DCEAFC,stroke:#3D6395,stroke-width:1.3px,color:#1A2840
+    style NOT fill:#DCEAFC,stroke:#3D6395,stroke-width:1.3px,color:#1A2840
+    style AUD fill:#DCEAFC,stroke:#3D6395,stroke-width:1.3px,color:#1A2840
+
+    %% Event backbone: distinctive cylinder shape, neutral
+    style EVT fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+
+    %% Final outcome: vivid green (success exit)
+    style OUT fill:#1ABC9C,stroke:#138D75,stroke-width:2px,color:#FFFFFF
+
+    %% ─── CLUSTER STYLES — alternating light blue + light cream ───
+    style CORE fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840
+    style SUPP fill:#FAF6EE,stroke:#D4C8B0,stroke-width:1.2px,color:#3A2410
+    style GEN  fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840

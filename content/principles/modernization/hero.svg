@@ -1,0 +1,84 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Modernization Principles emblem.
+
+  Visual metaphor: a system METAMORPHOSES between two visual states:
+    - State A: a MONOLITH — single block with internal horizontal
+      layers (presentation / business / data), warm neutral outline.
+    - State B: a SERVICE GRID — decomposed independent modules,
+      terracotta filled, with faint connection hints between them.
+
+  Animation: the two states CROSS-FADE through each other in the same
+  conceptual space. Hold A → fade to B → hold B → fade back to A →
+  repeat. The system is the same system; its shape evolves.
+
+  Motion mechanic: METAMORPHOSIS / CROSS-FADE.
+  No particles travel. No shapes oscillate. No rigid body rotates.
+  Two complete forms simply trade visibility, occupying the same
+  bounding box. This is the fourth distinct mechanic in the catalogue
+  alongside ai-native (particle flow), domain-specific (shape
+  oscillation), and foundational (rigid-body rotation).
+
+  Meaning: today's monolith becomes tomorrow's services; tomorrow's
+  services will be the legacy of the day after. The cycle of
+  modernization is perpetual. The repetition itself is the message.
+-->
+
+<!-- ─── Subtle anchor at bottom (the system being modernised endures) ─── -->
+<line x1="20" y1="80" x2="100" y2="80"
+      stroke="#D6D2C8" stroke-width="0.8" opacity="0.45"/>
+
+<!-- ═══ STATE A: MONOLITH FORM (warm neutral, single block, internal layers) ═══ -->
+<!-- Visible 0–35% (held), fades 35–45%, invisible 45–85%, fades back 85–100% (held) -->
+<g>
+  <animate attributeName="opacity"
+           values="1; 1; 0; 0; 1; 1"
+           keyTimes="0; 0.30; 0.45; 0.85; 1; 1"
+           dur="6s" repeatCount="indefinite"/>
+
+  <!-- Outer monolith block -->
+  <rect x="42" y="22" width="36" height="50" rx="3"
+        fill="#FFFFFF" stroke="#D6D2C8" stroke-width="2"/>
+
+  <!-- Internal horizontal layers (presentation / business / data) -->
+  <line x1="42" y1="34" x2="78" y2="34"
+        stroke="#D6D2C8" stroke-width="1.5"/>
+  <line x1="42" y1="46" x2="78" y2="46"
+        stroke="#D6D2C8" stroke-width="1.5"/>
+  <line x1="42" y1="58" x2="78" y2="58"
+        stroke="#D6D2C8" stroke-width="1.5"/>
+</g>
+
+<!-- ═══ STATE B: SERVICE GRID (terracotta, decomposed independent modules) ═══ -->
+<!-- Invisible 0–35%, fades in 35–45%, visible 45–85% (held), fades 85–100% -->
+<g>
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.30; 0.45; 0.85; 1; 1"
+           dur="6s" repeatCount="indefinite"/>
+
+  <!-- Six bounded contexts in a 3×2 grid (the modernised form) -->
+  <rect x="32" y="24" width="14" height="14" rx="2" fill="#C96330"/>
+  <rect x="53" y="24" width="14" height="14" rx="2" fill="#C96330"/>
+  <rect x="74" y="24" width="14" height="14" rx="2" fill="#C96330"/>
+  <rect x="32" y="44" width="14" height="14" rx="2" fill="#C96330"/>
+  <rect x="53" y="44" width="14" height="14" rx="2" fill="#C96330"/>
+  <rect x="74" y="44" width="14" height="14" rx="2" fill="#C96330"/>
+
+  <!-- Faint connection hints between services (the integration fabric) -->
+  <line x1="46" y1="31" x2="53" y2="31"
+        stroke="#C96330" stroke-width="0.8" opacity="0.45"/>
+  <line x1="67" y1="31" x2="74" y2="31"
+        stroke="#C96330" stroke-width="0.8" opacity="0.45"/>
+  <line x1="46" y1="51" x2="53" y2="51"
+        stroke="#C96330" stroke-width="0.8" opacity="0.45"/>
+  <line x1="67" y1="51" x2="74" y2="51"
+        stroke="#C96330" stroke-width="0.8" opacity="0.45"/>
+  <line x1="39" y1="38" x2="39" y2="44"
+        stroke="#C96330" stroke-width="0.8" opacity="0.45"/>
+  <line x1="60" y1="38" x2="60" y2="44"
+        stroke="#C96330" stroke-width="0.8" opacity="0.45"/>
+  <line x1="81" y1="38" x2="81" y2="44"
+        stroke="#C96330" stroke-width="0.8" opacity="0.45"/>
+</g>
+</svg>

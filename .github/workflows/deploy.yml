@@ -16,12 +16,29 @@ concurrency:
 
 jobs:
   deploy:
-    name: Sync to S3 and invalidate CloudFront
+    name: Build and sync to S3 + invalidate CloudFront
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build dependencies
+        run: pip install markdown
+
+      - name: Seed taxonomy stubs
+        # seed_content.py is idempotent — never overwrites authored READMEs.
+        # It creates the 154 stub READMEs that exist in TAXONOMY but aren't
+        # committed to the repo, so the build produces the full navigation.
+        run: python tools/seed_content.py
+
+      - name: Build static site
+        run: python tools/generate.py --src content --out dist --clean
 
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
@@ -30,14 +47,10 @@ jobs:
           aws-region: ap-southeast-2
           role-session-name: github-actions-knowledge-library
 
-      - name: Sync repository to S3
+      - name: Sync built site to S3
         run: |
-          aws s3 sync . s3://ascendion-engineering-site \
+          aws s3 sync dist/ s3://ascendion-engineering-site \
             --delete \
-            --exclude ".git/*" \
-            --exclude ".github/*" \
-            --exclude "README.md" \
-            --exclude ".gitignore" \
             --cache-control "public, max-age=300"
 
       - name: Invalidate CloudFront cache
