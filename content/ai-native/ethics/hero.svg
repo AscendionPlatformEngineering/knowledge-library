@@ -1,0 +1,68 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  AI Ethics & Responsible AI emblem.
+
+  Visual metaphor: same task, two groups, different rates of outcome.
+  Two horizontal progress bars side by side, each representing a
+  different group receiving the same kind of decision. Bar A (top)
+  fills at one speed, Bar B (bottom) fills at a slower speed. The
+  visible asymmetry IS the message — fairness is the relationship
+  between these rates, and a system whose bars fill at meaningfully
+  different rates has a fairness property to investigate.
+
+  Animation: 8-second cycle.
+    Bar A (top): fills 0→100% over 4s, holds for 2s, then resets to 0
+                 over 0.2s, holds at 0 for 1.8s. Cycle period 8s.
+    Bar B (bottom): fills 0→100% over 6s (slower), holds for 0.5s,
+                    resets, holds at 0. Cycle period 8s.
+    The bars cycle together but at different fill rates, so at any
+    given moment they're at different fill levels — the asymmetry is
+    visible throughout the cycle.
+
+  Bar geometry:
+    Track outline (Bar A):   x=18-102, y=30-38 (height 8)
+    Fill region (Bar A):     x=18-(18+84*progress), y=30-38
+    Track outline (Bar B):   x=18-102, y=52-60 (height 8)
+    Fill region (Bar B):     x=18-(18+84*progress), y=52-60
+
+  Motion mechanic: DISPARATE-RATE PROGRESSION (the twenty-eighth
+  mechanic in the catalogue). Distinct from #7 progressive threshold
+  fill (a SINGLE region grows continuously through canary checkpoints)
+  by being TWO regions filling at INDEPENDENT speeds — the asymmetry
+  is the architectural point. Distinct from #14 scaling envelope
+  (a row of rectangles where the COUNT of active rectangles rises
+  and falls) by being two CONTINUOUS fill bars rather than discrete
+  toggle states.
+
+  Two colours only: warm neutral (#D6D2C8) for track outlines, terracotta
+  (#C96330) for the filling regions.
+-->
+
+<!-- ─── Bar A track (top) ─── -->
+<rect x="18" y="30" width="84" height="8" rx="1.5" fill="none" stroke="#D6D2C8" stroke-width="1.4"/>
+
+<!-- ─── Bar A fill — fills 0→100% over 4s, holds, resets ─── -->
+<rect x="18" y="30" width="0" height="8" rx="1.5" fill="#C96330">
+  <animate attributeName="width"
+           values="0; 84; 84; 0; 0"
+           keyTimes="0; 0.500; 0.750; 0.775; 1"
+           dur="8s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Group A label dot (small marker) ─── -->
+<circle cx="11" cy="34" r="2" fill="#D6D2C8"/>
+
+<!-- ─── Bar B track (bottom) ─── -->
+<rect x="18" y="52" width="84" height="8" rx="1.5" fill="none" stroke="#D6D2C8" stroke-width="1.4"/>
+
+<!-- ─── Bar B fill — fills 0→100% over 6s (slower), holds briefly, resets ─── -->
+<rect x="18" y="52" width="0" height="8" rx="1.5" fill="#C96330">
+  <animate attributeName="width"
+           values="0; 84; 84; 0; 0"
+           keyTimes="0; 0.750; 0.825; 0.850; 1"
+           dur="8s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Group B label dot (small marker) ─── -->
+<circle cx="11" cy="56" r="2" fill="#D6D2C8"/>
+</svg>

@@ -179,6 +179,13 @@ TAXONOMY = {
         "ha-dr":         "HA & DR Systems",
         "scalable":      "Scalable Systems",
     },
+    "ai-native": {
+        "architecture": "AI System Architecture",
+        "ethics":       "AI Ethics & Responsible AI",
+        "monitoring":   "AI Monitoring & Observability",
+        "rag":          "Retrieval-Augmented Generation",
+        "security":     "AI Security",
+    },
     "tech": {
         # Legacy group — pre-v27 technology stubs. The substantive replacements
         # live under `technology/`. These entries exist so the legacy URLs that
@@ -606,6 +613,12 @@ SHORT_DESC = {
     ("security", "cloud-security"):               "Cloud-native security: shared responsibility, IAM at scale, CSPM/CIEM/CWPP/CNAPP, and account topology.",
     ("security", "encryption"):                   "Cryptographic engineering: data at rest/transit/in-use, key management, crypto agility, and certificate lifecycle.",
     ("security", "vulnerability-management"):     "Vulnerability lifecycle: discovery, prioritization, remediation workflows, and patch hygiene.",
+
+    ("ai-native", "architecture"): "AI system architecture: serving topology, agentic state machines, deterministic-stochastic boundary, and inference cost shaping.",
+    ("ai-native", "ethics"):       "Responsible AI engineering: fairness measurement, interpretability, human oversight, model and system cards, and risk-tier compliance.",
+    ("ai-native", "monitoring"):   "AI-specific observability: drift detection, hallucination signal, output quality scoring, token economics, and feedback loops.",
+    ("ai-native", "rag"):          "Retrieval-Augmented Generation as architecture: chunking, hybrid retrieval, embedding choice, citation provenance, and multi-axis evaluation.",
+    ("ai-native", "security"):     "AI threat surface: prompt injection, training-data poisoning, model extraction, jailbreaks, and agent capability boundaries.",
 
     ("technology", "ui-ux-cx"):          "Frontend frameworks (React, Angular, Vue), UX laws, and customer-experience architecture.",
     ("technology", "api-backend"):       "Backend stacks (Java/Spring, Node.js, Python) and API design and delivery patterns.",

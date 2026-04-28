@@ -1,0 +1,105 @@
+flowchart TB
+
+    %% ─── Production AI traffic ───
+    USER([User Request])
+
+    subgraph AI_PIPELINE [AI Inference Pipeline]
+        direction LR
+        EMBED[Embed]
+        RETRIEVE[Retrieve]
+        GEN[Generate]
+        TOOL[Tool Call]
+        PARSE[Parse / Validate]
+    end
+
+    %% ─── Classical observability ───
+    subgraph CLASSICAL [Classical Signals]
+        direction TB
+        LAT[Latency p50 / p95 / p99]
+        AVAIL[Availability / Errors]
+        THROUGH[Throughput / RPS]
+    end
+
+    %% ─── AI-specific observability ───
+    subgraph AI_SIGNALS [AI-Specific Signals]
+        direction TB
+        QUALITY[Output Quality<br/>faithfulness &middot; relevance]
+        DRIFT[Drift Detection<br/>input &middot; output &middot; corpus]
+        HALLUC[Hallucination Rate<br/>direct &middot; proxy]
+        TOKEN[Token Economics<br/>cost / outcome]
+    end
+
+    %% ─── Tracing ───
+    TRACES[(End-to-End Traces<br/>spans: embed/retrieve/gen/tool<br/>tail-sampled)]
+
+    %% ─── Feedback collection ───
+    FEEDBACK[/User Feedback<br/>explicit + implicit/]
+
+    %% ─── Eval pipeline ───
+    EVAL[(Eval Set<br/>continuous + feedback-grown)]
+    GATE{Deployment<br/>Gate}
+
+    %% ─── Operations ───
+    DASH[Operator Dashboards<br/>quality + availability + cost]
+    INCIDENT[Incident Response<br/>quality regression treated as incident]
+
+    %% ─── Flow ───
+    USER --> AI_PIPELINE
+    EMBED --> RETRIEVE
+    RETRIEVE --> GEN
+    GEN --> TOOL
+    TOOL --> PARSE
+    PARSE -->|response| USER
+
+    %% ─── Telemetry flow ───
+    AI_PIPELINE -.spans.-> TRACES
+    AI_PIPELINE -.metrics.-> CLASSICAL
+    AI_PIPELINE -.AI metrics.-> AI_SIGNALS
+    USER -.feedback.-> FEEDBACK
+
+    %% ─── Aggregation ───
+    CLASSICAL --> DASH
+    AI_SIGNALS --> DASH
+    DASH -->|alert| INCIDENT
+
+    %% ─── Feedback loop into evaluation ───
+    FEEDBACK -.tagged samples.-> EVAL
+    TRACES -.production samples.-> EVAL
+    EVAL --> GATE
+    GATE -.gates deploys.-> AI_PIPELINE
+
+    %% ─── NODE STYLES ───
+    style USER fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Pipeline: amber (where the work happens)
+    style EMBED    fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style RETRIEVE fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style GEN      fill:#FEF3C7,stroke:#C96330,stroke-width:1.8px,color:#5C4316
+    style TOOL     fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style PARSE    fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+
+    %% Classical signals: cooler grey-blue (necessary but insufficient)
+    style LAT     fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.4px,color:#2C4258
+    style AVAIL   fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.4px,color:#2C4258
+    style THROUGH fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.4px,color:#2C4258
+
+    %% AI-specific signals: emphasised (the architectural addition)
+    style QUALITY fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+    style DRIFT   fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+    style HALLUC  fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+    style TOKEN   fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+
+    %% Tracing / feedback / eval: blue (the data flywheel)
+    style TRACES   fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+    style FEEDBACK fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+    style EVAL     fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+    style GATE     fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2.2px,color:#1A2840
+
+    %% Operations
+    style DASH     fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+    style INCIDENT fill:#F4E5DD,stroke:#A37050,stroke-width:1.8px,color:#3A2410
+
+    %% ─── CLUSTER STYLES ───
+    style AI_PIPELINE fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316
+    style CLASSICAL   fill:#F2F4F7,stroke:#9CB0C4,stroke-width:1.2px,color:#2C4258
+    style AI_SIGNALS  fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410

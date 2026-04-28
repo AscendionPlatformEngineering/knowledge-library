@@ -1,0 +1,88 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  AI System Architecture emblem.
+
+  Visual metaphor: autoregressive token-by-token streaming. Six dots
+  arranged in a horizontal row appear one at a time from left to right,
+  each persisting after appearance, building up cumulatively until the
+  full row is visible (the complete generated sequence). After a brief
+  hold, all dots clear simultaneously and the cycle restarts with the
+  next sequence.
+
+  Animation: 6-second cycle.
+    0.0–0.5s : Dot 1 appears (token 1 generated)
+    0.5–1.0s : Dot 2 appears (token 2 generated, dot 1 still visible)
+    1.0–1.5s : Dot 3 appears
+    1.5–2.0s : Dot 4 appears
+    2.0–2.5s : Dot 5 appears
+    2.5–3.0s : Dot 6 appears (sequence complete)
+    3.0–4.5s : All hold (sequence shown to consumer)
+    4.5–5.0s : All clear simultaneously (next sequence starting)
+    5.0–6.0s : Brief pause, then restart
+
+  Dots positioned at x = 18, 32, 46, 60, 74, 88 (evenly spaced).
+  Active region marked with a subtle horizontal baseline.
+
+  Motion mechanic: TOKEN STREAMING EMERGENCE (the twenty-seventh
+  mechanic in the catalogue). Distinct from #6 sequential frame
+  illumination (frames take TURNS being lit — only one active at a
+  time, not cumulative) by being CUMULATIVE — each dot persists once
+  it appears. Distinct from #17 sedimentation stacking (items fall
+  vertically and accumulate on a floor) by being HORIZONTAL emergence
+  with simultaneous clear, not vertical fall with persistent stacking.
+
+  Two colours only: warm neutral (#D6D2C8) for the baseline and
+  invisible-state, terracotta (#C96330) for emerged tokens.
+-->
+
+<!-- ─── Subtle baseline (the streaming line) ─── -->
+<line x1="14" y1="56" x2="92" y2="56" stroke="#D6D2C8" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+
+<!-- ─── Token 1 (x=18) — appears at t=0.5s, clears at t=4.5s ─── -->
+<circle cx="18" cy="45" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.083; 0.084; 0.75; 0.83; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Token 2 (x=32) — appears at t=1.0s ─── -->
+<circle cx="32" cy="45" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.166; 0.167; 0.75; 0.83; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Token 3 (x=46) — appears at t=1.5s ─── -->
+<circle cx="46" cy="45" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.249; 0.250; 0.75; 0.83; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Token 4 (x=60) — appears at t=2.0s ─── -->
+<circle cx="60" cy="45" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.332; 0.333; 0.75; 0.83; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Token 5 (x=74) — appears at t=2.5s ─── -->
+<circle cx="74" cy="45" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.415; 0.416; 0.75; 0.83; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Token 6 (x=88) — appears at t=3.0s ─── -->
+<circle cx="88" cy="45" r="3" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.499; 0.500; 0.75; 0.83; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+</svg>

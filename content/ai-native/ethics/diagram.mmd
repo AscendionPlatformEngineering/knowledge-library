@@ -1,0 +1,100 @@
+flowchart TB
+
+    %% ─── Risk tiering at the front ───
+    INPUT([AI Decision Request])
+    TIER{Risk Tier?<br/>EU AI Act &middot; NIST AI RMF<br/>tier 1-4}
+
+    %% ─── High-risk path ───
+    subgraph HIGH [High-Risk Tier &mdash; strict controls]
+        direction TB
+        FAIR_HIGH[Fairness Eval<br/>multi-definition<br/>group metrics]
+        OVERSIGHT[Human-Before-Action<br/>review with context + authority]
+        AUDIT_HIGH[(Full Decision Log<br/>inputs / model / reasoning / outcome)]
+    end
+
+    %% ─── Lower-risk path ───
+    subgraph LOW [Lower-Risk Tier &mdash; lighter controls]
+        direction TB
+        FAIR_LOW[Fairness Sample<br/>continuous monitoring]
+        SAMPLE[Human-After Sample<br/>5-10% review rate]
+        AUDIT_LOW[(Audit Log<br/>standard detail)]
+    end
+
+    %% ─── Documentation surfaces ───
+    subgraph DOCS [Documentation Surfaces]
+        direction LR
+        MODELCARD[Model Card<br/>training &middot; intended use &middot; limits]
+        SYSTEMCARD[System Card<br/>pipeline &middot; downstream &middot; scope]
+    end
+
+    %% ─── User-facing surfaces ───
+    subgraph USER_FACING [User-Facing Surfaces]
+        direction TB
+        DISCLOSE[Disclosure<br/>at point of decision]
+        EXPLAIN[Explanation<br/>counterfactual for users]
+        CONTEST[Contestability Path<br/>human reviewer + override]
+        RECOURSE[Recourse Mechanism<br/>reversal &middot; correction]
+    end
+
+    %% ─── Continuous monitoring ───
+    METRICS[/Fairness over time<br/>contestability rate<br/>incident count<br/>drift indicators/]
+
+    %% ─── Flow ───
+    INPUT --> TIER
+    TIER -->|high| FAIR_HIGH
+    TIER -->|lower| FAIR_LOW
+    FAIR_HIGH --> OVERSIGHT
+    OVERSIGHT --> AUDIT_HIGH
+    FAIR_LOW --> SAMPLE
+    SAMPLE --> AUDIT_LOW
+
+    AUDIT_HIGH --> DISCLOSE
+    AUDIT_LOW --> DISCLOSE
+    DISCLOSE --> EXPLAIN
+    EXPLAIN --> CONTEST
+    CONTEST --> RECOURSE
+
+    %% ─── Cross-cutting documentation ───
+    MODELCARD -.informs.-> EXPLAIN
+    SYSTEMCARD -.informs.-> CONTEST
+
+    %% ─── Metrics feedback ───
+    AUDIT_HIGH -.feeds.-> METRICS
+    AUDIT_LOW -.feeds.-> METRICS
+    CONTEST -.feeds.-> METRICS
+    METRICS -.informs threshold.-> TIER
+
+    %% ─── NODE STYLES ───
+    style INPUT fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Tier gate: emphasised cream (the architectural decision)
+    style TIER fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+
+    %% High-risk path: emphasised amber (strict controls)
+    style FAIR_HIGH  fill:#FEF3C7,stroke:#C96330,stroke-width:2px,color:#5C4316
+    style OVERSIGHT  fill:#FEF3C7,stroke:#C96330,stroke-width:2.2px,color:#5C4316
+    style AUDIT_HIGH fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+
+    %% Lower-risk path: lighter amber
+    style FAIR_LOW  fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style SAMPLE    fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style AUDIT_LOW fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+
+    %% Documentation: cooler blue (specification surfaces)
+    style MODELCARD  fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+    style SYSTEMCARD fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+
+    %% User-facing: cooler grey-blue (the contract with the user)
+    style DISCLOSE fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style EXPLAIN  fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style CONTEST  fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.8px,color:#2C4258
+    style RECOURSE fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.8px,color:#2C4258
+
+    %% Metrics: distinct grey (operator capability)
+    style METRICS fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+
+    %% ─── CLUSTER STYLES ───
+    style HIGH        fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410
+    style LOW         fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316
+    style DOCS        fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840
+    style USER_FACING fill:#F2F4F7,stroke:#9CB0C4,stroke-width:1.2px,color:#2C4258

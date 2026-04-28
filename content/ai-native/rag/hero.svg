@@ -1,0 +1,198 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Retrieval-Augmented Generation emblem.
+
+  Visual metaphor: nearest-neighbor retrieval against a corpus.
+  A central query node sits in the middle of the canvas. Around it,
+  eight stationary corpus nodes form a ring at radius 28 from center.
+  Each retrieval cycle, 3 specific corpus nodes light terracotta and
+  connect to the center via thin lines (this round's retrieved set);
+  after a brief hold, they fade back to neutral and a different subset
+  of 3 corpus nodes lights for the next query.
+
+  Three subsets cycle through the ring, each highlighting a different
+  3-of-8 selection:
+    Subset A (cycle 1): nodes at angles 0°, 135°, 270° (positions 1, 4, 7 if numbered around the ring)
+    Subset B (cycle 2): nodes at angles 45°, 180°, 315°  (positions 2, 5, 8)
+    Subset C (cycle 3): nodes at angles 90°, 225°, 0°    (positions 3, 6, 1)
+
+  The center query node stays terracotta throughout; the corpus nodes
+  default to warm neutral and shift to terracotta when retrieved.
+  Connection lines fade in/out with the retrieved-state.
+
+  Center:    (60, 45)
+  Ring radius: 28
+  Eight node positions (angle, x, y), starting at right and going clockwise:
+    Node 1 (0°):    (88, 45)
+    Node 2 (45°):   (80, 65)   [actually y-axis inverted in SVG: 45 + 28*sin(45) ≈ 65]
+    Node 3 (90°):   (60, 73)
+    Node 4 (135°):  (40, 65)
+    Node 5 (180°):  (32, 45)
+    Node 6 (225°):  (40, 25)
+    Node 7 (270°):  (60, 17)
+    Node 8 (315°):  (80, 25)
+
+  Animation: 6-second cycle, three retrievals (2s each).
+    0.0–1.5s : Subset A active (nodes 1, 4, 7 light + lines drawn)
+    1.5–2.0s : transition (subset A fades, subset B prepares)
+    2.0–3.5s : Subset B active (nodes 2, 5, 8)
+    3.5–4.0s : transition
+    4.0–5.5s : Subset C active (nodes 3, 6, 1 — overlap on node 1 is intentional)
+    5.5–6.0s : transition back to subset A
+
+  Motion mechanic: NEAREST-NEIGHBOR RETRIEVAL (the thirtieth mechanic
+  in the catalogue). Distinct from #11 peripheral asynchronous pulse
+  (independent firings without connection lines, no central node) by
+  having a CENTRAL anchor + EXPLICIT connection lines from the
+  selected subset to it. Distinct from #20 cardinal cluster cycle
+  (CLUSTERS of nodes cycle through being lit in rotation) by being
+  SELECTIVE SUBSET retrieval — different specific nodes light each
+  cycle, not all-of-cluster-A then all-of-cluster-B.
+
+  Two colours only: warm neutral (#D6D2C8) for the unretrieved corpus
+  nodes, terracotta (#C96330) for the central query and any retrieved
+  corpus node + connection line.
+-->
+
+<!-- ─── Eight stationary corpus nodes (default warm neutral) ─── -->
+<!-- Node 1 (right) -->
+<circle cx="88" cy="45" r="2.5" fill="#D6D2C8"/>
+<!-- Node 2 (lower-right) -->
+<circle cx="80" cy="65" r="2.5" fill="#D6D2C8"/>
+<!-- Node 3 (bottom) -->
+<circle cx="60" cy="73" r="2.5" fill="#D6D2C8"/>
+<!-- Node 4 (lower-left) -->
+<circle cx="40" cy="65" r="2.5" fill="#D6D2C8"/>
+<!-- Node 5 (left) -->
+<circle cx="32" cy="45" r="2.5" fill="#D6D2C8"/>
+<!-- Node 6 (upper-left) -->
+<circle cx="40" cy="25" r="2.5" fill="#D6D2C8"/>
+<!-- Node 7 (top) -->
+<circle cx="60" cy="17" r="2.5" fill="#D6D2C8"/>
+<!-- Node 8 (upper-right) -->
+<circle cx="80" cy="25" r="2.5" fill="#D6D2C8"/>
+
+<!-- ─── Subset A: nodes 1, 4, 7 active during 0–1.5s of 6s cycle ─── -->
+<!-- Connection line: center to node 1 -->
+<line x1="60" y1="45" x2="88" y2="45" stroke="#C96330" stroke-width="1.2" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 1; 1; 0; 0; 0; 0; 0; 0"
+           keyTimes="0; 0.05; 0.25; 0.30; 0.35; 0.65; 0.70; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</line>
+<!-- Highlight on node 1 -->
+<circle cx="88" cy="45" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 1; 1; 0; 0; 0; 0; 0; 0"
+           keyTimes="0; 0.05; 0.25; 0.30; 0.35; 0.65; 0.70; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+<!-- Connection line: center to node 4 -->
+<line x1="60" y1="45" x2="40" y2="65" stroke="#C96330" stroke-width="1.2" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 1; 1; 0; 0; 0; 0; 0; 0"
+           keyTimes="0; 0.05; 0.25; 0.30; 0.35; 0.65; 0.70; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</line>
+<!-- Highlight on node 4 -->
+<circle cx="40" cy="65" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 1; 1; 0; 0; 0; 0; 0; 0"
+           keyTimes="0; 0.05; 0.25; 0.30; 0.35; 0.65; 0.70; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+<!-- Connection line: center to node 7 -->
+<line x1="60" y1="45" x2="60" y2="17" stroke="#C96330" stroke-width="1.2" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 1; 1; 0; 0; 0; 0; 0; 0"
+           keyTimes="0; 0.05; 0.25; 0.30; 0.35; 0.65; 0.70; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</line>
+<!-- Highlight on node 7 -->
+<circle cx="60" cy="17" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 1; 1; 0; 0; 0; 0; 0; 0"
+           keyTimes="0; 0.05; 0.25; 0.30; 0.35; 0.65; 0.70; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Subset B: nodes 2, 5, 8 active during 2–3.5s ─── -->
+<!-- Connection line: center to node 2 -->
+<line x1="60" y1="45" x2="80" y2="65" stroke="#C96330" stroke-width="1.2" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 1; 1; 0; 0; 0"
+           keyTimes="0; 0.30; 0.33; 0.36; 0.40; 0.58; 0.62; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</line>
+<circle cx="80" cy="65" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 1; 1; 0; 0; 0"
+           keyTimes="0; 0.30; 0.33; 0.36; 0.40; 0.58; 0.62; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+<line x1="60" y1="45" x2="32" y2="45" stroke="#C96330" stroke-width="1.2" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 1; 1; 0; 0; 0"
+           keyTimes="0; 0.30; 0.33; 0.36; 0.40; 0.58; 0.62; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</line>
+<circle cx="32" cy="45" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 1; 1; 0; 0; 0"
+           keyTimes="0; 0.30; 0.33; 0.36; 0.40; 0.58; 0.62; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+<line x1="60" y1="45" x2="80" y2="25" stroke="#C96330" stroke-width="1.2" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 1; 1; 0; 0; 0"
+           keyTimes="0; 0.30; 0.33; 0.36; 0.40; 0.58; 0.62; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</line>
+<circle cx="80" cy="25" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 1; 1; 0; 0; 0"
+           keyTimes="0; 0.30; 0.33; 0.36; 0.40; 0.58; 0.62; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Subset C: nodes 3, 6 active during 4–5.5s (plus revisited node 8) ─── -->
+<line x1="60" y1="45" x2="60" y2="73" stroke="#C96330" stroke-width="1.2" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 0; 1; 1; 0"
+           keyTimes="0; 0.30; 0.33; 0.36; 0.40; 0.62; 0.70; 0.92; 1"
+           dur="6s" repeatCount="indefinite"/>
+</line>
+<circle cx="60" cy="73" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 0; 1; 1; 0"
+           keyTimes="0; 0.30; 0.33; 0.36; 0.40; 0.62; 0.70; 0.92; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+<line x1="60" y1="45" x2="40" y2="25" stroke="#C96330" stroke-width="1.2" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 0; 1; 1; 0"
+           keyTimes="0; 0.30; 0.33; 0.36; 0.40; 0.62; 0.70; 0.92; 1"
+           dur="6s" repeatCount="indefinite"/>
+</line>
+<circle cx="40" cy="25" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 0; 1; 1; 0"
+           keyTimes="0; 0.30; 0.33; 0.36; 0.40; 0.62; 0.70; 0.92; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+<line x1="60" y1="45" x2="88" y2="45" stroke="#C96330" stroke-width="1.2" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 0; 1; 1; 0"
+           keyTimes="0; 0.30; 0.33; 0.36; 0.40; 0.62; 0.70; 0.92; 1"
+           dur="6s" repeatCount="indefinite"/>
+</line>
+<circle cx="88" cy="45" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 0; 1; 1; 0"
+           keyTimes="0; 0.30; 0.33; 0.36; 0.40; 0.62; 0.70; 0.92; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Central query node (always terracotta, slightly larger) ─── -->
+<circle cx="60" cy="45" r="3.5" fill="#C96330"/>
+</svg>

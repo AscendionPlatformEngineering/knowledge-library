@@ -210,6 +210,83 @@ EMBLEM MOTION MECHANICS (each page must use a DISTINCT mechanic):
                            via the funnel's diagonal walls; distinct from
                            particle flow which has radial centripetal
                            convergence to a central point)
+    ai-native/architecture → token streaming emergence (six small dots in
+                           a horizontal row appear one at a time from left
+                           to right over a 6s cycle, each persisting after
+                           appearance, building cumulatively until the full
+                           row is visible — the autoregressive token-by-
+                           token generation; after a brief hold all dots
+                           clear simultaneously and the cycle restarts;
+                           distinct from sequential frame illumination
+                           which has frames take TURNS being lit — only
+                           one active at a time, not cumulative; distinct
+                           from sedimentation stacking which has items fall
+                           VERTICALLY and accumulate on a floor — here the
+                           emergence is HORIZONTAL with simultaneous clear)
+    ai-native/ethics     → disparate-rate progression (two horizontal
+                           progress bars side by side fill at independent
+                           speeds — top bar fills 0→100% in 4s, bottom
+                           bar fills in 6s, each cycles at 8s — visualising
+                           the asymmetry between groups receiving the same
+                           task; the visible rate difference IS the message,
+                           fairness as the relationship between filling
+                           rates; distinct from progressive threshold fill
+                           which has a SINGLE region growing through canary
+                           checkpoints; distinct from scaling envelope
+                           which has a row of rectangles where the COUNT
+                           of active rectangles rises and falls — here
+                           two CONTINUOUS fill bars with disparate rates)
+    ai-native/monitoring → rolling time-series window (five dots emerge
+                           on the right edge of the canvas with staggered
+                           phases over a 4s base cycle, shift left in
+                           unison through five slot positions, with the
+                           oldest dot exiting on the left edge and fading;
+                           continuous unidirectional FIFO flow, the time
+                           series in motion; distinct from conveyor loop
+                           which is a CLOSED rectangular circuit where
+                           items return to the start — here items have
+                           explicit entry on the right and exit on the
+                           left; distinct from particle flow which is
+                           RADIAL centripetal convergence to a central
+                           point — here LINEAR horizontal flow with
+                           FIFO replacement; distinct from bidirectional
+                           pipeline traffic which has TWO opposite-
+                           direction parallel flows)
+    ai-native/rag        → nearest-neighbor retrieval (a central terracotta
+                           query node sits at the canvas centre with eight
+                           stationary corpus nodes arranged in a ring
+                           around it; each cycle three specific corpus
+                           nodes light terracotta and connect to the centre
+                           via thin terracotta lines, then fade back to
+                           neutral as a different subset of three corpus
+                           nodes lights for the next query; three subsets
+                           rotate over a 6s cycle; distinct from peripheral
+                           asynchronous pulse which has independent firings
+                           of nodes WITHOUT any connection lines and no
+                           central anchor; distinct from cardinal cluster
+                           cycle which has CLUSTERS of nodes cycling
+                           through being lit in rotation — here it is
+                           SELECTIVE SUBSET retrieval, different specific
+                           individual nodes light each cycle, not all-of-
+                           cluster-A then all-of-cluster-B)
+    ai-native/security   → latent threat unmasking (dots travel right-to-
+                           left across the canvas through a vertical
+                           detection band drawn at the centre; benign dots
+                           pass straight through as warm neutral and exit
+                           on the left; some dots reveal themselves as
+                           adversarial while inside the band — they turn
+                           terracotta and REVERSE direction, exiting back
+                           to the right; the reversal-on-detection is the
+                           visual signature, animating the architectural
+                           reality that detected adversarial inputs are
+                           sent back rather than absorbed; distinct from
+                           filtration cascade which has VERTICAL descent
+                           through HORIZONTAL filter layers and blocked
+                           items fade IN PLACE rather than reversing;
+                           distinct from triage funnel which has GEOMETRIC
+                           convergence with directional reduction and
+                           rejected items fade out — here items actively
+                           travel BACKWARD past the boundary they entered)
   Future pages must invent a new mechanic, not reuse one.
   Two colours only: warm neutral (#D6D2C8) + terracotta (#C96330).
   Basic SMIL primitives only (animate, animateTransform with type=rotate).
@@ -270,7 +347,7 @@ GROUPS = [
     ("Operations",     "Observability, runbooks, checklists, and tooling",
      ["observability", "runbooks", "checklists", "tools"]),
     ("Excellence",     "AI-native, maturity, strategy, scorecards, roadmaps, playbooks",
-     ["ai", "maturity", "scorecards", "strategy", "roadmaps", "playbooks", "templates"]),
+     ["ai-native", "ai", "maturity", "scorecards", "strategy", "roadmaps", "playbooks", "templates"]),
 ]
 
 SECTIONS = {
@@ -288,6 +365,7 @@ SECTIONS = {
     "infra":         ("Infrastructure Architecture",          "IaC, networking, CI/CD, and operational excellence practices."),
     "cloud":         ("Cloud Architecture",                   "Multi-cloud reference architectures across AWS, Azure, and GCP."),
     "ai":            ("AI-Native Architecture",               "AI-native patterns, LLMOps, RAG, agentic systems, and governance."),
+    "ai-native":     ("AI-Native",                             "Production-grade AI systems: architecture, responsible-AI engineering, observability, retrieval, and the AI-specific threat surface."),
     "security":      ("Security Architecture",                "End-to-end security design: AuthN/AuthZ, encryption, and cloud controls."),
     "compliance":    ("Compliance & Regulatory Frameworks",   "Standards mappings and compliance controls for enterprise environments."),
     "governance":    ("Architecture Governance",              "Governance structures, review boards, and decision workflows."),
@@ -1399,6 +1477,50 @@ TAG_LINKS = {
     "NVD": "https://nvd.nist.gov/",
     "ISO 27001": "https://www.iso.org/standard/27001",
     "NIST SP 800-53": "https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final",
+    # AI-Native — system architecture
+    "Anthropic Engineering": "https://www.anthropic.com/engineering",
+    "Hugging Face": "https://huggingface.co/",
+    "vLLM": "https://docs.vllm.ai/",
+    "TensorRT-LLM": "https://github.com/NVIDIA/TensorRT-LLM",
+    "Ray Serve": "https://docs.ray.io/en/latest/serve/index.html",
+    "LangGraph": "https://langchain-ai.github.io/langgraph/",
+    "ReAct (Yao et al.)": "https://arxiv.org/abs/2210.03629",
+    "OpenAI Function Calling": "https://platform.openai.com/docs/guides/function-calling",
+    # AI-Native — ethics & responsible AI
+    "EU AI Act": "https://artificialintelligenceact.eu/the-act/",
+    "NIST AI Risk Management Framework": "https://www.nist.gov/itl/ai-risk-management-framework",
+    "ISO/IEC 42001": "https://www.iso.org/standard/81230.html",
+    "Model Cards (Mitchell et al.)": "https://arxiv.org/abs/1810.03993",
+    "Datasheets for Datasets": "https://arxiv.org/abs/1803.09010",
+    "Fairlearn": "https://fairlearn.org/",
+    "Aequitas Fairness Toolkit": "https://github.com/dssg/aequitas",
+    "OECD AI Principles": "https://oecd.ai/en/ai-principles",
+    # AI-Native — monitoring & observability
+    "OpenTelemetry GenAI Conventions": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+    "Evidently AI": "https://www.evidentlyai.com/",
+    "Arize Phoenix": "https://phoenix.arize.com/",
+    "LangSmith": "https://docs.smith.langchain.com/",
+    "Helicone": "https://www.helicone.ai/",
+    "Langfuse": "https://langfuse.com/",
+    "RAGAS": "https://docs.ragas.io/",
+    # AI-Native — RAG
+    "FAISS": "https://github.com/facebookresearch/faiss",
+    "Pinecone": "https://www.pinecone.io/",
+    "Weaviate": "https://weaviate.io/",
+    "Qdrant": "https://qdrant.tech/",
+    "ChromaDB": "https://www.trychroma.com/",
+    "BM25 (Wikipedia)": "https://en.wikipedia.org/wiki/Okapi_BM25",
+    "MTEB Embedding Benchmark": "https://huggingface.co/spaces/mteb/leaderboard",
+    "HyDE (Gao et al.)": "https://arxiv.org/abs/2212.10496",
+    "ColBERT (Khattab & Zaharia)": "https://arxiv.org/abs/2004.12832",
+    # AI-Native — security
+    "OWASP Top 10 for LLM Applications": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+    "MITRE ATLAS": "https://atlas.mitre.org/",
+    "NIST AI 100-2 (Adversarial ML)": "https://csrc.nist.gov/publications/detail/ai/100-2/final",
+    "Google Secure AI Framework (SAIF)": "https://safety.google/cybersecurity-advancements/saif/",
+    "Anthropic Responsible Scaling Policy": "https://www.anthropic.com/news/announcing-our-updated-responsible-scaling-policy",
+    "Garak LLM Vulnerability Scanner": "https://github.com/NVIDIA/garak",
+    "Prompt Injection (Greshake et al.)": "https://arxiv.org/abs/2302.12173",
 }
 
 

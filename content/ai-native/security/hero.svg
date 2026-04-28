@@ -1,0 +1,141 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  AI Security emblem.
+
+  Visual metaphor: latent threats unmasked at the detection boundary.
+  Dots travel right-to-left across the canvas, representing inputs
+  flowing toward the model. A vertical detection band sits at the
+  centre (the post-output classifier / capability boundary). Most
+  inputs are benign (warm neutral) and pass straight through the band,
+  exiting on the left. Some inputs reveal themselves as adversarial
+  while inside the band: they turn terracotta and REVERSE direction,
+  exiting back to the right (rejected at the boundary).
+
+  The reversal-on-detection is the visual signature: in classical
+  filtration, blocked items fade or stop; here they actively retreat,
+  visualising the architectural reality that a detected adversarial
+  input is sent back, not absorbed.
+
+  Dot trajectories (4-second cycle each, staggered begin times):
+
+    Dot A (benign, full transit R→L):
+      cx: 110 → 60 → 14   (passes through detection band cleanly)
+      cy: 30 (top channel)
+      colour: warm neutral throughout
+      duration: 4s, opacity 0→1→1→0
+
+    Dot B (adversarial, REVERSES at detection):
+      cx: 110 → 70 → 60 (enters band) → 70 → 110 (exits back right)
+      cy: 50 (middle channel)
+      colour: warm neutral until inside band (cx≈60), then terracotta
+      duration: 4s
+
+    Dot C (benign, full transit):
+      cx: 110 → 60 → 14
+      cy: 70 (bottom channel)
+
+    Dot D (adversarial, reverses):
+      cx: 110 → 60 → 110
+      cy: 40
+
+  Animation timing assumes a 4s base cycle, with dots staggered by
+  begin offsets of 0, 1, 2, 3 seconds to create continuous flow.
+
+  Detection band: vertical strip at x=54-66, light terracotta tint.
+
+  Motion mechanic: LATENT THREAT UNMASKING (the thirty-first mechanic
+  in the catalogue). Distinct from #22 filtration cascade (VERTICAL
+  descent through HORIZONTAL layers, blocked items fade in place
+  rather than reversing direction) and from #26 triage funnel
+  (GEOMETRIC convergence with directional reduction, rejected items
+  fade out rather than retreat). Uniquely characterised by REVERSAL
+  of motion: the rejected items don't fade or stop, they actively
+  travel BACKWARD past the boundary they entered.
+
+  Two colours only: warm neutral (#D6D2C8) for the detection-band
+  outline and pre-detection items, terracotta (#C96330) for the
+  detection band's faint tint and for items revealed adversarial.
+-->
+
+<!-- ─── Vertical detection band (centre, faint terracotta tint) ─── -->
+<rect x="54" y="14" width="12" height="62" fill="#FBEDE0" opacity="0.6"/>
+<line x1="54" y1="14" x2="54" y2="76" stroke="#D6D2C8" stroke-width="1" stroke-dasharray="2,2"/>
+<line x1="66" y1="14" x2="66" y2="76" stroke="#D6D2C8" stroke-width="1" stroke-dasharray="2,2"/>
+
+<!-- ─── Dot A: benign, transits cleanly R→L (top channel, y=28) ─── -->
+<circle cx="110" cy="28" r="2.5" fill="#D6D2C8" opacity="0">
+  <animate attributeName="cx"
+           values="110; 60; 14"
+           keyTimes="0; 0.5; 1"
+           dur="4s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="0; 1; 1; 1; 0"
+           keyTimes="0; 0.05; 0.5; 0.95; 1"
+           dur="4s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Dot B: adversarial, REVERSES at detection band (y=44) ─── -->
+<!-- Position animation: enters from right, reaches band at midpoint, reverses, exits right -->
+<circle cx="110" cy="44" r="2.5" fill="#D6D2C8" opacity="0">
+  <animate attributeName="cx"
+           values="110; 70; 60; 70; 110"
+           keyTimes="0; 0.30; 0.45; 0.60; 1"
+           dur="4s" repeatCount="indefinite" begin="1s"/>
+  <animate attributeName="opacity"
+           values="0; 1; 1; 1; 0"
+           keyTimes="0; 0.05; 0.45; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="1s"/>
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #C96330"
+           keyTimes="0; 0.40; 0.45; 0.60; 1"
+           dur="4s" repeatCount="indefinite" begin="1s"/>
+  <animate attributeName="r"
+           values="2.5; 2.5; 3.5; 3.5; 2.5"
+           keyTimes="0; 0.40; 0.50; 0.60; 1"
+           dur="4s" repeatCount="indefinite" begin="1s"/>
+</circle>
+
+<!-- ─── Dot C: benign, transits cleanly (bottom channel, y=62) ─── -->
+<circle cx="110" cy="62" r="2.5" fill="#D6D2C8" opacity="0">
+  <animate attributeName="cx"
+           values="110; 60; 14"
+           keyTimes="0; 0.5; 1"
+           dur="4s" repeatCount="indefinite" begin="2s"/>
+  <animate attributeName="opacity"
+           values="0; 1; 1; 1; 0"
+           keyTimes="0; 0.05; 0.5; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="2s"/>
+</circle>
+
+<!-- ─── Dot D: adversarial, REVERSES at detection (y=36) ─── -->
+<circle cx="110" cy="36" r="2.5" fill="#D6D2C8" opacity="0">
+  <animate attributeName="cx"
+           values="110; 70; 60; 70; 110"
+           keyTimes="0; 0.30; 0.45; 0.60; 1"
+           dur="4s" repeatCount="indefinite" begin="3s"/>
+  <animate attributeName="opacity"
+           values="0; 1; 1; 1; 0"
+           keyTimes="0; 0.05; 0.45; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="3s"/>
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #C96330"
+           keyTimes="0; 0.40; 0.45; 0.60; 1"
+           dur="4s" repeatCount="indefinite" begin="3s"/>
+  <animate attributeName="r"
+           values="2.5; 2.5; 3.5; 3.5; 2.5"
+           keyTimes="0; 0.40; 0.50; 0.60; 1"
+           dur="4s" repeatCount="indefinite" begin="3s"/>
+</circle>
+
+<!-- ─── Dot E: benign, secondary stagger (y=54) ─── -->
+<circle cx="110" cy="54" r="2.5" fill="#D6D2C8" opacity="0">
+  <animate attributeName="cx"
+           values="110; 60; 14"
+           keyTimes="0; 0.5; 1"
+           dur="4s" repeatCount="indefinite" begin="0.5s"/>
+  <animate attributeName="opacity"
+           values="0; 1; 1; 1; 0"
+           keyTimes="0; 0.05; 0.5; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="0.5s"/>
+</circle>
+</svg>

@@ -1,0 +1,105 @@
+flowchart LR
+
+    %% ─── Client / API surface ───
+    CLIENT([Client Request])
+
+    %% ─── Application layer (deterministic) ───
+    subgraph DET [Deterministic Region]
+        direction TB
+        APP[Application Logic<br/>orchestration &middot; routing]
+        VALID[Schema Validator<br/>Pydantic / JSON Schema]
+        CACHE[(Semantic Cache<br/>response cache)]
+    end
+
+    %% ─── Stochastic boundary ───
+    BOUNDARY{{Stochastic Boundary<br/>retries &middot; fallbacks &middot; timeouts}}
+
+    %% ─── Stochastic region — serving tiers ───
+    subgraph STOCH [Stochastic Region &mdash; serving topology]
+        direction TB
+        ROUTER[Model Router<br/>small / large / specialist]
+        APIMODEL[API-Hosted<br/>Claude / GPT / Gemini]
+        SELFHOST[Self-Hosted<br/>vLLM / TensorRT-LLM]
+        EDGE[Edge / On-Device<br/>small open-weight]
+    end
+
+    %% ─── Agentic loop ───
+    subgraph AGENT [Agentic Loop &mdash; bounded]
+        direction TB
+        REASON[Reason<br/>plan next action]
+        ACT[Act<br/>tool call]
+        OBS[Observe<br/>tool result]
+        LIMIT{step count<br/>&lt; N?}
+    end
+
+    %% ─── Prompt + eval ───
+    PROMPTS[(Prompt Registry<br/>versioned &middot; tested)]
+    EVAL[(Eval Suite<br/>continuous &middot; gating)]
+
+    %% ─── Cost + audit ───
+    COST[/Cost Telemetry<br/>per-request &middot; budget/]
+    AUDIT[(Audit Log<br/>prompt &middot; model &middot; output)]
+
+    %% ─── Flow ───
+    CLIENT --> APP
+    APP --> CACHE
+    CACHE -->|miss| BOUNDARY
+    CACHE -->|hit| VALID
+    BOUNDARY --> ROUTER
+    ROUTER --> APIMODEL
+    ROUTER --> SELFHOST
+    ROUTER --> EDGE
+    APIMODEL --> AGENT
+    SELFHOST --> AGENT
+
+    %% ─── Agent loop ───
+    AGENT --> REASON
+    REASON --> ACT
+    ACT --> OBS
+    OBS --> LIMIT
+    LIMIT -->|yes| REASON
+    LIMIT -->|no, halt| VALID
+
+    %% ─── Validation back to deterministic ───
+    VALID --> APP
+
+    %% ─── Cross-cutting ───
+    PROMPTS -.serves.-> ROUTER
+    EVAL -.gates.-> PROMPTS
+    APIMODEL -.cost.-> COST
+    SELFHOST -.cost.-> COST
+    AGENT -.actions.-> AUDIT
+
+    %% ─── NODE STYLES ───
+    style CLIENT fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Deterministic region: blue (predictable)
+    style APP   fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+    style VALID fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+    style CACHE fill:#DCEAFC,stroke:#5A7A9A,stroke-width:1.5px,color:#1A2840
+
+    %% Boundary: emphasised cream (the architectural rule)
+    style BOUNDARY fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+
+    %% Stochastic region: amber (probabilistic)
+    style ROUTER   fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+    style APIMODEL fill:#FEF3C7,stroke:#C96330,stroke-width:1.8px,color:#5C4316
+    style SELFHOST fill:#FEF3C7,stroke:#C96330,stroke-width:1.8px,color:#5C4316
+    style EDGE     fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+
+    %% Agent: distinct cooler tone
+    style REASON fill:#F4E5DD,stroke:#A37050,stroke-width:1.8px,color:#3A2410
+    style ACT    fill:#F4E5DD,stroke:#A37050,stroke-width:1.8px,color:#3A2410
+    style OBS    fill:#F4E5DD,stroke:#A37050,stroke-width:1.8px,color:#3A2410
+    style LIMIT  fill:#FEF1E6,stroke:#C96330,stroke-width:2px,color:#3A2410
+
+    %% Cross-cutting: distinct grey-blue
+    style PROMPTS fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style EVAL    fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style COST    fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+    style AUDIT   fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+
+    %% ─── CLUSTER STYLES ───
+    style DET    fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840
+    style STOCH  fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316
+    style AGENT  fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410

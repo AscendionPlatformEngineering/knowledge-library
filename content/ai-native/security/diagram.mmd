@@ -1,0 +1,105 @@
+flowchart LR
+
+    %% ─── Untrusted input sources ───
+    subgraph UNTRUSTED [Untrusted Input Sources &mdash; all treated adversarial]
+        direction TB
+        USER([User Input])
+        RETRIEVED[(Retrieved Chunks<br/>indirect injection vector)]
+        TOOL_OUT[(Tool Outputs<br/>upstream content)]
+    end
+
+    %% ─── Pre-prompt defences ───
+    PRE_CLF{Pre-Prompt Classifier<br/>injection / jailbreak<br/>pattern detection}
+
+    %% ─── Model layer with constraints ───
+    subgraph MODEL_LAYER [Model + Capability Constraints]
+        direction TB
+        MODEL[Foundation Model<br/>policy-trained]
+        CAP[Capability Boundary<br/>narrow tool scope<br/>scoped credentials]
+        DESTRUCT{Destructive<br/>action?}
+        STEP_UP[Step-Up Verification<br/>human / MFA]
+    end
+
+    %% ─── Post-output defences ───
+    POST_CLF{Post-Output Classifier<br/>policy violation<br/>anomaly detection}
+
+    %% ─── Tools ───
+    SAFE_TOOLS[Safe Tools<br/>read-only / scoped]
+    DESTR_TOOLS[Destructive Tools<br/>gated by step-up]
+
+    %% ─── Supply chain ───
+    subgraph SUPPLY [Supply-Chain Integrity]
+        direction TB
+        WEIGHTS[(Verified Model Weights<br/>signature check)]
+        LINEAGE[(Data Lineage<br/>training + corpus)]
+    end
+
+    %% ─── Audit + monitoring ───
+    AUDIT[(Audit Log<br/>prompt &middot; output &middot; tool call<br/>per-action)]
+    EXTRACT[Extraction Detection<br/>cross-account patterns]
+    REDTEAM[/Red-Team Findings<br/>continuous discipline/]
+
+    %% ─── Output ───
+    OUT([Validated Output])
+
+    %% ─── Flow ───
+    USER --> PRE_CLF
+    RETRIEVED --> PRE_CLF
+    TOOL_OUT --> PRE_CLF
+    PRE_CLF -->|pass| MODEL
+    PRE_CLF -->|block| AUDIT
+    MODEL --> CAP
+    CAP --> DESTRUCT
+    DESTRUCT -->|safe| SAFE_TOOLS
+    DESTRUCT -->|destructive| STEP_UP
+    STEP_UP -->|verified| DESTR_TOOLS
+    STEP_UP -->|denied| AUDIT
+    SAFE_TOOLS --> POST_CLF
+    DESTR_TOOLS --> POST_CLF
+    POST_CLF -->|pass| OUT
+    POST_CLF -->|violation| AUDIT
+
+    %% ─── Cross-cutting ───
+    WEIGHTS -.verifies.-> MODEL
+    LINEAGE -.verifies.-> RETRIEVED
+    MODEL -.actions.-> AUDIT
+    AUDIT -.feeds.-> EXTRACT
+    EXTRACT -.alert.-> AUDIT
+    REDTEAM -.findings.-> PRE_CLF
+    REDTEAM -.findings.-> POST_CLF
+
+    %% ─── NODE STYLES ───
+    style USER fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+    style OUT  fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Untrusted: emphasised cream (the threat surface)
+    style RETRIEVED fill:#FBEDE0,stroke:#C96330,stroke-width:1.5px,color:#3A2410
+    style TOOL_OUT  fill:#FBEDE0,stroke:#C96330,stroke-width:1.5px,color:#3A2410
+
+    %% Pre/post classifiers: emphasised (the screening boundaries)
+    style PRE_CLF  fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+    style POST_CLF fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+
+    %% Model layer: amber (the stochastic core)
+    style MODEL    fill:#FEF3C7,stroke:#C96330,stroke-width:2px,color:#5C4316
+    style CAP      fill:#FEF3C7,stroke:#C96330,stroke-width:2.2px,color:#5C4316
+    style DESTRUCT fill:#FEF3C7,stroke:#C96330,stroke-width:2px,color:#5C4316
+    style STEP_UP  fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+
+    %% Tools: differentiated (safe vs destructive)
+    style SAFE_TOOLS  fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style DESTR_TOOLS fill:#F4E5DD,stroke:#A37050,stroke-width:1.8px,color:#3A2410
+
+    %% Supply chain: blue (the integrity verification)
+    style WEIGHTS fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+    style LINEAGE fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+
+    %% Audit / monitoring: grey (the operator surface)
+    style AUDIT   fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.8px,color:#2C2C2C
+    style EXTRACT fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+    style REDTEAM fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+
+    %% ─── CLUSTER STYLES ───
+    style UNTRUSTED   fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410
+    style MODEL_LAYER fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316
+    style SUPPLY      fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840

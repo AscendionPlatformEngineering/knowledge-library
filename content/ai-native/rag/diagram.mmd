@@ -1,0 +1,108 @@
+flowchart LR
+
+    %% ─── Sources & ingestion ───
+    subgraph INGEST [Corpus Ingestion]
+        direction TB
+        SOURCES[(Source Systems<br/>docs &middot; APIs &middot; databases)]
+        QUALITY{Quality Gate<br/>dedup &middot; conflict &middot; redaction}
+        VERSION[(Versioned Corpus<br/>changelog &middot; freshness SLA)]
+    end
+
+    %% ─── Chunking ───
+    CHUNK[Structural Chunking<br/>section/turn/function-aligned<br/>hierarchical parents]
+
+    %% ─── Indexes ───
+    DENSE[(Dense Index<br/>vector embeddings)]
+    SPARSE[(Sparse Index<br/>BM25 keyword)]
+
+    %% ─── Query path ───
+    USER([User Query])
+    REWRITE[Query Rewrite<br/>multi-turn context]
+
+    %% ─── Hybrid retrieval ───
+    subgraph RETRIEVE [Hybrid Retrieval]
+        direction TB
+        DENSE_R[Dense Retrieval<br/>semantic match]
+        SPARSE_R[Sparse Retrieval<br/>exact-term match]
+        FUSE[Reciprocal Rank Fusion]
+        RERANK[Cross-Encoder Rerank]
+    end
+
+    %% ─── Generation ───
+    PROMPT[Prompt Construction<br/>retrieved context + instructions]
+    LLM[Model Generation<br/>with citation directives]
+
+    %% ─── Verification ───
+    FAITH{Faithfulness<br/>cited content<br/>matches claim?}
+    CITE[Citation Surface<br/>user-verifiable chunk display]
+
+    %% ─── Evaluation ───
+    EVAL[(Multi-Axis Eval<br/>recall &middot; faithfulness<br/>relevance &middot; correctness)]
+    FEEDBACK[/User Feedback<br/>+ retrieval observability/]
+
+    %% ─── Flow ───
+    SOURCES --> QUALITY
+    QUALITY --> VERSION
+    VERSION --> CHUNK
+    CHUNK --> DENSE
+    CHUNK --> SPARSE
+
+    USER --> REWRITE
+    REWRITE --> DENSE_R
+    REWRITE --> SPARSE_R
+    DENSE -.indexes.-> DENSE_R
+    SPARSE -.indexes.-> SPARSE_R
+    DENSE_R --> FUSE
+    SPARSE_R --> FUSE
+    FUSE --> RERANK
+    RERANK --> PROMPT
+    PROMPT --> LLM
+    LLM --> FAITH
+    FAITH -->|verified| CITE
+    FAITH -->|unfaithful| EVAL
+    CITE --> USER
+
+    %% ─── Feedback loops ───
+    CITE -.signals.-> FEEDBACK
+    RETRIEVE -.recall@K.-> EVAL
+    FEEDBACK -.tagged samples.-> EVAL
+    EVAL -.gates.-> LLM
+    FEEDBACK -.corpus signals.-> VERSION
+
+    %% ─── NODE STYLES ───
+    style USER    fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Ingestion: blue (operational discipline)
+    style SOURCES fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.5px,color:#1A2840
+    style QUALITY fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+    style VERSION fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+
+    %% Chunking + indexes: cooler grey-blue
+    style CHUNK  fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.8px,color:#2C4258
+    style DENSE  fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style SPARSE fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+
+    %% Query path: amber (the request being processed)
+    style REWRITE fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+
+    %% Retrieval: emphasised amber (the architectural core)
+    style DENSE_R  fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+    style SPARSE_R fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+    style FUSE     fill:#FEF3C7,stroke:#C96330,stroke-width:1.8px,color:#5C4316
+    style RERANK   fill:#FEF3C7,stroke:#C96330,stroke-width:2px,color:#5C4316
+
+    %% Generation: cooler tone
+    style PROMPT fill:#F4E5DD,stroke:#A37050,stroke-width:1.6px,color:#3A2410
+    style LLM    fill:#F4E5DD,stroke:#A37050,stroke-width:2px,color:#3A2410
+
+    %% Verification: emphasised (the architectural rule)
+    style FAITH fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+    style CITE  fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+
+    %% Evaluation / feedback: blue (the data flywheel)
+    style EVAL     fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+    style FEEDBACK fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.5px,color:#1A2840
+
+    %% ─── CLUSTER STYLES ───
+    style INGEST   fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840
+    style RETRIEVE fill:#FEF8E5,stroke:#D4C599,stroke-width:1.4px,color:#5C4316

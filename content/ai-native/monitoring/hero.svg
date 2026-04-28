@@ -1,0 +1,135 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  AI Monitoring & Observability emblem.
+
+  Visual metaphor: a rolling telemetry window. Dots representing
+  measurements emerge on the right edge of the canvas, shift left
+  in unison as new data arrives, and the oldest measurement exits
+  the left edge and fades. Continuous FIFO flow with explicit entry
+  and exit points — the time series in motion.
+
+  Animation: 4-second cycle, conceptually the canvas shifts left by
+  one "slot" per second. Five dots are visible at any moment,
+  positioned at canvas x = 24, 40, 56, 72, 88 (slot positions).
+  Each dot carries a slightly different "value" (y-coordinate),
+  representing the variation in measurements over time.
+
+  Implementation approach: each dot animates its cx from one slot
+  position to the previous slot position over 1 second per slot,
+  then jumps back to the rightmost slot to begin its trajectory
+  again. Five dots at staggered phases produce the continuous
+  shifting illusion.
+
+  Per-dot timing in 4s cycle (each dot moves through 4 slot
+  positions, exits, then re-emerges):
+    Dot 1: cx=88 → 72 → 56 → 40 → 24 → exit (8) → restart
+    Dot 2 (phase 0.2): same pattern, starts further along
+    ...etc
+
+  Actually simpler: 5 dots, each at staggered phases, each animates
+  cx from rightmost (88) to leftmost (24) over 4s, with opacity
+  fading at the edges. Each dot is at a different point in its
+  trajectory at any moment, producing the appearance of a
+  continuously shifting window.
+
+  Motion mechanic: ROLLING TIME-SERIES WINDOW (the twenty-ninth
+  mechanic in the catalogue). Distinct from #19 conveyor loop
+  (CLOSED rectangular circuit — items return to the start) by
+  being LINEAR with explicit entry on the right and exit on the
+  left — a true unidirectional flow. Distinct from #1 particle
+  flow (RADIAL centripetal convergence to a single central point)
+  by being LINEAR horizontal flow with FIFO replacement. Distinct
+  from #16 bidirectional pipeline traffic (TWO opposite-direction
+  parallel flows) by being a SINGLE-direction flow.
+
+  Two colours only: warm neutral (#D6D2C8) for the baseline track
+  and the subtle x-axis, terracotta (#C96330) for the moving
+  measurement dots.
+-->
+
+<!-- ─── Subtle x-axis baseline (the time line) ─── -->
+<line x1="14" y1="68" x2="106" y2="68" stroke="#D6D2C8" stroke-width="1" opacity="0.5"/>
+
+<!-- ─── Subtle y-axis (the measurement axis) ─── -->
+<line x1="14" y1="20" x2="14" y2="68" stroke="#D6D2C8" stroke-width="1" opacity="0.5"/>
+
+<!-- ─── Dot 1 (phase 0, 4s cycle): travels right→left ─── -->
+<circle cx="100" cy="50" r="2.5" fill="#C96330">
+  <animate attributeName="cx"
+           values="100; 100; 88; 72; 56; 40; 24; 14; 14; 100"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.95; 0.96; 1"
+           dur="4s" repeatCount="indefinite"/>
+  <animate attributeName="cy"
+           values="50; 50; 42; 38; 50; 56; 48; 50; 50; 50"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.95; 0.96; 1"
+           dur="4s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="0; 1; 1; 1; 1; 1; 1; 0; 0; 0"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.95; 0.96; 1"
+           dur="4s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Dot 2 (phase 0.2): staggered, lower y values ─── -->
+<circle cx="100" cy="48" r="2.5" fill="#C96330">
+  <animate attributeName="cx"
+           values="100; 88; 72; 56; 40; 24; 14; 14; 100; 100"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.81; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="0.8s"/>
+  <animate attributeName="cy"
+           values="48; 44; 36; 40; 52; 46; 50; 50; 48; 48"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.81; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="0.8s"/>
+  <animate attributeName="opacity"
+           values="0; 1; 1; 1; 1; 1; 1; 0; 0; 0"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.81; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="0.8s"/>
+</circle>
+
+<!-- ─── Dot 3 (phase 0.4) ─── -->
+<circle cx="100" cy="46" r="2.5" fill="#C96330">
+  <animate attributeName="cx"
+           values="100; 88; 72; 56; 40; 24; 14; 14; 100; 100"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.81; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="1.6s"/>
+  <animate attributeName="cy"
+           values="46; 50; 44; 36; 42; 50; 46; 46; 46; 46"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.81; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="1.6s"/>
+  <animate attributeName="opacity"
+           values="0; 1; 1; 1; 1; 1; 1; 0; 0; 0"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.81; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="1.6s"/>
+</circle>
+
+<!-- ─── Dot 4 (phase 0.6) ─── -->
+<circle cx="100" cy="52" r="2.5" fill="#C96330">
+  <animate attributeName="cx"
+           values="100; 88; 72; 56; 40; 24; 14; 14; 100; 100"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.81; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="2.4s"/>
+  <animate attributeName="cy"
+           values="52; 46; 50; 38; 44; 48; 52; 52; 52; 52"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.81; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="2.4s"/>
+  <animate attributeName="opacity"
+           values="0; 1; 1; 1; 1; 1; 1; 0; 0; 0"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.81; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="2.4s"/>
+</circle>
+
+<!-- ─── Dot 5 (phase 0.8) ─── -->
+<circle cx="100" cy="44" r="2.5" fill="#C96330">
+  <animate attributeName="cx"
+           values="100; 88; 72; 56; 40; 24; 14; 14; 100; 100"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.81; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="3.2s"/>
+  <animate attributeName="cy"
+           values="44; 52; 38; 46; 50; 42; 48; 48; 44; 44"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.81; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="3.2s"/>
+  <animate attributeName="opacity"
+           values="0; 1; 1; 1; 1; 1; 1; 0; 0; 0"
+           keyTimes="0; 0.05; 0.20; 0.35; 0.50; 0.65; 0.80; 0.81; 0.95; 1"
+           dur="4s" repeatCount="indefinite" begin="3.2s"/>
+</circle>
+</svg>
