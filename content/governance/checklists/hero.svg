@@ -1,0 +1,105 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Governance Checklists emblem.
+
+  Visual metaphor: a checklist being completed item by item.
+  Five checkbox outlines (square rectangles) are arranged in a
+  vertical column. Each cycle, the boxes are "checked" one at a time
+  from top to bottom — a terracotta checkmark path appears inside
+  each box and persists until the whole list is checked. After a
+  brief hold showing the complete list, all checkmarks clear
+  simultaneously and the cycle restarts.
+
+  Animation: 6-second cycle.
+    0.0–0.7s : Box 1 checkmark appears
+    0.7–1.4s : Box 2 checkmark appears (Box 1 still visible)
+    1.4–2.1s : Box 3 checkmark appears
+    2.1–2.8s : Box 4 checkmark appears
+    2.8–3.5s : Box 5 checkmark appears (full list checked)
+    3.5–5.0s : All hold (complete state shown)
+    5.0–5.5s : All clear simultaneously
+    5.5–6.0s : Brief pause, restart
+
+  Box positions (centred in canvas):
+    Box 1: x=52-68, y=12-22 (top)
+    Box 2: x=52-68, y=27-37
+    Box 3: x=52-68, y=42-52 (centre)
+    Box 4: x=52-68, y=57-67
+    Box 5: x=52-68, y=72-82 (bottom)
+
+  Each checkmark is a polyline path: from lower-left of box, up to
+  middle-low, then up-right to upper-right.
+
+  Motion mechanic: VERTICAL CASCADE CHECKLIST (the thirty-second
+  mechanic in the catalogue). Distinct from #27 token streaming
+  emergence (HORIZONTAL row of CIRCULAR DOTS appearing cumulatively
+  L→R) by being a VERTICAL column of RECTANGULAR CHECKBOXES with
+  CHECKMARK PATHS appearing inside them top-to-bottom. Distinct from
+  #32 sedimentation stacking (items FALL VERTICALLY and accumulate)
+  by having STATIONARY boxes whose internal checkmark state changes,
+  not items that travel into position.
+
+  Two colours only: warm neutral (#D6D2C8) for the checkbox outlines,
+  terracotta (#C96330) for the checkmark paths.
+-->
+
+<!-- ─── Five checkbox outlines (always visible, warm neutral) ─── -->
+<rect x="52" y="12" width="16" height="10" rx="1.5" fill="none" stroke="#D6D2C8" stroke-width="1.4"/>
+<rect x="52" y="27" width="16" height="10" rx="1.5" fill="none" stroke="#D6D2C8" stroke-width="1.4"/>
+<rect x="52" y="42" width="16" height="10" rx="1.5" fill="none" stroke="#D6D2C8" stroke-width="1.4"/>
+<rect x="52" y="57" width="16" height="10" rx="1.5" fill="none" stroke="#D6D2C8" stroke-width="1.4"/>
+<rect x="52" y="72" width="16" height="10" rx="1.5" fill="none" stroke="#D6D2C8" stroke-width="1.4"/>
+
+<!-- ─── Item 1 line indicator (decorative dash to suggest "the item text") ─── -->
+<line x1="74" y1="17" x2="100" y2="17" stroke="#D6D2C8" stroke-width="1" opacity="0.6"/>
+<line x1="74" y1="32" x2="98" y2="32" stroke="#D6D2C8" stroke-width="1" opacity="0.6"/>
+<line x1="74" y1="47" x2="102" y2="47" stroke="#D6D2C8" stroke-width="1" opacity="0.6"/>
+<line x1="74" y1="62" x2="96" y2="62" stroke="#D6D2C8" stroke-width="1" opacity="0.6"/>
+<line x1="74" y1="77" x2="100" y2="77" stroke="#D6D2C8" stroke-width="1" opacity="0.6"/>
+
+<!-- ─── Checkmark 1 (appears at t=0.7s, clears at t=5.0s in 6s cycle) ─── -->
+<!-- A checkmark is a polyline: bottom-left → mid-low → upper-right -->
+<polyline points="55,17 58,20 65,14" fill="none" stroke="#C96330" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.116; 0.117; 0.833; 0.917; 1"
+           dur="6s" repeatCount="indefinite"/>
+</polyline>
+
+<!-- ─── Checkmark 2 (appears at t=1.4s) ─── -->
+<polyline points="55,32 58,35 65,29" fill="none" stroke="#C96330" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.232; 0.233; 0.833; 0.917; 1"
+           dur="6s" repeatCount="indefinite"/>
+</polyline>
+
+<!-- ─── Checkmark 3 (appears at t=2.1s) ─── -->
+<polyline points="55,47 58,50 65,44" fill="none" stroke="#C96330" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.349; 0.350; 0.833; 0.917; 1"
+           dur="6s" repeatCount="indefinite"/>
+</polyline>
+
+<!-- ─── Checkmark 4 (appears at t=2.8s) ─── -->
+<polyline points="55,62 58,65 65,59" fill="none" stroke="#C96330" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.466; 0.467; 0.833; 0.917; 1"
+           dur="6s" repeatCount="indefinite"/>
+</polyline>
+
+<!-- ─── Checkmark 5 (appears at t=3.5s) ─── -->
+<polyline points="55,77 58,80 65,74" fill="none" stroke="#C96330" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.582; 0.583; 0.833; 0.917; 1"
+           dur="6s" repeatCount="indefinite"/>
+</polyline>
+</svg>

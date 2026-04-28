@@ -1,49 +1,99 @@
-flowchart TD
-    A([🚀 Start: Governance Scorecards]) --> B[Assessment & Discovery]
+flowchart TB
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    %% ─── Data sources ───
+    subgraph SOURCES [Data Sources]
+        direction TB
+        DECISIONS[(Decision System Telemetry<br/>submissions &middot; reviews &middot; outcomes)]
+        AUDITS[(Sampled Audits<br/>retrospective reviews)]
+        AUTO[(Automated Checks<br/>code &middot; infra-as-code &middot; runtime)]
+    end
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    %% ─── Two measurement streams ───
+    subgraph PROCESS [Process Metrics &mdash; responsiveness]
+        direction TB
+        LEAD[Lead Time<br/>per decision class<br/>vs SLA]
+        QUEUE[Queue Depth<br/>open decisions<br/>time-in-queue]
+        THRU[Throughput<br/>completions per period]
+    end
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    subgraph OUTCOME [Outcome Metrics &mdash; quality]
+        direction TB
+        QUALITY[Decision Quality<br/>retrospective review<br/>independent reviewers]
+        EXC[Exception Rate<br/>per standard<br/>not aggregated]
+        ADOPT[Adoption Rate<br/>actual deployment<br/>vs paper compliance]
+    end
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    %% ─── Cadence layer ───
+    CADENCE{Cadence Layer<br/>per-metric review frequency<br/>operational weekly &middot; strategic quarterly}
 
-    G --> H[Architecture Review Board]
+    %% ─── Scorecard ───
+    SCORECARD[(Governance Scorecard<br/>weighted toward outcomes<br/>patterns over individuals)]
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    %% ─── Alerts and triggers ───
+    ALERTS[/Threshold Alerts<br/>structural triggers/]
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    %% ─── Feedback into governance system ───
+    subgraph TUNING [Governance System Tuning]
+        direction TB
+        ROLES_FB[Role Structure<br/>capacity adjustments]
+        STD_FB[Standards Review<br/>fix mismatched rules]
+        TPL_FB[Template / Checklist<br/>add or retire items]
+    end
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    %% ─── Flow ───
+    DECISIONS --> LEAD
+    DECISIONS --> QUEUE
+    DECISIONS --> THRU
+    AUDITS --> QUALITY
+    DECISIONS --> EXC
+    AUTO --> ADOPT
+    AUDITS --> ADOPT
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    PROCESS --> CADENCE
+    OUTCOME --> CADENCE
+    CADENCE --> SCORECARD
+    SCORECARD --> ALERTS
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    ALERTS -.lead time issue.-> ROLES_FB
+    ALERTS -.exception rate issue.-> STD_FB
+    ALERTS -.decision quality issue.-> TPL_FB
+    ALERTS -.adoption gap.-> STD_FB
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    %% ─── Tuning feeds back into the system being measured ───
+    TUNING -.adjusts.-> DECISIONS
+
+    %% ─── NODE STYLES ───
+    %% Sources: blue (operational data)
+    style DECISIONS fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+    style AUDITS    fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+    style AUTO      fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+
+    %% Process metrics: amber (the operational signals)
+    style LEAD  fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style QUEUE fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style THRU  fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+
+    %% Outcome metrics: emphasised cream (the architectural priority)
+    style QUALITY fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+    style EXC     fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+    style ADOPT   fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+
+    %% Cadence: distinct (the calibration layer)
+    style CADENCE fill:#FEF1E6,stroke:#D4A87A,stroke-width:2px,color:#3A2410
+
+    %% Scorecard: emphasised (the integration point)
+    style SCORECARD fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+
+    %% Alerts: warm (the action trigger)
+    style ALERTS fill:#F4E5DD,stroke:#A37050,stroke-width:1.8px,color:#3A2410
+
+    %% Tuning: cooler (the governance system response)
+    style ROLES_FB fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style STD_FB   fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style TPL_FB   fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+
+    %% ─── CLUSTER STYLES ───
+    style SOURCES fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840
+    style PROCESS fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316
+    style OUTCOME fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410
+    style TUNING  fill:#F2F4F7,stroke:#9CB0C4,stroke-width:1.2px,color:#2C4258

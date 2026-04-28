@@ -1,0 +1,129 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Governance Scorecards emblem.
+
+  Visual metaphor: multi-dimensional governance health metrics, each
+  measured continuously and varying at its own rate. Five vertical
+  bars are arranged horizontally across the canvas, each bar's height
+  oscillates continuously between a minimum and maximum value at an
+  independent frequency. The bars never fill together; each is its
+  own metric, each at its own oscillation rate, jointly producing
+  the multi-dimensional measurement pattern of a scorecard at work.
+
+  Bar geometry:
+    Bar width: 8 (each)
+    Spacing: 6 between bars
+    Total width: 5 bars * 8 + 4 spacing * 6 = 64
+    Centre offset: (120 - 64) / 2 = 28
+    Bar baseline (bottom): y=78
+    Bar maximum top: y=14 (so max height = 64)
+    Bar minimum top: y=58 (so min height = 20)
+
+    Bar 1: x=28
+    Bar 2: x=42
+    Bar 3: x=56
+    Bar 4: x=70
+    Bar 5: x=84
+
+  Animation per bar: sinusoidal-style height oscillation between
+  min height and max height, with each bar at a different frequency
+  (period). Rendering as height + y attribute pair so that the bar
+  appears to grow/shrink from the bottom (baseline at y=78).
+
+  Per-bar timing (each bar oscillates continuously, no reset):
+    Bar 1: period 3.0s, varies from height=20 to height=60
+    Bar 2: period 4.2s, varies from height=22 to height=58
+    Bar 3: period 5.0s, varies from height=18 to height=64
+    Bar 4: period 6.0s, varies from height=24 to height=54
+    Bar 5: period 7.5s, varies from height=20 to height=62
+
+  Each bar's height animates with values list approximating a sine
+  wave (peak in middle, trough at start and end of each cycle).
+
+  Subtle baseline at y=78 in warm neutral.
+
+  Motion mechanic: INDEPENDENT METRIC OSCILLATION (the thirty-fifth
+  mechanic in the catalogue). Distinct from #28 disparate-rate
+  progression (TWO HORIZONTAL bars filling LEFT-TO-RIGHT
+  monotonically then RESETTING) by being FIVE VERTICAL bars with
+  CONTINUOUSLY OSCILLATING heights — never reset, never fill in one
+  direction, just oscillate up and down at independent frequencies.
+  Distinct from #14 scaling envelope (a row of rectangles where
+  COUNT of active rectangles changes — discrete on/off states) by
+  having FIXED count of bars with CONTINUOUS height variation.
+
+  Two colours only: warm neutral (#D6D2C8) for baseline, terracotta
+  (#C96330) for the oscillating bars.
+-->
+
+<!-- ─── Subtle baseline (warm neutral) ─── -->
+<line x1="22" y1="78" x2="98" y2="78" stroke="#D6D2C8" stroke-width="1" opacity="0.6"/>
+
+<!-- ─── Y-axis tick marks (subtle, decorative — also break fingerprint collision) ─── -->
+<line x1="20" y1="78" x2="22" y2="78" stroke="#D6D2C8" stroke-width="0.8" opacity="0.5"/>
+<line x1="20" y1="62" x2="22" y2="62" stroke="#D6D2C8" stroke-width="0.8" opacity="0.5"/>
+<line x1="20" y1="46" x2="22" y2="46" stroke="#D6D2C8" stroke-width="0.8" opacity="0.5"/>
+<line x1="20" y1="30" x2="22" y2="30" stroke="#D6D2C8" stroke-width="0.8" opacity="0.5"/>
+<line x1="20" y1="14" x2="22" y2="14" stroke="#D6D2C8" stroke-width="0.8" opacity="0.5"/>
+
+<!-- ─── Bar 1: x=28, period 3.0s, height range 20–60 ─── -->
+<!-- Sinusoidal approximation: 20 → 38 → 56 → 60 → 56 → 38 → 20, etc. -->
+<rect x="28" y="58" width="8" height="20" fill="#C96330">
+  <animate attributeName="height"
+           values="20; 32; 48; 60; 48; 32; 20"
+           keyTimes="0; 0.167; 0.333; 0.500; 0.667; 0.833; 1"
+           dur="3s" repeatCount="indefinite"/>
+  <animate attributeName="y"
+           values="58; 46; 30; 18; 30; 46; 58"
+           keyTimes="0; 0.167; 0.333; 0.500; 0.667; 0.833; 1"
+           dur="3s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Bar 2: x=42, period 4.2s, height range 22–58 ─── -->
+<rect x="42" y="56" width="8" height="22" fill="#C96330">
+  <animate attributeName="height"
+           values="22; 34; 48; 58; 48; 34; 22"
+           keyTimes="0; 0.167; 0.333; 0.500; 0.667; 0.833; 1"
+           dur="4.2s" repeatCount="indefinite"/>
+  <animate attributeName="y"
+           values="56; 44; 30; 20; 30; 44; 56"
+           keyTimes="0; 0.167; 0.333; 0.500; 0.667; 0.833; 1"
+           dur="4.2s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Bar 3: x=56, period 5.0s, height range 18–64 ─── -->
+<rect x="56" y="60" width="8" height="18" fill="#C96330">
+  <animate attributeName="height"
+           values="18; 32; 50; 64; 50; 32; 18"
+           keyTimes="0; 0.167; 0.333; 0.500; 0.667; 0.833; 1"
+           dur="5s" repeatCount="indefinite"/>
+  <animate attributeName="y"
+           values="60; 46; 28; 14; 28; 46; 60"
+           keyTimes="0; 0.167; 0.333; 0.500; 0.667; 0.833; 1"
+           dur="5s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Bar 4: x=70, period 6.0s, height range 24–54 ─── -->
+<rect x="70" y="54" width="8" height="24" fill="#C96330">
+  <animate attributeName="height"
+           values="24; 34; 46; 54; 46; 34; 24"
+           keyTimes="0; 0.167; 0.333; 0.500; 0.667; 0.833; 1"
+           dur="6s" repeatCount="indefinite"/>
+  <animate attributeName="y"
+           values="54; 44; 32; 24; 32; 44; 54"
+           keyTimes="0; 0.167; 0.333; 0.500; 0.667; 0.833; 1"
+           dur="6s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Bar 5: x=84, period 7.5s, height range 20–62 ─── -->
+<rect x="84" y="58" width="8" height="20" fill="#C96330">
+  <animate attributeName="height"
+           values="20; 33; 49; 62; 49; 33; 20"
+           keyTimes="0; 0.167; 0.333; 0.500; 0.667; 0.833; 1"
+           dur="7.5s" repeatCount="indefinite"/>
+  <animate attributeName="y"
+           values="58; 45; 29; 16; 29; 45; 58"
+           keyTimes="0; 0.167; 0.333; 0.500; 0.667; 0.833; 1"
+           dur="7.5s" repeatCount="indefinite"/>
+</rect>
+</svg>

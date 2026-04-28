@@ -1,49 +1,81 @@
-flowchart TD
-    A([🚀 Start: Governance Checklists]) --> B[Assessment & Discovery]
+flowchart TB
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    %% ─── Governance moments ───
+    PROPOSAL([Proposal Submission])
+    EXCEPTION([Exception Request])
+    INCIDENT([Post-Incident])
+    AUDIT([Periodic Audit])
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    %% ─── Distinct checklists per moment ───
+    subgraph CHECKLISTS [Governance Checklists &mdash; one per moment]
+        direction TB
+        CL_PROP[Proposal-Review<br/>well-formed? alternatives?<br/>standards aligned?]
+        CL_EXC[Exception-Review<br/>bounded scope?<br/>revisit cadence?]
+        CL_INC[Post-Incident<br/>did process catch risk?<br/>what should change?]
+        CL_AUD[Audit<br/>quarterly &middot; trends<br/>process health]
+    end
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    %% ─── Each checklist owned and reviewed ───
+    OWNERS[(Documented Owners<br/>review cadence<br/>versioned changes)]
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    %% ─── Workflow integration ───
+    subgraph WORKFLOW [Workflow Integration]
+        direction LR
+        ADR_REPO[ADR Repository<br/>checklist embedded<br/>in templates]
+        PR_TPL[PR / RFC Templates<br/>checklist as required fields]
+        ARB_AGENDA[ARB Agenda Tool<br/>opening + closing checklists]
+    end
 
-    G --> H[Architecture Review Board]
+    %% ─── Application telemetry ───
+    TELEMETRY[/Application Rate<br/>completion %<br/>reviewer attestation/]
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    %% ─── Feedback loops ───
+    FEEDBACK[Item Lifecycle<br/>add &middot; refine &middot; retire]
+    INSTITUTIONAL[(Institutional Memory<br/>incidents &middot; audit findings<br/>regulator questions)]
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    %% ─── Flow ───
+    PROPOSAL --> CL_PROP
+    EXCEPTION --> CL_EXC
+    INCIDENT --> CL_INC
+    AUDIT --> CL_AUD
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    CHECKLISTS --> WORKFLOW
+    OWNERS -.governs.-> CHECKLISTS
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    WORKFLOW --> TELEMETRY
+    TELEMETRY -.signals.-> FEEDBACK
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    %% ─── Institutional memory feedback ───
+    CL_INC -.surfaces lessons.-> INSTITUTIONAL
+    CL_AUD -.surfaces gaps.-> INSTITUTIONAL
+    INSTITUTIONAL -.adds items.-> FEEDBACK
+    FEEDBACK -.evolves.-> CHECKLISTS
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    %% ─── NODE STYLES ───
+    style PROPOSAL  fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+    style EXCEPTION fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+    style INCIDENT  fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+    style AUDIT     fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Checklists: emphasised cream (the architectural artefacts)
+    style CL_PROP fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+    style CL_EXC  fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+    style CL_INC  fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+    style CL_AUD  fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+
+    %% Owners: blue (the governance discipline)
+    style OWNERS fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+
+    %% Workflow integration: amber (where governance meets engineering)
+    style ADR_REPO   fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style PR_TPL     fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style ARB_AGENDA fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+
+    %% Telemetry / feedback: cooler tone
+    style TELEMETRY     fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+    style FEEDBACK      fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.6px,color:#2C4258
+    style INSTITUTIONAL fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.6px,color:#2C4258
+
+    %% ─── CLUSTER STYLES ───
+    style CHECKLISTS fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410
+    style WORKFLOW   fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316

@@ -287,6 +287,98 @@ EMBLEM MOTION MECHANICS (each page must use a DISTINCT mechanic):
                            convergence with directional reduction and
                            rejected items fade out — here items actively
                            travel BACKWARD past the boundary they entered)
+    governance/checklists → vertical cascade checklist (a vertical column
+                           of five rectangular checkbox outlines is always
+                           visible in warm neutral; over a 6s cycle, a
+                           terracotta checkmark POLYLINE PATH appears
+                           inside each box one at a time from top to
+                           bottom, each persisting after appearance, all
+                           checkboxes filled by t=3.5s, hold until t=5s,
+                           then all checkmarks clear simultaneously;
+                           distinct from token streaming emergence which
+                           is a HORIZONTAL row of CIRCULAR DOTS appearing
+                           cumulatively L→R — here it is a VERTICAL
+                           column of RECTANGULAR CHECKBOXES with
+                           CHECKMARK PATHS appearing inside them; distinct
+                           from sedimentation stacking which has items
+                           FALL VERTICALLY and accumulate on a floor —
+                           here the boxes are STATIONARY and only their
+                           internal checkmark state changes)
+    governance/review-templates → template reuse pattern (a fixed 2x3 grid
+                           of nine cell outlines is always visible in
+                           warm neutral, representing the template's
+                           permanent structure; each cycle a different
+                           SUBSET of three cells fills with terracotta
+                           — Subset A: top-left, middle-mid, bottom-right;
+                           Subset B: top-mid, middle-right, bottom-left;
+                           Subset C: top-right, middle-left, bottom-mid;
+                           subsets cycle through over 6s with brief
+                           transitions between, representing the same
+                           template being filled in differently for
+                           different reviews; distinct from nearest-
+                           neighbor retrieval which has a CIRCULAR ring
+                           of 8 nodes around a CENTRAL anchor with
+                           CONNECTION LINES from selected subset to
+                           anchor — here it is a RECTANGULAR 2D GRID
+                           with NO central anchor and NO connection
+                           lines; distinct from vertical cascade
+                           checklist which is a 1D column with cells
+                           filling SEQUENTIALLY top-to-bottom — here
+                           it is a 2D grid with cells filling in
+                           SUBSETS per cycle, full clear between subsets)
+    governance/roles     → tiered escalation cascade (three horizontal
+                           tier-baselines are drawn in warm neutral,
+                           each baseline carrying three dots — bottom
+                           tier representing team authority, middle
+                           representing ARB, top representing executive;
+                           a 9-second cycle contains three sub-cycles
+                           of 3s each: cycle 1 lights only the BOTTOM
+                           tier (routine decision); cycle 2 lights
+                           BOTTOM then MIDDLE in sequence (cross-cutting
+                           decision escalating one tier); cycle 3
+                           lights BOTTOM, MIDDLE, then TOP in sequence
+                           (high-stakes decision cascading all the way
+                           up); each tier's dots all light together,
+                           variable cascade depth visualises authority
+                           promotion across decision classes; distinct
+                           from rolling time-series window which has
+                           a SINGLE horizontal flow with FIFO
+                           replacement, dots traveling RIGHT TO LEFT —
+                           here it is THREE TIERED HORIZONTAL ROWS
+                           where activation cascades UPWARD through
+                           tiers; distinct from sequential frame
+                           illumination which has a SINGLE row with
+                           frames taking turns being lit — here the
+                           cascade is VERTICAL across tiers, with
+                           variable depth per cycle; distinct from
+                           progressive threshold fill which has ONE
+                           growing region — here three discrete tier
+                           rows light independently per cycle)
+    governance/scorecards → independent metric oscillation (five vertical
+                           rectangular bars are arranged horizontally
+                           across the canvas, each bar's HEIGHT
+                           animates continuously between a minimum
+                           and maximum value, each bar at a DIFFERENT
+                           PERIOD — 3.0s, 4.2s, 5.0s, 6.0s, 7.5s — so
+                           each oscillates at its own frequency, never
+                           syncing, never resetting, just continuously
+                           rising and falling like sine waves out of
+                           phase; the bars share a baseline at y=78
+                           and grow upward toward the canvas top;
+                           multi-dimensional governance health metrics,
+                           each measured continuously at its own rate;
+                           distinct from disparate-rate progression
+                           which has TWO HORIZONTAL bars filling
+                           LEFT-TO-RIGHT MONOTONICALLY then RESETTING
+                           — here FIVE VERTICAL bars CONTINUOUSLY
+                           OSCILLATE, never reset, never fill in one
+                           direction; distinct from scaling envelope
+                           which has a row of rectangles where the
+                           COUNT of active rectangles changes — here
+                           FIXED count with CONTINUOUS height
+                           variation; distinct from progressive
+                           threshold fill which is a single growing
+                           region — here five independent oscillators)
   Future pages must invent a new mechanic, not reuse one.
   Two colours only: warm neutral (#D6D2C8) + terracotta (#C96330).
   Basic SMIL primitives only (animate, animateTransform with type=rotate).
@@ -368,7 +460,7 @@ SECTIONS = {
     "ai-native":     ("AI-Native",                             "Production-grade AI systems: architecture, responsible-AI engineering, observability, retrieval, and the AI-specific threat surface."),
     "security":      ("Security Architecture",                "End-to-end security design: AuthN/AuthZ, encryption, and cloud controls."),
     "compliance":    ("Compliance & Regulatory Frameworks",   "Standards mappings and compliance controls for enterprise environments."),
-    "governance":    ("Architecture Governance",              "Governance structures, review boards, and decision workflows."),
+    "governance":    ("Architecture Governance",              "How the governance system itself runs: checklists, review templates, roles and authority, and scorecards measuring whether governance is working."),
     "nfr":           ("Non-Functional Requirements",          "Performance, availability, scalability, and security NFR evaluation."),
     "data":          ("Data Architecture",                    "Data modeling, governance, lineage, mesh patterns, and analytics."),
     "integration":   ("Integration Architecture",             "API, event, messaging, workflow, and partner integration patterns."),
@@ -1521,6 +1613,23 @@ TAG_LINKS = {
     "Anthropic Responsible Scaling Policy": "https://www.anthropic.com/news/announcing-our-updated-responsible-scaling-policy",
     "Garak LLM Vulnerability Scanner": "https://github.com/NVIDIA/garak",
     "Prompt Injection (Greshake et al.)": "https://arxiv.org/abs/2302.12173",
+    # Governance — frameworks, ADR, architecture authority
+    "ADR (Michael Nygard)": "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
+    "ADR GitHub Organization": "https://adr.github.io/",
+    "RFC Process (IETF)": "https://www.ietf.org/standards/rfcs/",
+    "ATAM (SEI)": "https://insights.sei.cmu.edu/library/architecture-tradeoff-analysis-method-collection/",
+    "TOGAF": "https://www.opengroup.org/togaf",
+    "COBIT 2019 (ISACA)": "https://www.isaca.org/resources/cobit",
+    "AWS Well-Architected Framework": "https://aws.amazon.com/architecture/well-architected/",
+    "Team Topologies": "https://teamtopologies.com/",
+    "Spotify Engineering Culture": "https://engineering.atspotify.com/",
+    "ThoughtWorks Technology Radar": "https://www.thoughtworks.com/radar",
+    "DORA Metrics": "https://dora.dev/",
+    "Conway's Law (Wikipedia)": "https://en.wikipedia.org/wiki/Conway%27s_law",
+    "Architecture Advice Process (Andrew Harmel-Law)": "https://martinfowler.com/articles/scaling-architecture-conversationally.html",
+    "Apache Project Governance": "https://www.apache.org/foundation/how-it-works.html",
+    "Kubernetes Governance": "https://kubernetes.io/community/",
+    "RACI Matrix (Wikipedia)": "https://en.wikipedia.org/wiki/Responsibility_assignment_matrix",
 }
 
 

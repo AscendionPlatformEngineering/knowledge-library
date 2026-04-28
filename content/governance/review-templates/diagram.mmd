@@ -1,49 +1,93 @@
-flowchart TD
-    A([🚀 Start: Review Templates]) --> B[Assessment & Discovery]
+flowchart LR
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    %% ─── Artefact classes ───
+    PROPOSAL([Proposal])
+    DECISION([Committed Decision])
+    SPEC([Design Spec])
+    EXCEPTION([Exception])
+    POSTINC([Post-Incident])
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    %% ─── Templates ───
+    subgraph TEMPLATES [Distinct Templates per Artefact Class]
+        direction TB
+        T_RFC[RFC Template<br/>motivation &middot; proposal<br/>alternatives &middot; open questions]
+        T_ADR[ADR Template<br/>status &middot; context<br/>decision &middot; consequences]
+        T_SPEC[Design Spec<br/>requirements &middot; design<br/>implementation &middot; testing]
+        T_EXC[Exception Template<br/>standard &middot; why &middot; bounded scope<br/>revisit cadence]
+        T_PI[Post-Incident<br/>timeline &middot; root cause<br/>actions &middot; lessons]
+    end
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    %% ─── Metadata layer (closed vocabulary) ───
+    METADATA[(Metadata Layer<br/>status &middot; date &middot; owner<br/>supersession &middot; scope tags)]
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    %% ─── Archive ───
+    ARCHIVE[(Versioned Archive<br/>markdown &middot; version-controlled<br/>indexed metadata)]
 
-    G --> H[Architecture Review Board]
+    %% ─── Lifecycle ───
+    LIFECYCLE{Lifecycle<br/>relationships}
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    %% ─── Review surface ───
+    subgraph REVIEW [Submitter-Reviewer Contract]
+        direction TB
+        SUB[Submitter<br/>addresses template's questions]
+        REV[Reviewer<br/>evaluates within template's scope]
+    end
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    %% ─── Discovery / query ───
+    QUERY[(Discovery Layer<br/>find by status &middot; scope &middot; date<br/>supersession chains)]
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    %% ─── Flow ───
+    PROPOSAL --> T_RFC
+    DECISION --> T_ADR
+    SPEC --> T_SPEC
+    EXCEPTION --> T_EXC
+    POSTINC --> T_PI
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    TEMPLATES --> METADATA
+    METADATA --> ARCHIVE
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    %% ─── Lifecycle edges between templates ───
+    T_RFC -.proposal accepted.-> LIFECYCLE
+    LIFECYCLE -.becomes.-> T_ADR
+    T_ADR -.superseded by.-> T_ADR
+    T_PI -.surfaces update to.-> T_ADR
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    %% ─── Review contract ───
+    SUB -->|fills| TEMPLATES
+    TEMPLATES -->|surface for| REV
+    REV -.feedback.-> TEMPLATES
+
+    %% ─── Discovery ───
+    ARCHIVE --> QUERY
+
+    %% ─── NODE STYLES ───
+    style PROPOSAL  fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+    style DECISION  fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+    style SPEC      fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+    style EXCEPTION fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+    style POSTINC   fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Templates: emphasised cream (the architectural artefacts)
+    style T_RFC  fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+    style T_ADR  fill:#FBEDE0,stroke:#C96330,stroke-width:2.2px,color:#3A2410
+    style T_SPEC fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+    style T_EXC  fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+    style T_PI   fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+
+    %% Metadata + archive: blue (operational infrastructure)
+    style METADATA fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+    style ARCHIVE  fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+
+    %% Lifecycle: amber (the dynamic relationships)
+    style LIFECYCLE fill:#FEF3C7,stroke:#C96330,stroke-width:2px,color:#5C4316
+
+    %% Review surface: cooler tone
+    style SUB fill:#F4E5DD,stroke:#A37050,stroke-width:1.6px,color:#3A2410
+    style REV fill:#F4E5DD,stroke:#A37050,stroke-width:1.6px,color:#3A2410
+
+    %% Discovery: grey
+    style QUERY fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+
+    %% ─── CLUSTER STYLES ───
+    style TEMPLATES fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410
+    style REVIEW    fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316

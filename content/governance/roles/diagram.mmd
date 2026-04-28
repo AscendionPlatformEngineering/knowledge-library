@@ -1,49 +1,94 @@
-flowchart TD
-    A([🚀 Start: Governance Roles]) --> B[Assessment & Discovery]
+flowchart LR
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    %% ─── Decision classes (input) ───
+    subgraph CLASSES [Decision Classes]
+        direction TB
+        ROUTINE([Routine Tech Choice])
+        CROSSCUT([Cross-Cutting Standard])
+        HIGH_STAKES([High-Stakes Decision<br/>regulatory &middot; financial])
+    end
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    %% ─── RACI routing ───
+    RACI{RACI Matrix<br/>per decision class}
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    %% ─── Three authority tiers ───
+    subgraph TIERS [Authority Tiers]
+        direction TB
+        TIER_EXEC[Executive<br/>CTO &middot; CIO &middot; CISO<br/>regulatory &middot; strategic]
+        TIER_ARB[ARB<br/>composition &middot; terms<br/>recusal &middot; quorum]
+        TIER_TEAM[Team<br/>routine pattern selection<br/>service-internal architecture]
+    end
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    %% ─── Consulted roles ───
+    subgraph CONSULTED [Consulted Roles]
+        direction TB
+        SECURITY[Security Architect]
+        LEGAL[Legal / Compliance]
+        FINANCE[Finance / FinOps]
+        DATA[Data Architect]
+    end
 
-    G --> H[Architecture Review Board]
+    %% ─── Capacity layer ───
+    CAPACITY[/Capacity Telemetry<br/>lead time &middot; queue depth<br/>review hours/]
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    %% ─── Outputs ───
+    ADR[(ADR / Decision Record<br/>with role attribution)]
+    PROMOTE{Decision authority<br/>promotion review<br/>periodic}
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    %% ─── Flow ───
+    CLASSES --> RACI
+    RACI -->|routine| TIER_TEAM
+    RACI -->|cross-cutting| TIER_ARB
+    RACI -->|high-stakes| TIER_EXEC
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    %% ─── Consults run across tiers ───
+    TIER_TEAM -.advice.-> SECURITY
+    TIER_ARB -.consult.-> SECURITY
+    TIER_ARB -.consult.-> DATA
+    TIER_EXEC -.consult.-> LEGAL
+    TIER_EXEC -.consult.-> FINANCE
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    %% ─── Escalation up ───
+    TIER_TEAM -.escalate.-> TIER_ARB
+    TIER_ARB -.escalate.-> TIER_EXEC
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    %% ─── All tiers produce decisions ───
+    TIER_TEAM --> ADR
+    TIER_ARB --> ADR
+    TIER_EXEC --> ADR
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    %% ─── Capacity feedback ───
+    TIERS -.measured.-> CAPACITY
+    CAPACITY -.signals.-> PROMOTE
+    PROMOTE -.shifts authority.-> RACI
+
+    %% ─── NODE STYLES ───
+    style ROUTINE     fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+    style CROSSCUT    fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+    style HIGH_STAKES fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% RACI: emphasised cream (the routing decision)
+    style RACI fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+
+    %% Authority tiers: amber gradient (low to high authority)
+    style TIER_TEAM fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style TIER_ARB  fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+    style TIER_EXEC fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+
+    %% Consulted: blue (advisory roles)
+    style SECURITY fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.5px,color:#1A2840
+    style LEGAL    fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.5px,color:#1A2840
+    style FINANCE  fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.5px,color:#1A2840
+    style DATA     fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.5px,color:#1A2840
+
+    %% Capacity / promotion: cooler tone
+    style CAPACITY fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+    style PROMOTE  fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.8px,color:#2C4258
+
+    %% Output
+    style ADR fill:#F4E5DD,stroke:#A37050,stroke-width:1.6px,color:#3A2410
+
+    %% ─── CLUSTER STYLES ───
+    style CLASSES   fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840
+    style TIERS     fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410
+    style CONSULTED fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840

@@ -1,0 +1,147 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Governance Roles emblem.
+
+  Visual metaphor: variable escalation depth across decisions.
+  Three horizontal tiers represent authority levels — bottom tier
+  (architects / team leads), middle tier (ARB), top tier (executive).
+  Each tier has three dots arranged horizontally. Decisions arrive
+  from outside the canvas and trigger the bottom tier first; some
+  decisions are resolved at the bottom, some cascade up one tier
+  (to ARB), and some cascade all the way to the top (to executive).
+  The variable cascade depth visualises how different decision
+  classes route through different authority tiers.
+
+  Three full cycles within the 9-second period:
+    Cycle 1 (0–3s)   : routine decision — bottom tier only lights
+    Cycle 2 (3–6s)   : cross-cutting decision — bottom + middle tier light
+    Cycle 3 (6–9s)   : high-stakes decision — all three tiers light
+
+  Tier dot positions:
+    Top tier (executive):    y=18, dots at x=44, 60, 76
+    Middle tier (ARB):       y=44, dots at x=44, 60, 76
+    Bottom tier (team):      y=70, dots at x=44, 60, 76
+
+  Subtle horizontal tier-baselines drawn in warm neutral.
+  Subtle vertical "escalation channel" hint at left/right edges.
+
+  Animation per cycle (3 seconds each):
+    Cycle 1 (0.0–3.0s):
+      Bottom tier dots light terracotta (all three together) at t=0.5s
+      Hold until t=2.5s
+      Clear at t=2.5–2.8s
+    Cycle 2 (3.0–6.0s):
+      Bottom tier lights at t=3.5s
+      Middle tier lights at t=4.0s (cascade up)
+      Both hold until t=5.5s
+      Clear at t=5.5–5.8s
+    Cycle 3 (6.0–9.0s):
+      Bottom tier lights at t=6.5s
+      Middle tier lights at t=7.0s
+      Top tier lights at t=7.5s (full cascade)
+      All hold until t=8.5s
+      Clear at t=8.5–8.8s
+
+  Total cycle: 9 seconds.
+
+  Motion mechanic: TIERED ESCALATION CASCADE (the thirty-fourth
+  mechanic in the catalogue). Distinct from #29 rolling time-series
+  window (single horizontal flow with FIFO replacement, dots travel
+  RIGHT TO LEFT) by being THREE TIERED HORIZONTAL ROWS where
+  activation cascades UPWARD through tiers, with variable depth
+  per cycle. Distinct from #6 sequential frame illumination (single
+  row with frames taking turns being lit) by having VERTICAL
+  cascade STRUCTURE rather than horizontal sequence. The signature
+  is variable-depth UPWARD cascade through authority tiers.
+
+  Two colours only: warm neutral (#D6D2C8) for tier baselines and
+  inactive dots, terracotta (#C96330) for activated tier dots
+  during their cycle.
+-->
+
+<!-- ─── Tier baselines (warm neutral, always visible) ─── -->
+<line x1="36" y1="18" x2="84" y2="18" stroke="#D6D2C8" stroke-width="1" opacity="0.5"/>
+<line x1="36" y1="44" x2="84" y2="44" stroke="#D6D2C8" stroke-width="1" opacity="0.5"/>
+<line x1="36" y1="70" x2="84" y2="70" stroke="#D6D2C8" stroke-width="1" opacity="0.5"/>
+
+<!-- ─── Inactive tier dots (always visible, warm neutral) ─── -->
+<!-- Top tier (executive) -->
+<circle cx="44" cy="18" r="2.5" fill="#D6D2C8"/>
+<circle cx="60" cy="18" r="2.5" fill="#D6D2C8"/>
+<circle cx="76" cy="18" r="2.5" fill="#D6D2C8"/>
+<!-- Middle tier (ARB) -->
+<circle cx="44" cy="44" r="2.5" fill="#D6D2C8"/>
+<circle cx="60" cy="44" r="2.5" fill="#D6D2C8"/>
+<circle cx="76" cy="44" r="2.5" fill="#D6D2C8"/>
+<!-- Bottom tier (team) -->
+<circle cx="44" cy="70" r="2.5" fill="#D6D2C8"/>
+<circle cx="60" cy="70" r="2.5" fill="#D6D2C8"/>
+<circle cx="76" cy="70" r="2.5" fill="#D6D2C8"/>
+
+<!-- ─── Subtle escalation channel hints (faint vertical dashes) ─── -->
+<line x1="60" y1="22" x2="60" y2="40" stroke="#D6D2C8" stroke-width="0.6" stroke-dasharray="2,2" opacity="0.4"/>
+<line x1="60" y1="48" x2="60" y2="66" stroke="#D6D2C8" stroke-width="0.6" stroke-dasharray="2,2" opacity="0.4"/>
+
+<!-- ─── Bottom tier activation: lights in all 3 cycles ─── -->
+<!-- Active during cycles 1, 2, and 3 — visible from 0.5s to 2.5s, 3.5s to 5.5s, 6.5s to 8.5s -->
+<circle cx="44" cy="70" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0; 1; 1; 0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.055; 0.056; 0.278; 0.311; 0.389; 0.390; 0.611; 0.644; 0.722; 0.723; 0.944; 0.978; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+<circle cx="60" cy="70" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0; 1; 1; 0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.055; 0.056; 0.278; 0.311; 0.389; 0.390; 0.611; 0.644; 0.722; 0.723; 0.944; 0.978; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+<circle cx="76" cy="70" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0; 1; 1; 0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.055; 0.056; 0.278; 0.311; 0.389; 0.390; 0.611; 0.644; 0.722; 0.723; 0.944; 0.978; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Middle tier activation: lights in cycles 2 and 3 only -->
+<!-- Active 4.0s to 5.5s, and 7.0s to 8.5s (in 9s cycle: keyTimes 0.444-0.611, 0.778-0.944) -->
+<circle cx="44" cy="44" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 1; 1; 0; 0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.389; 0.422; 0.443; 0.445; 0.611; 0.644; 0.722; 0.777; 0.778; 0.944; 0.978; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+<circle cx="60" cy="44" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 1; 1; 0; 0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.389; 0.422; 0.443; 0.445; 0.611; 0.644; 0.722; 0.777; 0.778; 0.944; 0.978; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+<circle cx="76" cy="44" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 1; 1; 0; 0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.389; 0.422; 0.443; 0.445; 0.611; 0.644; 0.722; 0.777; 0.778; 0.944; 0.978; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Top tier activation: lights only in cycle 3 -->
+<!-- Active 7.5s to 8.5s (keyTimes 0.833-0.944) -->
+<circle cx="44" cy="18" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 0; 0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.389; 0.422; 0.611; 0.644; 0.722; 0.777; 0.832; 0.834; 0.944; 0.978; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+<circle cx="60" cy="18" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 0; 0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.389; 0.422; 0.611; 0.644; 0.722; 0.777; 0.832; 0.834; 0.944; 0.978; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+<circle cx="76" cy="18" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 0; 0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.389; 0.422; 0.611; 0.644; 0.722; 0.777; 0.832; 0.834; 0.944; 0.978; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+</svg>
