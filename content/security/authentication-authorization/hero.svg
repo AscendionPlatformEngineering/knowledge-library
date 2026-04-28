@@ -1,0 +1,88 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Authentication and Authorization emblem.
+
+  Visual metaphor: identity established and access decided through a
+  back-and-forth exchange of tokens. Two persistent shapes anchor the
+  scene — Subject (left) and Resource (right) — connected by a static
+  channel. Tokens shuttle across the channel alternately: a challenge
+  travels left-to-right, pauses, then a response travels right-to-left,
+  pauses, and the cycle repeats.
+
+  Animation: 8-second cycle.
+    0.0–1.5s : challenge token travels L→R, both nodes neutral
+    1.5–2.5s : token at right side, right node briefly active (verifying)
+    2.5–4.0s : (rest — channel idle)
+    4.0–5.5s : response token travels R→L
+    5.5–6.5s : token at left side, left node briefly active (consuming)
+    6.5–8.0s : (rest — channel idle, cycle restarts)
+
+  The two tokens use opacity to show only one in flight at a time.
+  Token positions: L-edge at x=32, R-edge at x=88.
+
+  Motion mechanic: CHALLENGE-RESPONSE HANDSHAKE (the twenty-third
+  mechanic in the catalogue). Distinct from #8 bidirectional pulsation
+  (where both NODES pulse simultaneously over a static channel — no
+  movement of tokens, just synchronous activation). Distinct from #16
+  bidirectional pipeline traffic (where two parallel lanes carry
+  CONTINUOUS opposing flows — many tokens at once in opposite directions).
+  Here it is one token at a time, alternating direction, with explicit
+  pause between exchanges.
+
+  Two colours only: warm neutral (#D6D2C8) at rest, terracotta (#C96330)
+  for active nodes, in-flight tokens, and the connecting channel during
+  exchange.
+-->
+
+<!-- ─── Static channel (subtle baseline) ─── -->
+<line x1="36" y1="45" x2="84" y2="45" stroke="#D6D2C8" stroke-width="1.2" stroke-dasharray="2,2" opacity="0.6"/>
+
+<!-- ─── Subject (left node) — receives response, briefly active during 5.5-6.5s ─── -->
+<rect x="20" y="35" width="16" height="20" rx="2" fill="#D6D2C8" stroke="#B0AC9F" stroke-width="1.5">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.68; 0.70; 0.80; 0.82; 1"
+           dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="stroke"
+           values="#B0AC9F; #B0AC9F; #C96330; #C96330; #B0AC9F; #B0AC9F"
+           keyTimes="0; 0.68; 0.70; 0.80; 0.82; 1"
+           dur="8s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Resource (right node) — receives challenge, briefly active during 1.5-2.5s ─── -->
+<rect x="84" y="35" width="16" height="20" rx="2" fill="#D6D2C8" stroke="#B0AC9F" stroke-width="1.5">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.18; 0.20; 0.30; 0.32; 1"
+           dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="stroke"
+           values="#B0AC9F; #B0AC9F; #C96330; #C96330; #B0AC9F; #B0AC9F"
+           keyTimes="0; 0.18; 0.20; 0.30; 0.32; 1"
+           dur="8s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Challenge token: travels L→R from t=0 to t=1.5s (keyTimes 0 to 0.1875) ─── -->
+<!-- Visible only during 0–1.5s window; hidden at all other times -->
+<circle cx="36" cy="45" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="cx"
+           values="36; 36; 84; 84; 36"
+           keyTimes="0; 0.001; 0.187; 0.188; 1"
+           dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="0; 1; 1; 0; 0"
+           keyTimes="0; 0.001; 0.187; 0.188; 1"
+           dur="8s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Response token: travels R→L from t=4 to t=5.5s (keyTimes 0.5 to 0.6875) ─── -->
+<circle cx="84" cy="45" r="2.5" fill="#C96330" opacity="0">
+  <animate attributeName="cx"
+           values="84; 84; 84; 36; 36; 84"
+           keyTimes="0; 0.499; 0.5; 0.687; 0.688; 1"
+           dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.499; 0.5; 0.687; 0.688; 1"
+           dur="8s" repeatCount="indefinite"/>
+</circle>
+</svg>

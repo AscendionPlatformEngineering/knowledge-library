@@ -1,0 +1,80 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Encryption emblem.
+
+  Visual metaphor: plaintext data and a cryptographic key, two
+  distinct things, come together to produce ciphertext (one unified
+  thing), hold, then separate back to plaintext + key. The motion
+  captures the essence of symmetric encryption: data + key → ciphertext,
+  and the inverse operation unwinds the merge.
+
+  Animation: 7-second cycle.
+    0.0–1.5s : Data (left) and Key (right) translate toward centre
+    1.5–2.5s : Merge into Ciphertext (single unified shape, terracotta)
+    2.5–4.5s : Hold as Ciphertext (encrypted state, persistent)
+    4.5–5.5s : Ciphertext splits back into Data + Key
+    5.5–7.0s : Data and Key translate back to original positions
+    7.0s     : Cycle restarts
+
+  The two original shapes use cx animation to translate (left shape
+  cx 28→54; right shape cx 92→66). When they meet at the centre,
+  they fade out simultaneously and a single ciphertext rectangle
+  fades in. Reverse on the way back.
+
+  Motion mechanic: KEY-MERGE / UNMERGE (the twenty-fifth mechanic in
+  the catalogue). Distinct from #1 particle flow (where MANY particles
+  converge from periphery to a central reasoning core — a count of
+  many becoming one stream) by being TWO named persistent shapes that
+  meet and re-separate. Distinct from #4 cross-fade metamorphosis
+  (where two forms in the SAME spatial position trade visibility) by
+  having the two shapes physically TRANSLATE through space toward each
+  other before merging — spatial movement is the defining feature.
+
+  Two colours only: warm neutral (#D6D2C8) for plaintext data and key,
+  terracotta (#C96330) for the merged ciphertext.
+-->
+
+<!-- ─── Data shape (left) — translates toward centre, fades during merge ─── -->
+<rect x="22" y="38" width="14" height="14" rx="1.5" fill="#D6D2C8" stroke="#B0AC9F" stroke-width="1.4">
+  <animate attributeName="x"
+           values="22; 47; 47; 22; 22"
+           keyTimes="0; 0.214; 0.643; 0.857; 1"
+           dur="7s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="1; 1; 0; 0; 1; 1"
+           keyTimes="0; 0.214; 0.286; 0.643; 0.714; 1"
+           dur="7s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Key shape (right) — circle to differ visually from data, translates toward centre ─── -->
+<circle cx="92" cy="45" r="7" fill="#D6D2C8" stroke="#B0AC9F" stroke-width="1.4">
+  <animate attributeName="cx"
+           values="92; 71; 71; 92; 92"
+           keyTimes="0; 0.214; 0.643; 0.857; 1"
+           dur="7s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="1; 1; 0; 0; 1; 1"
+           keyTimes="0; 0.214; 0.286; 0.643; 0.714; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Ciphertext (merged shape at centre) — appears during merge, holds, fades on un-merge ─── -->
+<rect x="50" y="36" width="20" height="18" rx="2" fill="#C96330" stroke="#C96330" stroke-width="1.5" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.214; 0.357; 0.643; 0.714; 1"
+           dur="7s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Subtle inner pattern on ciphertext to show "encrypted" texture (only visible while ciphertext is shown) ─── -->
+<g opacity="0">
+  <line x1="53" y1="40" x2="67" y2="40" stroke="#FBEDE0" stroke-width="0.8"/>
+  <line x1="53" y1="44" x2="67" y2="44" stroke="#FBEDE0" stroke-width="0.8"/>
+  <line x1="53" y1="48" x2="67" y2="48" stroke="#FBEDE0" stroke-width="0.8"/>
+  <line x1="53" y1="52" x2="67" y2="52" stroke="#FBEDE0" stroke-width="0.8"/>
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.286; 0.357; 0.643; 0.714; 1"
+           dur="7s" repeatCount="indefinite"/>
+</g>
+</svg>

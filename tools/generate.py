@@ -148,6 +148,68 @@ EMBLEM MOTION MECHANICS (each page must use a DISTINCT mechanic):
                            progression with a fade-and-restart, not closed
                            loop, and from scaling envelope by being a single
                            ascending token rather than an array)
+    security/application-security → filtration cascade (five dots fall from
+                           top through three horizontal filter layers at
+                           y=30, y=50, y=70; some dots are blocked at each
+                           layer and fade out, two reach the bottom and
+                           briefly turn terracotta as they hit the protected
+                           application baseline; distinct from progressive
+                           threshold fill by having discrete items that
+                           travel rather than a region that grows, and from
+                           sedimentation stacking by having items rejected
+                           at multiple intermediate layers rather than
+                           accumulating on a single floor)
+    security/authentication-authorization → challenge-response handshake
+                           (two persistent shapes — a Subject rectangle on
+                           the left and a Resource rectangle on the right;
+                           tokens shuttle back and forth alternately, one
+                           direction at a time, with explicit rest between
+                           exchanges; the receiving node briefly turns
+                           terracotta as the token arrives; distinct from
+                           bidirectional pulsation by being sequential
+                           discrete token movement rather than simultaneous
+                           node activation, and from bidirectional pipeline
+                           traffic by being one token at a time alternating
+                           direction rather than continuous parallel flows
+                           in opposite lanes)
+    security/cloud-security → shield envelope pulsation (three concentric
+                           rings around a persistent terracotta core asset
+                           expand and contract in unison — same keyTimes,
+                           synchronised breathing rhythm — over a 6s cycle;
+                           rings at radii 12↔18, 22↔28, 32↔38; distinct
+                           from concentric perimeter tracing which uses
+                           stroke-dashoffset to draw rings sequentially,
+                           and from wave propagation which has a single
+                           ring expanding centrifugally from a source and
+                           disappearing — here multiple rings persist and
+                           breathe together)
+    security/encryption  → key-merge / unmerge (two persistent shapes — a
+                           data rectangle on the left and a key circle on
+                           the right — translate toward the centre, fade
+                           out as a single ciphertext rectangle fades in,
+                           hold as ciphertext for the encrypted phase, then
+                           reverse: ciphertext fades out, original two shapes
+                           fade back in and translate to original positions;
+                           distinct from particle flow which has many
+                           particles converging from periphery to a single
+                           central point — here it is two named persistent
+                           shapes that meet and re-separate, and from
+                           cross-fade metamorphosis which trades visibility
+                           in the same spatial position with no movement —
+                           here the two original shapes physically translate)
+    security/vulnerability-management → triage funnel (eight dots enter
+                           wide at the top of a visible inverted-trapezoid
+                           funnel — diagonal walls drawn explicitly; six
+                           descend through the funnel and four make it to
+                           the narrow bottom output line, where they
+                           briefly turn terracotta as remediated; the other
+                           dots are blocked at the diagonal walls and fade;
+                           distinct from filtration cascade which uses
+                           horizontal filter layers as the visual constraint
+                           — here the constraint is geometric convergence
+                           via the funnel's diagonal walls; distinct from
+                           particle flow which has radial centripetal
+                           convergence to a central point)
   Future pages must invent a new mechanic, not reuse one.
   Two colours only: warm neutral (#D6D2C8) + terracotta (#C96330).
   Basic SMIL primitives only (animate, animateTransform with type=rotate).
@@ -1282,6 +1344,50 @@ TAG_LINKS = {
     "SAFe": "https://framework.scaledagile.com/",
     "Lean Software Development": "https://en.wikipedia.org/wiki/Lean_software_development",
     "Outcomes-Based Contracting": "https://en.wikipedia.org/wiki/Performance-based_contracting",
+    # Security — application security
+    "OWASP Top 10": "https://owasp.org/www-project-top-ten/",
+    "OWASP ASVS": "https://owasp.org/www-project-application-security-verification-standard/",
+    "OWASP SAMM": "https://owaspsamm.org/",
+    "STRIDE": "https://en.wikipedia.org/wiki/STRIDE_model",
+    "SLSA Framework": "https://slsa.dev/",
+    "Sigstore": "https://www.sigstore.dev/",
+    "CycloneDX": "https://cyclonedx.org/",
+    "SPDX": "https://spdx.dev/",
+    "CWE": "https://cwe.mitre.org/",
+    # Security — authentication and authorization
+    "OAuth 2.0": "https://oauth.net/2/",
+    "OpenID Connect": "https://openid.net/connect/",
+    "SAML 2.0": "https://en.wikipedia.org/wiki/SAML_2.0",
+    "FIDO2": "https://fidoalliance.org/fido2/",
+    "WebAuthn": "https://www.w3.org/TR/webauthn-2/",
+    "Open Policy Agent": "https://www.openpolicyagent.org/",
+    "JWT": "https://jwt.io/introduction",
+    "RBAC": "https://en.wikipedia.org/wiki/Role-based_access_control",
+    "ABAC": "https://en.wikipedia.org/wiki/Attribute-based_access_control",
+    "ReBAC": "https://en.wikipedia.org/wiki/Relationship-based_access_control",
+    # Security — cloud security
+    "AWS Shared Responsibility Model": "https://aws.amazon.com/compliance/shared-responsibility-model/",
+    "CIS Benchmarks": "https://www.cisecurity.org/cis-benchmarks",
+    "AWS Well-Architected Security Pillar": "https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html",
+    "NIST SP 800-207 Zero Trust": "https://csrc.nist.gov/publications/detail/sp/800-207/final",
+    "CSA Cloud Controls Matrix": "https://cloudsecurityalliance.org/research/cloud-controls-matrix",
+    # Security — encryption
+    "NIST FIPS 140-3": "https://csrc.nist.gov/publications/detail/fips/140/3/final",
+    "TLS 1.3 (RFC 8446)": "https://datatracker.ietf.org/doc/html/rfc8446",
+    "AES (FIPS 197)": "https://csrc.nist.gov/publications/detail/fips/197/final",
+    "NIST Post-Quantum Cryptography": "https://csrc.nist.gov/projects/post-quantum-cryptography",
+    "Let's Encrypt": "https://letsencrypt.org/",
+    "Certificate Transparency": "https://certificate.transparency.dev/",
+    "libsodium": "https://doc.libsodium.org/",
+    "Tink": "https://developers.google.com/tink",
+    # Security — vulnerability management
+    "CVE Program": "https://www.cve.org/",
+    "CVSS": "https://www.first.org/cvss/",
+    "EPSS": "https://www.first.org/epss/",
+    "KEV Catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+    "NVD": "https://nvd.nist.gov/",
+    "ISO 27001": "https://www.iso.org/standard/27001",
+    "NIST SP 800-53": "https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final",
 }
 
 

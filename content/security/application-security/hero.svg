@@ -1,0 +1,117 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Application Security emblem.
+
+  Visual metaphor: untrusted inputs entering at the top, passing through
+  three successive filter layers (SAST, dependency scan, DAST/runtime),
+  some getting blocked at each layer, fewer reaching the protected
+  application at the bottom.
+
+  Animation: 5 dots fall from y=8 toward y=82 over a 5s cycle. Each
+  filter layer (drawn as a horizontal line at y=30, y=50, y=70) blocks
+  one dot — that dot stops at the layer's y-coordinate and fades while
+  remaining dots continue. Two dots make it through all three filters
+  to the bottom.
+
+  Filter layers: y=30 (filter 1), y=50 (filter 2), y=70 (filter 3)
+  Floor: y=82 (the protected application receives clean inputs)
+
+  The 5 dots' x positions are spread across the width (x=24,40,56,72,88).
+
+  Per-dot timing in 5s cycle:
+    Dot1 (x=24): blocked at y=30 (filter 1) at t≈1.5s, fades 1.5–2.0s
+    Dot2 (x=40): passes filter 1, blocked at y=50 (filter 2) at t≈2.5s
+    Dot3 (x=56): passes filters 1+2, blocked at y=70 (filter 3) at t≈3.5s
+    Dot4 (x=72): passes ALL filters, reaches y=82 at t≈4.5s — clean
+    Dot5 (x=88): passes filters 1+2, blocked at y=70 like Dot3 — but
+                 staggered to a different time so visually distinct
+
+  Motion mechanic: FILTRATION CASCADE (the twenty-second mechanic in
+  the catalogue). Distinct from #7 progressive threshold fill (a
+  region GROWS continuously through canary checkpoints) by having
+  DISCRETE items moving. Distinct from #17 sedimentation stacking
+  (items fall AND ACCUMULATE on a single floor) by having items
+  filtered/rejected at multiple layers, with most never reaching
+  the bottom.
+
+  Two colours only: warm neutral (#D6D2C8) for falling dots in
+  transit, terracotta (#C96330) for filter layers and the dots that
+  successfully reach the protected application.
+-->
+
+<!-- ─── Filter layers (visible horizontal lines) ─── -->
+<line x1="14" y1="30" x2="106" y2="30" stroke="#C96330" stroke-width="1.4" stroke-dasharray="3,2"/>
+<line x1="14" y1="50" x2="106" y2="50" stroke="#C96330" stroke-width="1.4" stroke-dasharray="3,2"/>
+<line x1="14" y1="70" x2="106" y2="70" stroke="#C96330" stroke-width="1.4" stroke-dasharray="3,2"/>
+
+<!-- ─── Protected-application baseline ─── -->
+<line x1="14" y1="82" x2="106" y2="82" stroke="#C96330" stroke-width="2.5"/>
+
+<!-- ─── Dot 1: blocked at filter 1 (y=30) ─── -->
+<circle cx="24" cy="6" r="2.2" fill="#D6D2C8">
+  <animate attributeName="cy"
+           values="6; 30; 30; 6"
+           keyTimes="0; 0.18; 0.30; 1"
+           dur="5s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="1; 1; 0; 0"
+           keyTimes="0; 0.18; 0.30; 1"
+           dur="5s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Dot 2: passes filter 1, blocked at filter 2 (y=50) ─── -->
+<circle cx="40" cy="6" r="2.2" fill="#D6D2C8">
+  <animate attributeName="cy"
+           values="6; 50; 50; 6"
+           keyTimes="0; 0.36; 0.48; 1"
+           dur="5s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="1; 1; 0; 0"
+           keyTimes="0; 0.36; 0.48; 1"
+           dur="5s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Dot 3: passes filters 1+2, blocked at filter 3 (y=70) ─── -->
+<circle cx="56" cy="6" r="2.2" fill="#D6D2C8">
+  <animate attributeName="cy"
+           values="6; 70; 70; 6"
+           keyTimes="0; 0.54; 0.66; 1"
+           dur="5s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="1; 1; 0; 0"
+           keyTimes="0; 0.54; 0.66; 1"
+           dur="5s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Dot 4: passes ALL filters, reaches the application (y=82) ─── -->
+<circle cx="72" cy="6" r="2.2" fill="#D6D2C8">
+  <animate attributeName="cy"
+           values="6; 82; 82; 6"
+           keyTimes="0; 0.72; 0.86; 1"
+           dur="5s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="1; 1; 0; 0"
+           keyTimes="0; 0.72; 0.86; 1"
+           dur="5s" repeatCount="indefinite"/>
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.70; 0.74; 0.86; 1"
+           dur="5s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Dot 5: passes ALL filters, reaches the application (y=82) — phase-shifted ─── -->
+<circle cx="88" cy="6" r="2.2" fill="#D6D2C8">
+  <animate attributeName="cy"
+           values="6; 6; 82; 82; 6"
+           keyTimes="0; 0.10; 0.86; 0.94; 1"
+           dur="5s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="1; 1; 1; 0; 0"
+           keyTimes="0; 0.10; 0.86; 0.94; 1"
+           dur="5s" repeatCount="indefinite"/>
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.10; 0.82; 0.86; 0.94; 1"
+           dur="5s" repeatCount="indefinite"/>
+</circle>
+</svg>

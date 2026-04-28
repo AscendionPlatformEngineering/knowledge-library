@@ -1,0 +1,88 @@
+flowchart LR
+
+    %% ─── Design-time security ───
+    subgraph DESIGN [Design &mdash; threat modelling]
+        direction TB
+        TM[Threat Model<br/>STRIDE &middot; attack trees]
+        REQ[Security Requirements<br/>authn &middot; authz &middot; audit]
+    end
+
+    %% ─── Build pipeline with embedded security ───
+    subgraph BUILD [Build &mdash; secure-by-construction]
+        direction TB
+        CODE[Source Code]
+        SAST[SAST<br/>static analysis]
+        SBOM[SBOM Generation<br/>CycloneDX / SPDX]
+        DEPSCAN[Dependency Scan<br/>known CVEs]
+        SIGN[Artefact Signing<br/>Sigstore / SLSA]
+    end
+
+    %% ─── Deployment with verification ───
+    subgraph TEST [Pre-prod &mdash; dynamic verification]
+        direction TB
+        DAST[DAST<br/>running-app probe]
+        IAST[IAST<br/>instrumented runtime]
+    end
+
+    %% ─── Runtime ───
+    subgraph RUN [Runtime &mdash; production]
+        direction TB
+        WAF[WAF / Edge<br/>perimeter rules]
+        APP[Application<br/>validated inputs<br/>encoded outputs]
+        TELE[Security Telemetry<br/>RASP &middot; audit log]
+    end
+
+    %% ─── Findings triage ───
+    BACKLOG[/Findings Backlog<br/>severity SLA &middot; owner/]
+
+    %% ─── Flow ───
+    TM --> REQ
+    REQ --> CODE
+    CODE --> SAST
+    CODE --> SBOM
+    SBOM --> DEPSCAN
+    SAST --> SIGN
+    DEPSCAN --> SIGN
+    SIGN --> DAST
+    DAST --> IAST
+    IAST --> WAF
+    WAF --> APP
+    APP --> TELE
+
+    %% ─── Findings flow ───
+    SAST -.findings.-> BACKLOG
+    DEPSCAN -.findings.-> BACKLOG
+    DAST -.findings.-> BACKLOG
+    IAST -.findings.-> BACKLOG
+    TELE -.alerts.-> BACKLOG
+    BACKLOG -.feeds back.-> TM
+
+    %% ─── NODE STYLES ───
+    %% Design: blue (intent)
+    style TM  fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+    style REQ fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+
+    %% Build: amber (construction)
+    style CODE    fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style SAST    fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style SBOM    fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style DEPSCAN fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style SIGN    fill:#FEF3C7,stroke:#C96330,stroke-width:2px,color:#5C4316
+
+    %% Pre-prod: cooler grey-blue (verification)
+    style DAST fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style IAST fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+
+    %% Runtime: emphasised (production)
+    style WAF  fill:#FBEDE0,stroke:#C96330,stroke-width:2.2px,color:#3A2410
+    style APP  fill:#FBEDE0,stroke:#C96330,stroke-width:2.2px,color:#3A2410
+    style TELE fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.8px,color:#3A2410
+
+    %% Backlog: distinct grey (operator capability)
+    style BACKLOG fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+
+    %% ─── CLUSTER STYLES ───
+    style DESIGN fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840
+    style BUILD  fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316
+    style TEST   fill:#F2F4F7,stroke:#9CB0C4,stroke-width:1.2px,color:#2C4258
+    style RUN    fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410

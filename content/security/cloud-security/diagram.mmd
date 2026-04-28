@@ -1,0 +1,71 @@
+flowchart TB
+
+    %% ─── Organisation root ───
+    ORG[Organisation Root<br/>Service Control Policies<br/>org-wide invariants]
+
+    %% ─── Security/audit accounts ───
+    subgraph SEC_TIER [Security &amp; Audit Accounts]
+        direction LR
+        SEC_ACCT[Security Account<br/>CSPM &middot; CIEM &middot; CWPP]
+        AUDIT_ACCT[(Audit Account<br/>centralised logs<br/>immutable retention)]
+    end
+
+    %% ─── Workload accounts (segregated by sensitivity) ───
+    subgraph WORK_TIER [Workload Accounts &mdash; segregated by sensitivity]
+        direction LR
+        PROD_ACCT[Production<br/>strict SCPs &middot; JIT only]
+        NONPROD_ACCT[Non-Production<br/>dev / staging / sandbox]
+        SHARED_ACCT[Shared Services<br/>identity &middot; networking]
+    end
+
+    %% ─── Identity (federated) ───
+    IDP[Identity Provider<br/>SSO + MFA<br/>JIT access broker]
+
+    %% ─── Engineers (people) ───
+    ENGINEERS([Engineers<br/>federated SSO])
+
+    %% ─── Org-level enforcement ───
+    ORG -->|SCPs| PROD_ACCT
+    ORG -->|SCPs| NONPROD_ACCT
+    ORG -->|SCPs| SHARED_ACCT
+    ORG -->|SCPs| SEC_ACCT
+    ORG -->|SCPs| AUDIT_ACCT
+
+    %% ─── Logs flow inward ───
+    PROD_ACCT -.CloudTrail / Activity.-> AUDIT_ACCT
+    NONPROD_ACCT -.CloudTrail / Activity.-> AUDIT_ACCT
+    SHARED_ACCT -.CloudTrail / Activity.-> AUDIT_ACCT
+
+    %% ─── CSPM/CIEM coverage ───
+    SEC_ACCT -.scan posture.-> PROD_ACCT
+    SEC_ACCT -.scan posture.-> NONPROD_ACCT
+    SEC_ACCT -.scan posture.-> SHARED_ACCT
+    SEC_ACCT -.entitlement analysis.-> ORG
+
+    %% ─── Identity flow ───
+    ENGINEERS --> IDP
+    IDP -->|federated, MFA, JIT| PROD_ACCT
+    IDP -->|federated, standing OK| NONPROD_ACCT
+    IDP -->|federated.| SHARED_ACCT
+
+    %% ─── NODE STYLES ───
+    style ENGINEERS fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Org root: emphasised cream (the policy authority)
+    style ORG fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+
+    %% Security/audit: blue (custodial accounts)
+    style SEC_ACCT   fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+    style AUDIT_ACCT fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+
+    %% Workloads: amber (production / dev / shared)
+    style PROD_ACCT    fill:#FEF3C7,stroke:#C96330,stroke-width:2.2px,color:#5C4316
+    style NONPROD_ACCT fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style SHARED_ACCT  fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+
+    %% IdP: distinct grey (broker)
+    style IDP fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.8px,color:#2C2C2C
+
+    %% ─── CLUSTER STYLES ───
+    style SEC_TIER  fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.4px,color:#1A2840
+    style WORK_TIER fill:#FEF8E5,stroke:#D4C599,stroke-width:1.4px,color:#5C4316

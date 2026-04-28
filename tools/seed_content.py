@@ -178,6 +178,13 @@ TAXONOMY = {
         "ha-dr":         "HA & DR Systems",
         "scalable":      "Scalable Systems",
     },
+    "security": {
+        "application-security":         "Application Security",
+        "authentication-authorization": "Authentication and Authorization",
+        "cloud-security":               "Cloud Security",
+        "encryption":                   "Encryption",
+        "vulnerability-management":     "Vulnerability Management",
+    },
     "technology": {
         "ui-ux-cx":          "UI, UX & CX",
         "api-backend":       "API & Backend Technologies",
@@ -577,6 +584,12 @@ SHORT_DESC = {
     ("system-design", "event-driven"): "Event-driven system design including event sourcing, CQRS, and stream processing.",
     ("system-design", "ha-dr"):        "High-availability and disaster-recovery system design across regions and providers.",
     ("system-design", "scalable"):     "Scalable system design including horizontal scaling, sharding, and partitioning strategies.",
+
+    ("security", "application-security"):         "Secure-by-design application engineering: OWASP, dependency supply chain, validation, and threat modeling.",
+    ("security", "authentication-authorization"): "Identity systems: AuthN vs AuthZ, federation (OIDC/SAML/OAuth), policy decision points, MFA, and identity governance.",
+    ("security", "cloud-security"):               "Cloud-native security: shared responsibility, IAM at scale, CSPM/CIEM/CWPP/CNAPP, and account topology.",
+    ("security", "encryption"):                   "Cryptographic engineering: data at rest/transit/in-use, key management, crypto agility, and certificate lifecycle.",
+    ("security", "vulnerability-management"):     "Vulnerability lifecycle: discovery, prioritization, remediation workflows, and patch hygiene.",
 
     ("technology", "ui-ux-cx"):          "Frontend frameworks (React, Angular, Vue), UX laws, and customer-experience architecture.",
     ("technology", "api-backend"):       "Backend stacks (Java/Spring, Node.js, Python) and API design and delivery patterns.",

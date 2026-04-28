@@ -1,49 +1,78 @@
-flowchart TD
-    A([🚀 Start: Authentication & Authorization]) --> B[Assessment & Discovery]
+flowchart LR
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    %% ─── User and identity provider ───
+    USER([User])
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    subgraph IDP_SIDE [Identity Provider &mdash; federated AuthN]
+        direction TB
+        IDP[OIDC / SAML IdP<br/>Auth0 / Okta / Azure AD]
+        MFA[MFA<br/>passkey &middot; FIDO2 &middot; TOTP]
+    end
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    %% ─── Application boundary ───
+    subgraph APP_SIDE [Application &mdash; consumes verified identity]
+        direction TB
+        EDGE[API Gateway / Edge<br/>token verification]
+        APP[Application Logic<br/>requests PDP decision]
+        RESOURCE[(Resources<br/>data &middot; actions)]
+    end
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    %% ─── PDP (separate decision point) ───
+    PDP[Policy Decision Point<br/>OPA / Cedar / IAM<br/>declarative policy]
 
-    G --> H[Architecture Review Board]
+    %% ─── Identity governance ───
+    subgraph IGA [Identity Governance]
+        direction TB
+        JML[Joiner-Mover-Leaver<br/>automation]
+        REVIEW[Access Reviews<br/>quarterly attestation]
+    end
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    %% ─── Audit ───
+    AUDIT[(Audit Log<br/>identity + policy + decision)]
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    %% ─── Authentication flow ───
+    USER -->|1. login| IDP
+    IDP -->|2. challenge| MFA
+    MFA -->|3. verified| IDP
+    IDP -->|4. OIDC token| USER
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    %% ─── Authorisation flow on each request ───
+    USER -->|5. request + token| EDGE
+    EDGE -->|6. verified identity| APP
+    APP -->|7. may principal do action?| PDP
+    PDP -->|8. allow / deny + reasoning| APP
+    APP -->|9. permitted action| RESOURCE
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    %% ─── Audit ───
+    APP -.decision + reasoning.-> AUDIT
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    %% ─── Governance lifecycle ───
+    JML -.provisions / deprovisions.-> IDP
+    REVIEW -.attests.-> IDP
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    %% ─── NODE STYLES ───
+    style USER fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% IdP side: blue (identity authority)
+    style IDP fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+    style MFA fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+
+    %% Application side: amber
+    style EDGE     fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+    style APP      fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+    style RESOURCE fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+
+    %% PDP: emphasised cream (policy authority)
+    style PDP fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+
+    %% Governance: cooler grey-blue (lifecycle management)
+    style JML    fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style REVIEW fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+
+    %% Audit: distinct grey
+    style AUDIT fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+
+    %% ─── CLUSTER STYLES ───
+    style IDP_SIDE fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840
+    style APP_SIDE fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316
+    style IGA      fill:#F2F4F7,stroke:#9CB0C4,stroke-width:1.2px,color:#2C4258

@@ -1,49 +1,84 @@
-flowchart TD
-    A([🚀 Start: Encryption]) --> B[Assessment & Discovery]
+flowchart LR
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    %% ─── Clients (in transit) ───
+    CLIENT([Client])
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    %% ─── Edge / API tier ───
+    subgraph EDGE_TIER [In Transit &mdash; TLS 1.3 / mTLS]
+        direction TB
+        EDGE[API Gateway / Load Balancer<br/>TLS 1.3 termination]
+        SERVICE_A[Service A<br/>mTLS to peers]
+        SERVICE_B[Service B<br/>mTLS to peers]
+    end
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    %% ─── Persistence (at rest) ───
+    subgraph REST_TIER [At Rest &mdash; envelope encryption]
+        direction TB
+        APP_DEK[Data Encryption Key<br/>per-record / per-tenant<br/>AES-256-GCM]
+        STORAGE[(Storage<br/>encrypted blobs<br/>ciphertext + IV + tag)]
+    end
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    %% ─── Key management ───
+    subgraph KMS_TIER [Key Management]
+        direction TB
+        KEK[Key-Encryption Key<br/>master in KMS / HSM]
+        KMS[KMS / HSM<br/>rotation &middot; audit &middot; access policy]
+    end
 
-    G --> H[Architecture Review Board]
+    %% ─── Certificate lifecycle ───
+    ACME[ACME Automation<br/>issuance &middot; renewal &middot; CT monitoring]
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    %% ─── Audit ───
+    AUDIT[(Decrypt Audit Log<br/>who &middot; what &middot; when &middot; from where)]
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    %% ─── Boundary note ───
+    BOUNDARY{{What encryption protects:<br/>disk theft &middot; backup loss<br/>network sniffing<br/><br/>What it does NOT protect:<br/>compromised IAM<br/>app process compromise}}
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    %% ─── In transit flow ───
+    CLIENT -->|TLS 1.3| EDGE
+    EDGE -->|mTLS| SERVICE_A
+    SERVICE_A -->|mTLS| SERVICE_B
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    %% ─── At rest flow (envelope encryption) ───
+    SERVICE_A -->|encrypt with DEK| APP_DEK
+    APP_DEK --> STORAGE
+    APP_DEK -.encrypted by.-> KEK
+    KEK --> KMS
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    %% ─── Cert lifecycle ───
+    ACME -.issues / renews TLS certs.-> EDGE
+    ACME -.issues / renews mTLS certs.-> SERVICE_A
+    ACME -.issues / renews mTLS certs.-> SERVICE_B
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    %% ─── Audit flow ───
+    KMS -.every decrypt logged.-> AUDIT
+
+    %% ─── NODE STYLES ───
+    style CLIENT fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Edge / in transit: blue (the transit layer)
+    style EDGE      fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+    style SERVICE_A fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+    style SERVICE_B fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+
+    %% At rest: amber (the persistence layer)
+    style APP_DEK fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+    style STORAGE fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+
+    %% KMS/HSM: emphasised (the key authority)
+    style KEK fill:#FBEDE0,stroke:#C96330,stroke-width:2.2px,color:#3A2410
+    style KMS fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+
+    %% ACME / cert automation: cooler grey-blue
+    style ACME fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+
+    %% Audit: distinct grey
+    style AUDIT fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+
+    %% Boundary annotation: distinct (the architectural caveat)
+    style BOUNDARY fill:#F4E5DD,stroke:#A37050,stroke-width:1.5px,color:#3A2410
+
+    %% ─── CLUSTER STYLES ───
+    style EDGE_TIER fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840
+    style REST_TIER fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316
+    style KMS_TIER  fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410
