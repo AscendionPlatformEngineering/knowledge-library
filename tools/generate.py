@@ -608,6 +608,121 @@ EMBLEM MOTION MECHANICS (each page must use a DISTINCT mechanic):
                            fills as the other empties) by being a
                            SINGLE bar that fills then empties on its
                            own — the same bar undoes its own fill)
+    checklists/architecture → radial check bloom (a central pivot at
+                           (60, 45) with a warm-neutral outer ring and
+                           terracotta inner dot represents the
+                           architecture under review; six radial spokes
+                           extend outward at angles 0°, 60°, 120°, 180°,
+                           240°, 300° (clockwise from right) to terminal
+                           markers (small filled circles) at distance 26;
+                           initially all spokes and terminal markers are
+                           warm neutral; over a 7-second cycle, each
+                           terminal marker activates to terracotta in
+                           CLOCKWISE SEQUENCE around the radial structure
+                           (right → lower-right → lower-left → left →
+                           upper-left → upper-right) with each marker's
+                           spoke briefly highlighting terracotta as the
+                           marker activates, and once activated the
+                           terminal stays terracotta until the global
+                           reset; after all six markers are illuminated
+                           the structure holds briefly (the bloom-of-
+                           verified-dimensions), then all reset to warm
+                           neutral and the cycle repeats; FIRST
+                           SPOKE-AND-TERMINAL RADIAL mechanic in the
+                           catalogue; distinct from #1 particle flow
+                           (RADIAL CENTRIPETAL convergence — particles
+                           travel inward from edge to centre) by being
+                           CENTRIFUGAL STATIC structure with terminal
+                           markers ACTIVATING in CLOCKWISE TEMPORAL
+                           SEQUENCE; distinct from #21 reciprocating arc
+                           (uses ARCS as visual elements with zone-
+                           cycling perimeter highlighting) by having
+                           DISCRETE NUMBER OF SPOKES with TERMINAL
+                           MARKERS that activate in CLOCKWISE SEQUENCE,
+                           not zone-cycling; distinct from #38 sweeping
+                           gauge needle (SINGLE rotating needle on a
+                           STATIC arc) by being STATIC SPOKES with
+                           SEQUENTIAL TERMINAL ACTIVATION rather than
+                           one moving element)
+    checklists/deployment → sequential vertical fill (five vertical
+                           bars in a horizontal row at x=14/34/54/74/94,
+                           each width 12 height 50 from y=20 to y=70,
+                           with warm-neutral baseline always visible
+                           and small warm-neutral dot below each bar
+                           at y=78; over a 7-second cycle, each bar's
+                           terracotta foreground rectangle fills from
+                           BOTTOM-TO-TOP IN STRICT SEQUENCE — bar 1
+                           fills from y=70/h=0 to y=20/h=50 over phase
+                           0.043-0.200, then bar 2 fills over phase
+                           0.200-0.357, then bar 3 over 0.357-0.514,
+                           then bar 4 over 0.514-0.671, then bar 5 over
+                           0.671-0.828; once all five are full the
+                           structure holds (deploy complete) for phase
+                           0.828-0.929, then all five empty
+                           SIMULTANEOUSLY in a snap reset over
+                           0.929-1.000 and the cycle restarts; captures
+                           stage-by-stage gate progression through
+                           deployment readiness; distinct from #35
+                           independent metric oscillation which has
+                           FIVE VERTICAL bars CONTINUOUSLY OSCILLATING
+                           heights INDEPENDENTLY (each varies
+                           asynchronously, never fully filling, never
+                           fully emptying) — here FIVE VERTICAL bars
+                           FILL FULLY from BOTTOM-TO-TOP IN STRICT
+                           SEQUENCE then ALL RESET TO EMPTY
+                           SIMULTANEOUSLY, the architectural signature
+                           being SEQUENTIAL FILL with simultaneous
+                           reset; distinct from #28 disparate-rate
+                           progression (TWO HORIZONTAL bars filling at
+                           different rates) by being FIVE VERTICAL bars
+                           in STRICT SEQUENCE; distinct from #14
+                           scaling envelope (HORIZONTAL row of
+                           rectangles, count of active rectangles
+                           varying, DISCRETE on/off) by being CONTINUOUS
+                           FILL of fixed VERTICAL bars in SEQUENTIAL
+                           order)
+    checklists/security  → concentric ring activation (four concentric
+                           circles centred at (60, 45) with radii 30,
+                           23, 16, 9 — outermost to innermost — all
+                           rendered as STROKE-ONLY (no fill) with
+                           stroke-width 2; initially all four rings
+                           are warm-neutral stroke; over a 7-second
+                           cycle, each ring's stroke transitions to
+                           terracotta in OUTERMOST-TO-INNERMOST
+                           SEQUENCE — ring 1 (radius 30, perimeter)
+                           activates over phase 0.07-0.243, ring 2
+                           (radius 23) over 0.243-0.414, ring 3
+                           (radius 16) over 0.414-0.586, ring 4
+                           (innermost, radius 9, the core) over
+                           0.586-0.757; once activated, each ring
+                           stays terracotta until the global reset;
+                           after all four rings are illuminated, a
+                           small centre dot (radius 2.5) at (60, 45)
+                           transitions from warm neutral to terracotta
+                           during the hold phase 0.757-0.900
+                           representing the protected asset at the
+                           core of the defenses; all five elements
+                           reset to warm neutral over phase 0.900-1.000;
+                           captures defense-in-depth verified
+                           perimeter inward; FIRST NESTED-CIRCLE
+                           mechanic in the catalogue; distinct from
+                           #1 particle flow (radial CENTRIPETAL
+                           convergence — particles TRAVEL INWARD from
+                           edge to centre) by being NESTED CIRCLES at
+                           INCREASING RADII that ACTIVATE STATICALLY
+                           in sequence, no particles travelling;
+                           distinct from #21 reciprocating arc (uses
+                           ARCS as visual elements with zone-cycling
+                           perimeter highlighting on a SINGLE arc
+                           geometry) by having FOUR DISTINCT NESTED
+                           RINGS at DIFFERENT RADII activating in
+                           SEQUENTIAL ORDER perimeter-to-core; distinct
+                           from #44 radial check bloom (CENTRE PIVOT +
+                           SPOKES + TERMINAL MARKERS, sequence around
+                           the spokes) by having NO SPOKES, just
+                           NESTED CIRCLES at INCREASING RADII; the
+                           architectural signature is perimeter-to-core
+                           defense layer activation)
   Future pages must invent a new mechanic, not reuse one.
   Two colours only: warm neutral (#D6D2C8) + terracotta (#C96330).
   Basic SMIL primitives only (animate, animateTransform with type=rotate or translate).
@@ -695,7 +810,7 @@ SECTIONS = {
     "integration":   ("Integration Architecture",             "API, event, messaging, workflow, and partner integration patterns."),
     "observability": ("Observability",                        "The foundational observability primitives — incident response, structured logging, metrics, SLIs/SLOs, and distributed tracing — that any production system depends on, separate from AI-specific monitoring."),
     "tools":         ("Architecture Tooling",                 "Automation, validation, and architecture-as-code tooling."),
-    "checklists":    ("Review Checklists",                    "Architecture, security, and deployment readiness checklists."),
+    "checklists":    ("Review Checklists",                    "The artefacts a reviewer applies during structured review work — architecture, deployment readiness, and security checklists — as designed coverage instruments with dimensions, calibration, and tier-awareness, distinct from the governance disciplines that produce them."),
     "runbooks":      ("Operational Runbooks",                 "The artefacts a responder picks up under pressure — incident, migration, and rollback runbooks — as designed documents with structure, calibration, and lifecycle, distinct from the operational disciplines they execute."),
     "scorecards":    ("Architecture Scorecards",              "Scoring templates for continuous architecture quality measurement."),
     "maturity":      ("Architecture Maturity Models",         "Capability scoring and maturity criteria for engineering advancement."),
@@ -1907,6 +2022,24 @@ TAG_LINKS = {
     "Chaos Engineering (Rosenthal et al.)": "https://www.oreilly.com/library/view/chaos-engineering/9781492043850/",
     "Game Days (Google SRE)": "https://sre.google/sre-book/testing-reliability/",
     "Decommissioning Patterns (Lewis)": "https://martinfowler.com/articles/distributed-objects-microservices.html",
+    # Review checklists — architecture review, deployment readiness, security review
+    "ATAM (Architecture Tradeoff Analysis Method)": "https://www.sei.cmu.edu/our-work/projects/display.cfm?customel_datapageid_4050=21859",
+    "Software Architecture in Practice (Bass et al.)": "https://www.oreilly.com/library/view/software-architecture-in/9780136885979/",
+    "AWS Well-Architected Framework": "https://aws.amazon.com/architecture/well-architected/",
+    "Azure Well-Architected Framework": "https://learn.microsoft.com/en-us/azure/well-architected/",
+    "Google Cloud Architecture Framework": "https://cloud.google.com/architecture/framework",
+    "OWASP Top 10": "https://owasp.org/www-project-top-ten/",
+    "OWASP Application Security Verification Standard": "https://owasp.org/www-project-application-security-verification-standard/",
+    "OWASP Software Assurance Maturity Model (SAMM)": "https://owaspsamm.org/",
+    "NIST Secure Software Development Framework": "https://csrc.nist.gov/projects/ssdf",
+    "STRIDE Threat Model": "https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats",
+    "Threat Modeling Manifesto": "https://www.threatmodelingmanifesto.org/",
+    "SLSA Framework": "https://slsa.dev/",
+    "12-Factor App": "https://12factor.net/",
+    "Production-Ready Microservices (Fowler)": "https://www.oreilly.com/library/view/production-ready-microservices/9781491965962/",
+    "Release It! (Nygard)": "https://pragprog.com/titles/mnee2/release-it-second-edition/",
+    "Code Review Best Practices (Google)": "https://google.github.io/eng-practices/review/",
+    "Pull Request Review Patterns": "https://martinfowler.com/articles/ship-show-ask.html",
 }
 
 

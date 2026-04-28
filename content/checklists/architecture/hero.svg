@@ -1,0 +1,169 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Architecture Review Checklist emblem.
+
+  Visual metaphor: an architecture review evaluates multiple
+  non-functional dimensions simultaneously. A central pivot
+  represents the architecture under review; six radial spokes
+  extend outward to terminal markers, each marker representing
+  one dimension being verified (capacity, latency, security,
+  resilience, observability, operability). Over the cycle, each
+  marker activates in sequence (clockwise around the radial
+  structure), illustrating the dimensional verification.
+
+  Geometry:
+    Centre pivot: (60, 45)
+    Spoke length: 26
+    Six spokes at angles: 0°, 60°, 120°, 180°, 240°, 300°
+    (using SVG coordinates where 0° is right, going clockwise:
+      0°   = right       → endpoint (86, 45)
+      60°  = lower-right → endpoint (73, 67.5)  [60+26*cos(60°), 45+26*sin(60°)]
+      120° = lower-left  → endpoint (47, 67.5)  [60+26*cos(120°), 45+26*sin(120°)]
+      180° = left        → endpoint (34, 45)
+      240° = upper-left  → endpoint (47, 22.5)  [60+26*cos(240°), 45+26*sin(240°)]
+      300° = upper-right → endpoint (73, 22.5)  [60+26*cos(300°), 45+26*sin(300°)]
+    )
+    Terminal marker: small filled circle at endpoint, radius 3
+
+  Animation: 7-second cycle.
+    0.0–0.7s : All markers warm neutral (initial state)
+    0.7–0.7s : Marker 1 (right, 0°) turns terracotta
+    1.4–1.4s : Marker 2 (lower-right, 60°) turns terracotta
+    2.1–2.1s : Marker 3 (lower-left, 120°) turns terracotta
+    2.8–2.8s : Marker 4 (left, 180°) turns terracotta
+    3.5–3.5s : Marker 5 (upper-left, 240°) turns terracotta
+    4.2–4.2s : Marker 6 (upper-right, 300°) turns terracotta
+    4.2–6.0s : All markers terracotta (review complete bloom)
+    6.0–7.0s : All markers fade back to warm neutral, brief pause
+
+  Each marker also has its spoke line in warm neutral by default;
+  when the marker activates, its spoke also briefly highlights
+  to terracotta then fades back to warm neutral. The terminal
+  marker stays terracotta after activation until the global
+  reset.
+
+  Motion mechanic: RADIAL CHECK BLOOM (the forty-fourth mechanic
+  in the catalogue). FIRST SPOKE-AND-TERMINAL RADIAL mechanic.
+  Distinct from #1 particle flow (radial CENTRIPETAL convergence —
+  particles flow INWARD from edge to centre) by being CENTRIFUGAL
+  STATIC structure with terminal markers ACTIVATING in clockwise
+  sequence around the rim. Distinct from #21 reciprocating arc
+  (uses ARCS as visual elements with zone-cycling perimeter
+  highlighting; the arcs themselves don't rotate or activate
+  in sequence) by having a DISCRETE NUMBER OF SPOKES with
+  TERMINAL MARKERS that activate in TEMPORAL SEQUENCE (clockwise
+  bloom), not zone-cycling perimeter. Distinct from #38 sweeping
+  gauge needle (single rotating needle on a STATIC arc) by being
+  STATIC SPOKES with SEQUENTIAL TERMINAL ACTIVATION rather than
+  one moving element.
+
+  Two colours only: warm neutral (#D6D2C8) for inactive spokes,
+  inactive terminal markers, and the central pivot ring,
+  terracotta (#C96330) for the activated terminals, briefly
+  highlighted spokes, and the central pivot fill.
+-->
+
+<!-- ─── Six radial spokes (warm neutral baseline, brief highlight on activation) ─── -->
+
+<!-- Spoke 1: 0° (right) — endpoint (86, 45) -->
+<line x1="60" y1="45" x2="86" y2="45" stroke="#D6D2C8" stroke-width="1.4">
+  <animate attributeName="stroke"
+           values="#D6D2C8; #C96330; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.10; 0.20; 0.30; 0.50; 0.70; 0.86; 1"
+           dur="7s" repeatCount="indefinite"/>
+</line>
+
+<!-- Spoke 2: 60° (lower-right) — endpoint (73, 67.5) -->
+<line x1="60" y1="45" x2="73" y2="67.5" stroke="#D6D2C8" stroke-width="1.4">
+  <animate attributeName="stroke"
+           values="#D6D2C8; #D6D2C8; #C96330; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.20; 0.30; 0.40; 0.50; 0.70; 0.86; 1"
+           dur="7s" repeatCount="indefinite"/>
+</line>
+
+<!-- Spoke 3: 120° (lower-left) — endpoint (47, 67.5) -->
+<line x1="60" y1="45" x2="47" y2="67.5" stroke="#D6D2C8" stroke-width="1.4">
+  <animate attributeName="stroke"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #C96330; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.20; 0.30; 0.40; 0.50; 0.70; 0.86; 1"
+           dur="7s" repeatCount="indefinite"/>
+</line>
+
+<!-- Spoke 4: 180° (left) — endpoint (34, 45) -->
+<line x1="60" y1="45" x2="34" y2="45" stroke="#D6D2C8" stroke-width="1.4">
+  <animate attributeName="stroke"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #D6D2C8; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.30; 0.40; 0.50; 0.55; 0.70; 0.86; 1"
+           dur="7s" repeatCount="indefinite"/>
+</line>
+
+<!-- Spoke 5: 240° (upper-left) — endpoint (47, 22.5) -->
+<line x1="60" y1="45" x2="47" y2="22.5" stroke="#D6D2C8" stroke-width="1.4">
+  <animate attributeName="stroke"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.30; 0.40; 0.50; 0.60; 0.65; 0.86; 1"
+           dur="7s" repeatCount="indefinite"/>
+</line>
+
+<!-- Spoke 6: 300° (upper-right) — endpoint (73, 22.5) -->
+<line x1="60" y1="45" x2="73" y2="22.5" stroke="#D6D2C8" stroke-width="1.4">
+  <animate attributeName="stroke"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #D6D2C8"
+           keyTimes="0; 0.40; 0.50; 0.60; 0.65; 0.70; 0.75; 1"
+           dur="7s" repeatCount="indefinite"/>
+</line>
+
+<!-- ─── Six terminal markers (warm neutral baseline, terracotta on activation, hold until global reset) ─── -->
+
+<!-- Marker 1: 0° at (86, 45) -->
+<circle cx="86" cy="45" r="3" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #C96330; #C96330; #C96330; #C96330; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.10; 0.30; 0.50; 0.70; 0.85; 0.92; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Marker 2: 60° at (73, 67.5) -->
+<circle cx="73" cy="67.5" r="3" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #C96330; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.20; 0.30; 0.50; 0.70; 0.85; 0.92; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Marker 3: 120° at (47, 67.5) -->
+<circle cx="47" cy="67.5" r="3" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #C96330; #C96330; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.20; 0.30; 0.40; 0.70; 0.85; 0.92; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Marker 4: 180° at (34, 45) -->
+<circle cx="34" cy="45" r="3" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.30; 0.40; 0.50; 0.55; 0.85; 0.92; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Marker 5: 240° at (47, 22.5) -->
+<circle cx="47" cy="22.5" r="3" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.30; 0.40; 0.50; 0.60; 0.65; 0.92; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Marker 6: 300° at (73, 22.5) -->
+<circle cx="73" cy="22.5" r="3" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #D6D2C8"
+           keyTimes="0; 0.40; 0.50; 0.60; 0.65; 0.70; 0.75; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Central pivot (warm neutral ring + terracotta inner dot) ─── -->
+<circle cx="60" cy="45" r="4" fill="none" stroke="#D6D2C8" stroke-width="1.2"/>
+<circle cx="60" cy="45" r="2.2" fill="#C96330"/>
+</svg>

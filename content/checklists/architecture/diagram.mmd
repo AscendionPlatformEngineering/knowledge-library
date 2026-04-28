@@ -1,49 +1,104 @@
-flowchart TD
-    A([🚀 Start: Architecture Review Checklist]) --> B[Assessment & Discovery]
+flowchart TB
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    %% ─── Design entry ───
+    DESIGN([Proposed Architecture])
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    %% ─── Class assignment ───
+    CLASS{System Class<br/>request-response &middot; event-driven<br/>ML inference &middot; batch &middot; streaming}
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    %% ─── Tier assignment ───
+    TIER{Tier Assignment<br/>low / medium / high / critical}
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    %% ─── Checklist core ───
+    subgraph CHECKLIST [Architecture Review Checklist &mdash; designed artefact]
+        direction TB
+        DIMS[(Non-Functional Dimensions<br/>capacity &middot; latency<br/>security &middot; resilience<br/>observability &middot; operability<br/>cost &middot; evolvability)]
+        SHARED[Shared Items<br/>applicable across classes]
+        SPECIFIC[Class-Specific Items<br/>extension per system class]
+        DEPTH[Tier-Aware Depth<br/>required / optional / skipped<br/>per tier]
+    end
 
-    G --> H[Architecture Review Board]
+    %% ─── Item quality ───
+    ITEMS{{Items Demand<br/>Specific Evidence<br/>numbers &middot; URLs &middot; dates}}
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    %% ─── Tooling integration ───
+    subgraph TOOLING [Tooling Integration]
+        direction TB
+        ADR[ADR / Design-Doc<br/>Template]
+        PR[PR Template<br/>Review Tickets]
+        MEETING[Review Meeting<br/>Agenda]
+    end
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    %% ─── Application ───
+    REVIEW[Architecture Review<br/>reviewer evaluates each item<br/>against specific evidence]
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    %% ─── Outcome ───
+    OUTCOMES[(Item-Level Outcomes<br/>gaps &middot; waivers &middot; clean passes)]
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    %% ─── Calibration loop ───
+    INCIDENT([Production Incident])
+    POSTMORTEM[Post-Mortem<br/>'would checklist have caught this?']
+    REVISION[Revision Queue<br/>versioned &middot; reviewed]
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    %% ─── Flow ───
+    DESIGN --> CLASS
+    CLASS --> TIER
+    TIER --> CHECKLIST
+    DIMS --> SHARED
+    DIMS --> SPECIFIC
+    SHARED --> DEPTH
+    SPECIFIC --> DEPTH
+    DEPTH --> ITEMS
+    ITEMS --> REVIEW
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    CHECKLIST -.surfaces in.-> ADR
+    CHECKLIST -.surfaces in.-> PR
+    CHECKLIST -.surfaces in.-> MEETING
+
+    ADR --> REVIEW
+    PR --> REVIEW
+    MEETING --> REVIEW
+
+    REVIEW --> OUTCOMES
+
+    %% ─── Calibration ───
+    INCIDENT --> POSTMORTEM
+    POSTMORTEM --> REVISION
+    REVISION -.updates.-> CHECKLIST
+    OUTCOMES -.informs.-> REVISION
+
+    %% ─── NODE STYLES ───
+    style DESIGN fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Class / tier: emphasised cream (the architectural assignments)
+    style CLASS fill:#FBEDE0,stroke:#C96330,stroke-width:2.2px,color:#3A2410
+    style TIER  fill:#FBEDE0,stroke:#C96330,stroke-width:2.2px,color:#3A2410
+
+    %% Checklist core: emphasised
+    style DIMS     fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+    style SHARED   fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style SPECIFIC fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style DEPTH    fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+
+    %% Item quality: emphasised (the discipline)
+    style ITEMS fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+
+    %% Tooling: blue
+    style ADR     fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.5px,color:#1A2840
+    style PR      fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.5px,color:#1A2840
+    style MEETING fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.5px,color:#1A2840
+
+    %% Review: emphasised (the application)
+    style REVIEW fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+
+    %% Outcomes: cooler tone (the data)
+    style OUTCOMES fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.6px,color:#2C4258
+
+    %% Calibration: cooler
+    style INCIDENT   fill:#F4E5DD,stroke:#A37050,stroke-width:1.8px,color:#3A2410
+    style POSTMORTEM fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style REVISION   fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.8px,color:#2C4258
+
+    %% ─── CLUSTER STYLES ───
+    style CHECKLIST fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410
+    style TOOLING   fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840

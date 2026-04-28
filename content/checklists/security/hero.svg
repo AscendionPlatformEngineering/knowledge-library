@@ -1,0 +1,103 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Security Review Checklist emblem.
+
+  Visual metaphor: defense in depth verified layer by layer. Four
+  concentric circles centered on the canvas represent the layers
+  of defense (outermost: perimeter/network; second: application;
+  third: identity/authorisation; innermost: data/critical assets).
+  Initially all four rings are warm neutral. Over the cycle, each
+  ring activates to terracotta in sequence from OUTERMOST to
+  INNERMOST — representing the security review verifying each layer
+  perimeter inward. After all four rings are active, hold briefly
+  (defense verified end-to-end), then all reset to warm neutral and
+  the sequence repeats.
+
+  Geometry:
+    Centre: (60, 45)
+    Ring 1 (outermost): radius 30
+    Ring 2:             radius 23
+    Ring 3:             radius 16
+    Ring 4 (innermost): radius 9
+    All rings are stroke-only (no fill), stroke-width 2
+
+  Animation: 7-second cycle.
+    0.0–0.5s   : All rings warm neutral (initial state)
+    0.5–1.7s   : Ring 1 (outermost) activates to terracotta
+    1.7–2.9s   : Ring 2 activates
+    2.9–4.1s   : Ring 3 activates
+    4.1–5.3s   : Ring 4 (innermost) activates
+    5.3–6.3s   : All four rings terracotta (defense verified hold)
+    6.3–6.8s   : All rings fade to warm neutral
+    6.8–7.0s   : Brief pause; restart
+
+  Each ring's activation transitions its stroke colour from warm
+  neutral to terracotta over a brief moment, then holds terracotta
+  until the global reset. The activation is sequential (one ring
+  at a time), so the visual progression is perimeter → core, not
+  simultaneous.
+
+  A small terracotta dot appears at the very centre during the
+  hold phase (after all four rings are active) — representing the
+  protected asset at the core of the defense layers.
+
+  Motion mechanic: CONCENTRIC RING ACTIVATION (the forty-sixth
+  mechanic in the catalogue). FIRST NESTED-CIRCLE mechanic in
+  the catalogue. Distinct from #1 particle flow (RADIAL
+  CENTRIPETAL convergence — particles travel inward from edge
+  to centre) by being NESTED CIRCLES at INCREASING RADII that
+  ACTIVATE STATICALLY in sequence, no particles travelling.
+  Distinct from #21 reciprocating arc (uses ARCS as visual
+  elements with zone-cycling perimeter highlighting on a SINGLE
+  arc geometry) by having FOUR DISTINCT NESTED RINGS at
+  DIFFERENT RADII activating SEQUENTIALLY. Distinct from #44
+  radial check bloom (CENTRE PIVOT + SPOKES + TERMINAL MARKERS,
+  sequence around the SPOKES) by having NO SPOKES, just NESTED
+  CIRCLES at INCREASING RADII. The architectural signature is
+  perimeter-to-core defense layer activation.
+
+  Two colours only: warm neutral (#D6D2C8) for inactive rings and
+  the centre dot's outline, terracotta (#C96330) for activated
+  rings and the centre dot's fill during hold.
+-->
+
+<!-- ─── Ring 1 (outermost, radius 30) ─── -->
+<circle cx="60" cy="45" r="30" fill="none" stroke="#D6D2C8" stroke-width="2">
+  <animate attributeName="stroke"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #C96330; #C96330; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.07; 0.10; 0.243; 0.414; 0.586; 0.757; 0.900; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Ring 2 (radius 23) ─── -->
+<circle cx="60" cy="45" r="23" fill="none" stroke="#D6D2C8" stroke-width="2">
+  <animate attributeName="stroke"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #C96330; #C96330; #C96330; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.07; 0.243; 0.270; 0.414; 0.586; 0.757; 0.900; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Ring 3 (radius 16) ─── -->
+<circle cx="60" cy="45" r="16" fill="none" stroke="#D6D2C8" stroke-width="2">
+  <animate attributeName="stroke"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #C96330; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.07; 0.243; 0.414; 0.443; 0.586; 0.757; 0.900; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Ring 4 (innermost, radius 9) ─── -->
+<circle cx="60" cy="45" r="9" fill="none" stroke="#D6D2C8" stroke-width="2">
+  <animate attributeName="stroke"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.07; 0.243; 0.414; 0.586; 0.614; 0.757; 0.900; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Centre dot (warm neutral by default; terracotta during hold phase) ─── -->
+<circle cx="60" cy="45" r="2.5" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.07; 0.243; 0.414; 0.586; 0.757; 0.770; 0.900; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+</svg>
