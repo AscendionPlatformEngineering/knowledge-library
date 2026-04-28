@@ -1,49 +1,84 @@
-flowchart TD
-    A([🚀 Start: Incident Runbook]) --> B[Assessment & Discovery]
+flowchart LR
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    %% ─── Alerting layer (the trigger point) ───
+    ALERT[(Alert Fires<br/>specific signature)]
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    %% ─── Incident class taxonomy ───
+    TAXONOMY{Incident Class<br/>Taxonomy}
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    %% ─── Runbook structure ───
+    subgraph RUNBOOK [Runbook per Class &mdash; designed artefact]
+        direction TB
+        TRIGGER[Trigger Condition<br/>alert name &middot; dashboard signature<br/>threshold value]
+        STEPS[Executable Steps<br/>imperative &middot; concrete artefacts<br/>commands &middot; queries &middot; URLs]
+        BRANCH{Branching<br/>for known unknowns}
+        VERIFY[Verification<br/>per-step + resolution<br/>defined]
+    end
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    %% ─── Discoverability ───
+    LINK[/Alert-to-Runbook Link<br/>embedded in alert payload/]
+    TOOLING[(Integrated Tooling<br/>chat &middot; incident system<br/>alerting platform)]
 
-    G --> H[Architecture Review Board]
+    %% ─── Lifecycle ───
+    STATUS{Lifecycle Status<br/>proposed &middot; in-use &middot; deprecated}
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    %% ─── Learning loop ───
+    INVOCATION([Runbook Invoked])
+    FINDINGS[(Post-Incident Findings<br/>what was unclear / wrong / missing)]
+    REVISION[Revision Queue<br/>versioned &middot; reviewed]
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    %% ─── Outcomes ───
+    RESOLVED([Incident Resolved])
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    %% ─── Flow ───
+    ALERT --> LINK
+    LINK --> RUNBOOK
+    ALERT -.classified by.-> TAXONOMY
+    TAXONOMY -.maps to.-> RUNBOOK
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    TRIGGER --> STEPS
+    STEPS --> BRANCH
+    BRANCH --> STEPS
+    STEPS --> VERIFY
+    VERIFY --> RESOLVED
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    RUNBOOK -.in.-> TOOLING
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    %% ─── Lifecycle attached to each runbook ───
+    STATUS -.tags.-> RUNBOOK
+
+    %% ─── Learning loop ───
+    RESOLVED --> INVOCATION
+    INVOCATION --> FINDINGS
+    FINDINGS --> REVISION
+    REVISION -.updates.-> RUNBOOK
+    REVISION -.may evolve.-> TAXONOMY
+
+    %% ─── NODE STYLES ───
+    style ALERT fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Taxonomy: emphasised cream (the organising principle)
+    style TAXONOMY fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+
+    %% Runbook structure: emphasised cream (the architectural artefact)
+    style TRIGGER fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+    style STEPS   fill:#FBEDE0,stroke:#C96330,stroke-width:2.2px,color:#3A2410
+    style BRANCH  fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+    style VERIFY  fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+
+    %% Discoverability: amber (the routing layer)
+    style LINK    fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+    style TOOLING fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+
+    %% Lifecycle: blue
+    style STATUS fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+
+    %% Learning loop: cooler tone (the meta layer)
+    style INVOCATION fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style FINDINGS   fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.6px,color:#2C4258
+    style REVISION   fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.8px,color:#2C4258
+
+    style RESOLVED fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% ─── CLUSTER STYLES ───
+    style RUNBOOK fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410

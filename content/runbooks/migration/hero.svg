@@ -1,0 +1,108 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Migration Runbook emblem.
+
+  Visual metaphor: traffic migrating from OLD system to NEW system.
+  Two stacked horizontal bars span the canvas.
+    - Top bar represents the OLD system.
+    - Bottom bar represents the NEW system.
+  At cycle start, top is FULLY terracotta (100% old) and bottom is
+  EMPTY (0% new). Over the cycle, the top's terracotta retreats from
+  RIGHT to LEFT (the old system loses traffic), while the bottom's
+  terracotta advances from LEFT to RIGHT (the new system gains
+  traffic). At any moment, top + bottom ≈ 100%, capturing the
+  migration's anti-correlated nature.
+
+  Geometry:
+    Top bar: x=15-105 (width 90), y=28-38 (height 10)
+    Bottom bar: x=15-105 (width 90), y=52-62 (height 10)
+    Each bar has a warm-neutral baseline (always visible) and a
+    terracotta foreground rectangle whose width animates.
+
+  Animation: 6-second cycle.
+    Top bar (OLD): width starts at 90, ends at 0 (retreats right-to-left)
+      Width animation: 90 → 90 → 67 → 45 → 22 → 0 → 0 → 90 (reset)
+      x animation: stays at 15 (the width changes from the right edge)
+      ACTUALLY: to make it retreat from right-to-left, we need both x
+      and width to change: x stays at 15, width decreases.
+      Hmm wait — if x=15 and width decreases, the rectangle shrinks
+      from the right edge. That's what we want.
+    
+    Bottom bar (NEW): width starts at 0, ends at 90 (advances left-to-right)
+      Width: 0 → 0 → 22 → 45 → 67 → 90 → 90 → 0 (reset)
+      x stays at 15.
+
+  Reset behavior: at the end of cycle, both bars instantly return
+  to start state (top 100%, bottom 0%) and the cycle restarts.
+  
+  The anti-correlation is preserved at every moment: as top's width
+  decreases, bottom's width increases proportionally.
+
+  Brief pause at start (showing 100/0 state) and at peak (top=0,
+  bottom=full) to let the architectural moment register.
+
+  Animation timeline (6s cycle):
+    0.0–0.5s : Hold initial state (top 100%, bottom 0%)
+    0.5–4.5s : Anti-correlated transition
+              (top 100% → 0%, bottom 0% → 100%, linearly)
+    4.5–5.5s : Hold final state (top 0%, bottom 100%)
+    5.5–6.0s : Snap back to initial state
+
+  Motion mechanic: ANTI-CORRELATED FILL (the forty-second mechanic
+  in the catalogue). Distinct from #28 disparate-rate progression
+  which has TWO HORIZONTAL bars filling LEFT-TO-RIGHT MONOTONICALLY
+  at DIFFERENT RATES and then BOTH RESET TOGETHER — here both bars
+  also fill horizontally, but they are ANTI-CORRELATED: as one
+  empties from RIGHT-TO-LEFT, the other fills from LEFT-TO-RIGHT.
+  The architectural signature is the inverse relationship: at any
+  moment, the visible terracotta totals to a constant (representing
+  total traffic remaining constant as it shifts from old to new).
+  Distinct from #14 scaling envelope (count of active rectangles
+  changes — DISCRETE on/off states) by being CONTINUOUS fill on
+  fixed-position bars.
+
+  Two colours only: warm neutral (#D6D2C8) for the always-visible
+  baseline of each bar, terracotta (#C96330) for the active
+  (occupied) portion of each bar.
+-->
+
+<!-- ─── Subtle labels on the left (small text-line indicators, decorative) ─── -->
+<line x1="6" y1="33" x2="11" y2="33" stroke="#D6D2C8" stroke-width="0.8" opacity="0.6"/>
+<line x1="6" y1="57" x2="11" y2="57" stroke="#D6D2C8" stroke-width="0.8" opacity="0.6"/>
+
+<!-- ─── Top bar baseline (OLD system; warm neutral, always visible) ─── -->
+<rect x="15" y="28" width="90" height="10" rx="1.5" fill="#D6D2C8" opacity="0.4"/>
+
+<!-- ─── Bottom bar baseline (NEW system; warm neutral, always visible) ─── -->
+<rect x="15" y="52" width="90" height="10" rx="1.5" fill="#D6D2C8" opacity="0.4"/>
+
+<!-- ─── Top bar terracotta foreground (OLD system traffic) ─── -->
+<!-- Starts full (width=90), retreats right-to-left to width=0 -->
+<rect x="15" y="28" height="10" rx="1.5" fill="#C96330" width="90">
+  <animate attributeName="width"
+           values="90; 90; 0; 0; 90"
+           keyTimes="0; 0.083; 0.750; 0.917; 1"
+           dur="6s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Bottom bar terracotta foreground (NEW system traffic) ─── -->
+<!-- Starts empty (width=0), advances left-to-right to width=90 -->
+<rect x="15" y="52" height="10" rx="1.5" fill="#C96330" width="0">
+  <animate attributeName="width"
+           values="0; 0; 90; 90; 0"
+           keyTimes="0; 0.083; 0.750; 0.917; 1"
+           dur="6s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Subtle vertical divider showing 50% midpoint ─── -->
+<line x1="60" y1="42" x2="60" y2="48" stroke="#D6D2C8" stroke-width="0.8" opacity="0.5"/>
+
+<!-- ─── Small directional indicator between bars showing flow ─── -->
+<!-- A thin terracotta line from middle of top bar down to middle of bottom bar -->
+<line x1="60" y1="38" x2="60" y2="52" stroke="#C96330" stroke-width="1.2" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0.5; 0.7; 0.5; 0; 0"
+           keyTimes="0; 0.083; 0.300; 0.500; 0.700; 0.917; 1"
+           dur="6s" repeatCount="indefinite"/>
+</line>
+</svg>

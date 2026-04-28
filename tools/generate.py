@@ -506,9 +506,111 @@ EMBLEM MOTION MECHANICS (each page must use a DISTINCT mechanic):
                            multiple bars APPEARING WHOLE in cascade
                            order, no fill animation, hierarchical
                            position not sequential rate)
+    runbooks/incident    → sequential pointer descent (a vertical list
+                           of five stationary text-line shapes with
+                           bullet circles is always visible in warm
+                           neutral on the canvas, representing runbook
+                           steps; a terracotta pointer triangle on
+                           the left descends through the list at
+                           intervals using animateTransform type=
+                           translate, pausing at each step before
+                           advancing to the next; as the pointer
+                           arrives at each step, that step's text-line
+                           briefly brightens to terracotta (the
+                           responder is on this step now), and when
+                           the pointer moves on, the line returns to
+                           warm neutral; over a 6-second cycle the
+                           pointer descends through all five steps,
+                           then disappears for a brief pause before
+                           reappearing at the top for the next cycle;
+                           captures a responder reading and executing
+                           a runbook step by step; distinct from #32
+                           vertical cascade checklist which has CHECKMARK
+                           PATHS appearing inside checkbox rectangles
+                           sequentially top-to-bottom and ALL PERSISTING
+                           until cleared — here SINGLE MOVING POINTER
+                           advances and ONLY the CURRENT STEP is
+                           highlighted briefly, all others stay neutral;
+                           distinct from #6 sequential frame
+                           illumination which has a SINGLE HORIZONTAL
+                           ROW of frames taking turns being lit — here
+                           VERTICAL list with a SEPARATE MARKER ELEMENT
+                           (the pointer triangle) as the moving piece
+                           rather than the items themselves taking
+                           turns; distinct from #34 tiered escalation
+                           cascade by being SINGLE-COLUMN list with
+                           marker descending through a fixed sequence)
+    runbooks/migration   → anti-correlated fill (two stacked horizontal
+                           bars span the canvas: top bar represents
+                           the OLD system at y=28-38, bottom bar
+                           represents the NEW system at y=52-62, both
+                           with warm-neutral baselines always visible;
+                           top bar's terracotta foreground starts at
+                           full width 90 (representing 100% old-system
+                           traffic) and animates down to width 0 over
+                           the cycle, the rectangle shrinking from
+                           the right edge as old-system traffic
+                           retreats; bottom bar's terracotta foreground
+                           starts at width 0 and animates up to width
+                           90 (representing the new system gaining
+                           traffic), the rectangle growing rightward;
+                           the two bars are ANTI-CORRELATED — at any
+                           moment, the visible terracotta totals to a
+                           constant (representing total traffic remaining
+                           constant as it shifts from old to new); over
+                           a 6-second cycle the transition completes,
+                           holds briefly, then snaps back to start;
+                           captures migration as gradual traffic shift;
+                           distinct from #28 disparate-rate progression
+                           which has TWO horizontal bars filling
+                           LEFT-TO-RIGHT MONOTONICALLY at DIFFERENT
+                           RATES and BOTH RESET TOGETHER — here both
+                           bars fill horizontally too, but ANTI-
+                           CORRELATED: as one empties from RIGHT-TO-
+                           LEFT, the other fills from LEFT-TO-RIGHT,
+                           and the inverse relationship is the
+                           architectural signature; distinct from #14
+                           scaling envelope (count of active rectangles
+                           changes — DISCRETE on/off states) by being
+                           CONTINUOUS fill on fixed-position bars)
+    runbooks/rollback    → forward-reverse fill (a single horizontal
+                           bar at y=42-52 with warm-neutral baseline
+                           always visible spans the canvas x=15-105; a
+                           terracotta foreground rectangle within the
+                           baseline animates its width through a
+                           BIDIRECTIONAL pattern over a 6-second cycle:
+                           starts empty (width=0), GROWS LEFT-TO-RIGHT
+                           to width=67.5 (75% — the rollback decision
+                           point), HOLDS BRIEFLY at the decision point
+                           with a small terracotta indicator dot
+                           appearing above the threshold tick, then
+                           DRAINS RIGHT-TO-LEFT back to width=0
+                           (rollback restoring prior state), then holds
+                           empty before next cycle; subtle directional
+                           arrow indicators (warm neutral) appear above
+                           the bar during forward fill and below during
+                           drain phase; the architectural signature is
+                           the BIDIRECTIONAL motion on a SINGLE bar —
+                           the same fill that grows then UNDOES itself;
+                           FIRST BIDIRECTIONAL-FILL mechanic in the
+                           catalogue; distinct from #7 progressive
+                           threshold fill which is a SINGLE region
+                           GROWING through canary checkpoints and then
+                           RESETTING (monotonic forward then snap-back
+                           to start) — here the fill GROWS forward,
+                           HOLDS at decision point, then UN-GROWS
+                           backward (drain) before the next cycle;
+                           distinct from #28 disparate-rate progression
+                           (TWO bars filling at different rates then
+                           both reset) by being SINGLE bar with
+                           BIDIRECTIONAL motion; distinct from #42
+                           anti-correlated fill (TWO bars where one
+                           fills as the other empties) by being a
+                           SINGLE bar that fills then empties on its
+                           own — the same bar undoes its own fill)
   Future pages must invent a new mechanic, not reuse one.
   Two colours only: warm neutral (#D6D2C8) + terracotta (#C96330).
-  Basic SMIL primitives only (animate, animateTransform with type=rotate).
+  Basic SMIL primitives only (animate, animateTransform with type=rotate or translate).
   No animateMotion / mpath (proven unreliable across browsers).
 
 STUB CONTENT IS LOREM IPSUM:
@@ -594,7 +696,7 @@ SECTIONS = {
     "observability": ("Observability",                        "The foundational observability primitives — incident response, structured logging, metrics, SLIs/SLOs, and distributed tracing — that any production system depends on, separate from AI-specific monitoring."),
     "tools":         ("Architecture Tooling",                 "Automation, validation, and architecture-as-code tooling."),
     "checklists":    ("Review Checklists",                    "Architecture, security, and deployment readiness checklists."),
-    "runbooks":      ("Operational Runbooks",                 "Incident response, rollback, and migration runbooks."),
+    "runbooks":      ("Operational Runbooks",                 "The artefacts a responder picks up under pressure — incident, migration, and rollback runbooks — as designed documents with structure, calibration, and lifecycle, distinct from the operational disciplines they execute."),
     "scorecards":    ("Architecture Scorecards",              "Scoring templates for continuous architecture quality measurement."),
     "maturity":      ("Architecture Maturity Models",         "Capability scoring and maturity criteria for engineering advancement."),
     "playbooks":     ("Engineering Playbooks",                "Step-by-step playbooks for common architecture challenges."),
@@ -1788,6 +1890,23 @@ TAG_LINKS = {
     "Distributed Systems Observability (Cindy Sridharan)": "https://www.oreilly.com/library/view/distributed-systems-observability/9781492033431/",
     "Error Budget Policy (Google SRE)": "https://sre.google/workbook/error-budget-policy/",
     "ITIL Incident Management": "https://www.axelos.com/certifications/propath/itil-4",
+    # Runbooks — execution, deployment, migration, rollback patterns
+    "Runbook (Wikipedia)": "https://en.wikipedia.org/wiki/Runbook",
+    "GitOps Principles": "https://opengitops.dev/",
+    "Argo CD": "https://argo-cd.readthedocs.io/",
+    "Spinnaker — Continuous Delivery Platform": "https://spinnaker.io/",
+    "Feature Flags (Martin Fowler)": "https://martinfowler.com/articles/feature-toggles.html",
+    "Blue-Green Deployment (Martin Fowler)": "https://martinfowler.com/bliki/BlueGreenDeployment.html",
+    "Canary Release (Martin Fowler)": "https://martinfowler.com/bliki/CanaryRelease.html",
+    "Strangler Fig Pattern (Martin Fowler)": "https://martinfowler.com/bliki/StranglerFigApplication.html",
+    "Database Refactoring (Ambler & Sadalage)": "https://martinfowler.com/books/refactoringDatabases.html",
+    "Online Schema Migration (gh-ost)": "https://github.com/github/gh-ost",
+    "Continuous Delivery (Humble & Farley)": "https://www.oreilly.com/library/view/continuous-delivery-reliable/9780321670250/",
+    "Accelerate (Forsgren, Humble, Kim)": "https://itrevolution.com/product/accelerate/",
+    "The Phoenix Project (Kim et al.)": "https://itrevolution.com/product/the-phoenix-project/",
+    "Chaos Engineering (Rosenthal et al.)": "https://www.oreilly.com/library/view/chaos-engineering/9781492043850/",
+    "Game Days (Google SRE)": "https://sre.google/sre-book/testing-reliability/",
+    "Decommissioning Patterns (Lewis)": "https://martinfowler.com/articles/distributed-objects-microservices.html",
 }
 
 

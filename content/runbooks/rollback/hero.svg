@@ -1,0 +1,137 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Rollback Runbook emblem.
+
+  Visual metaphor: a deploy that progresses forward, encounters a
+  problem, and is rolled back. A single horizontal bar fills from
+  LEFT to RIGHT (terracotta foreground over warm neutral baseline) —
+  representing a deploy progressing through its rollout phases. It
+  reaches approximately 75% of its width (the rollback decision
+  point), holds briefly, then DRAINS BACK from RIGHT to LEFT until
+  empty (rollback in progress, restoring the prior state). The cycle
+  resets and starts forward-fill again.
+
+  Geometry:
+    Bar position: x=15-105 (width 90), y=42-52 (height 10)
+    Decision point marker (a small vertical tick) at approximately
+    75% of bar width: x=15+0.75*90 = x=82.5, but place it at x=82
+    or x=83 for cleaner integer.
+    
+    Decision tick at x=83, y=39 to y=55 (small vertical line above
+    and below the bar)
+
+  Animation: 6-second cycle.
+    0.0–0.3s   : Bar empty (width=0)
+    0.3–2.4s   : Bar fills LEFT→RIGHT, width 0 to 67.5 (75% of 90)
+                 (forward fill phase)
+    2.4–2.9s   : Hold at 75% (decision point — pause to register)
+    2.9–4.5s   : Bar drains RIGHT→LEFT, width 67.5 back to 0
+                 (rollback phase)
+    4.5–6.0s   : Hold empty (system restored, ready for next cycle)
+
+  For drain to go RIGHT-TO-LEFT visually, we need both x and width
+  to change: as drain proceeds, x increases and width decreases
+  proportionally so the right edge stays at the previous fill point
+  and only the left edge shrinks toward the right.
+  
+  Wait — let me think again. If x stays at 15 and width decreases
+  from 67.5 to 0, the rectangle shrinks from the RIGHT (right edge
+  retreats leftward). That's actually what we want: as rollback
+  proceeds, the terracotta region retreats from right back to the
+  start. Yes that's correct.
+  
+  Actually no — if the bar represents a deploy progressing left to
+  right, the LEFT edge is "start of deploy" and the RIGHT edge of
+  the terracotta region is "current position of deploy." During
+  rollback, the deploy is being UNDONE — the right edge of the
+  terracotta region moves LEFT, returning toward the start. So
+  width decreasing with x fixed at 15 is correct: the right edge
+  retreats leftward, capturing the rollback motion.
+
+  Actually I realize this is the same direction as the migration
+  emblem's TOP bar (top bar retreats from right-to-left). The
+  difference is that the migration emblem PAIRS this with the
+  bottom bar growing. Here it's a SINGLE bar that:
+    1. Grows from left-to-right (forward)
+    2. Holds briefly
+    3. Shrinks from right-to-left (rollback)
+    4. Holds empty
+    5. Repeats
+
+  This combination of GROW + HOLD + SHRINK + HOLD on a SINGLE bar
+  is the bidirectional motion that's distinct from all prior
+  mechanics.
+
+  Decision-point indicator: a small vertical tick at x=83 that
+  becomes visible (or briefly highlights) during the hold period
+  (2.4-2.9s) representing the moment of rollback decision.
+
+  Motion mechanic: FORWARD-REVERSE FILL (the forty-third mechanic
+  in the catalogue). FIRST BIDIRECTIONAL-FILL mechanic in the
+  catalogue. Distinct from #7 progressive threshold fill which is
+  a SINGLE region GROWING through canary checkpoints and then
+  RESETTING (monotonic forward then snap-back to start) — here the
+  fill GROWS forward, HOLDS, then UNGROWS backward (drain) before
+  the next cycle. Distinct from #28 disparate-rate progression
+  (TWO horizontal bars filling left-to-right at DIFFERENT rates
+  then both reset together) by being a SINGLE bar with BIDIRECTIONAL
+  motion. Distinct from #42 anti-correlated fill (TWO bars where one
+  fills as the other empties) by being a SINGLE bar that fills then
+  empties on its own — the same bar undoes its own fill.
+
+  Two colours only: warm neutral (#D6D2C8) for the always-visible
+  baseline of the bar and the decision-point tick, terracotta
+  (#C96330) for the fill region (advancing forward, then retreating
+  backward).
+-->
+
+<!-- ─── Bar baseline (warm neutral, always visible) ─── -->
+<rect x="15" y="42" width="90" height="10" rx="1.5" fill="#D6D2C8" opacity="0.4"/>
+
+<!-- ─── Decision-point tick (warm neutral, decorative — marks 75% threshold) ─── -->
+<line x1="82.5" y1="38" x2="82.5" y2="42" stroke="#D6D2C8" stroke-width="1.2" opacity="0.6"/>
+<line x1="82.5" y1="52" x2="82.5" y2="56" stroke="#D6D2C8" stroke-width="1.2" opacity="0.6"/>
+
+<!-- ─── Decision-point text marker (small dashed line indicator) ─── -->
+<line x1="82.5" y1="35" x2="82.5" y2="38" stroke="#D6D2C8" stroke-width="0.8" stroke-dasharray="1,1" opacity="0.5"/>
+
+<!-- ─── Forward fill bar (terracotta foreground, animates width) ─── -->
+<!-- Cycle:
+       0.000–0.050  : width=0  (empty start)
+       0.050–0.400  : width 0→67.5 (forward fill, left-to-right)
+       0.400–0.483  : width=67.5 (HOLD at decision point)
+       0.483–0.750  : width 67.5→0 (rollback, right-to-left drain)
+       0.750–1.000  : width=0 (empty hold before next cycle)
+-->
+<rect x="15" y="42" height="10" rx="1.5" fill="#C96330" width="0">
+  <animate attributeName="width"
+           values="0; 0; 67.5; 67.5; 0; 0"
+           keyTimes="0; 0.050; 0.400; 0.483; 0.750; 1"
+           dur="6s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Decision indicator (terracotta dot at decision point — appears during hold) ─── -->
+<circle cx="82.5" cy="33" r="2" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 1; 1; 0; 0; 0"
+           keyTimes="0; 0.050; 0.200; 0.350; 0.398; 0.405; 0.480; 0.488; 0.700; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Direction arrows (subtle, warm neutral, indicating motion) ─── -->
+<!-- Forward arrow above bar during fill phase -->
+<polygon points="46,28 51,32 46,36" fill="#D6D2C8" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0.6; 0.6; 0; 0; 0; 0"
+           keyTimes="0; 0.080; 0.150; 0.380; 0.400; 0.500; 0.700; 1"
+           dur="6s" repeatCount="indefinite"/>
+</polygon>
+
+<!-- Reverse arrow above bar during drain phase -->
+<polygon points="74,62 69,66 74,70" fill="#D6D2C8" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 0; 0.6; 0.6; 0; 0"
+           keyTimes="0; 0.200; 0.300; 0.400; 0.483; 0.500; 0.550; 0.700; 0.750; 1"
+           dur="6s" repeatCount="indefinite"/>
+</polygon>
+</svg>

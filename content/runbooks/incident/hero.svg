@@ -1,0 +1,146 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Incident Runbook emblem.
+
+  Visual metaphor: a responder reading down through runbook steps,
+  with a marker tracking their current position. A vertical list
+  of 5 stationary text-line shapes (representing runbook steps) is
+  always visible in warm neutral. A terracotta pointer triangle on
+  the left descends through them at intervals, pausing at each step
+  briefly. As the pointer arrives at a step, that step's text-line
+  briefly brightens to terracotta (the responder is on this step
+  now); when the pointer moves on, the line returns to warm neutral.
+
+  Geometry:
+    Step y-positions: 18, 32, 46, 60, 74
+    Each step has:
+      - A small bullet circle on the left at x=22 (warm neutral, decorative)
+      - A horizontal line representing the step text from x=30 to x=95 (warm neutral)
+    Pointer (terracotta triangle) sits on the left side, x≈12-18,
+    pointing right. Triangle: points (12, y-3), (12, y+3), (18, y).
+
+  Animation: 6-second cycle.
+    0.0–0.3s   : Pointer at step 1 (y=18), step 1 line bright terracotta
+    0.3–0.6s   : Pointer transitions to step 2 (y=32), step 1 fades, step 2 brightens
+    0.6–1.5s   : Pointer at step 2, step 2 bright
+    1.5–1.8s   : Transition to step 3 (y=46)
+    1.8–2.7s   : Pointer at step 3
+    2.7–3.0s   : Transition to step 4 (y=60)
+    3.0–3.9s   : Pointer at step 4
+    3.9–4.2s   : Transition to step 5 (y=74)
+    4.2–5.1s   : Pointer at step 5
+    5.1–5.4s   : Pointer fades (runbook complete)
+    5.4–6.0s   : Brief pause; restart at step 1
+
+  Implementation: pointer triangle uses SMIL animate on its `points`
+  attribute (or equivalently, animateTransform on translate).
+  Step lines use animate on opacity + fill to brighten/dim.
+
+  Motion mechanic: SEQUENTIAL POINTER DESCENT (the forty-first
+  mechanic in the catalogue). Distinct from #32 vertical cascade
+  checklist which has CHECKMARK PATHS appearing inside checkbox
+  rectangles SEQUENTIALLY top-to-bottom and ALL PERSISTING until
+  cleared — here SINGLE MOVING POINTER advances and ONLY THE
+  CURRENT STEP is highlighted (briefly), all others stay warm
+  neutral. Distinct from #6 sequential frame illumination which
+  has a SINGLE HORIZONTAL ROW of frames taking TURNS being lit —
+  here VERTICAL list with a SEPARATE MARKER ELEMENT (pointer
+  triangle) as the moving piece, and the items themselves only
+  briefly brighten as the marker passes. Distinct from #34 tiered
+  escalation cascade (three tiers each with three aligned dots,
+  variable cascade depth across cycles) by being SINGLE-COLUMN
+  list with marker descending through a fixed sequence each cycle.
+
+  Two colours only: warm neutral (#D6D2C8) for stationary step lines
+  and bullets, terracotta (#C96330) for the pointer triangle and
+  the briefly-active step line.
+-->
+
+<!-- ─── Vertical guide line on the left (subtle, decorative) ─── -->
+<line x1="22" y1="14" x2="22" y2="80" stroke="#D6D2C8" stroke-width="0.6" opacity="0.4"/>
+
+<!-- ─── Five stationary step bullets (always visible, warm neutral) ─── -->
+<circle cx="22" cy="18" r="1.8" fill="#D6D2C8"/>
+<circle cx="22" cy="32" r="1.8" fill="#D6D2C8"/>
+<circle cx="22" cy="46" r="1.8" fill="#D6D2C8"/>
+<circle cx="22" cy="60" r="1.8" fill="#D6D2C8"/>
+<circle cx="22" cy="74" r="1.8" fill="#D6D2C8"/>
+
+<!-- ─── Five stationary step text-lines (warm neutral baseline, briefly brighten as pointer passes) ─── -->
+<!-- Each has slightly varied width to evoke step text of different lengths -->
+
+<!-- Step 1 line: x=30 to x=95, y=18 -->
+<rect x="30" y="17" width="65" height="2" rx="0.8" fill="#D6D2C8" opacity="0.6">
+  <animate attributeName="fill"
+           values="#D6D2C8; #C96330; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.05; 0.20; 0.40; 0.60; 0.80; 1"
+           dur="6s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="0.6; 1; 0.6; 0.6; 0.6; 0.6; 0.6"
+           keyTimes="0; 0.05; 0.20; 0.40; 0.60; 0.80; 1"
+           dur="6s" repeatCount="indefinite"/>
+</rect>
+
+<!-- Step 2 line: x=30 to x=88, y=32 -->
+<rect x="30" y="31" width="58" height="2" rx="0.8" fill="#D6D2C8" opacity="0.6">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.20; 0.30; 0.40; 0.60; 0.80; 1"
+           dur="6s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="0.6; 0.6; 1; 0.6; 0.6; 0.6; 0.6"
+           keyTimes="0; 0.20; 0.30; 0.40; 0.60; 0.80; 1"
+           dur="6s" repeatCount="indefinite"/>
+</rect>
+
+<!-- Step 3 line: x=30 to x=92, y=46 -->
+<rect x="30" y="45" width="62" height="2" rx="0.8" fill="#D6D2C8" opacity="0.6">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #C96330; #D6D2C8; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.20; 0.40; 0.50; 0.60; 0.80; 1"
+           dur="6s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="0.6; 0.6; 0.6; 1; 0.6; 0.6; 0.6"
+           keyTimes="0; 0.20; 0.40; 0.50; 0.60; 0.80; 1"
+           dur="6s" repeatCount="indefinite"/>
+</rect>
+
+<!-- Step 4 line: x=30 to x=85, y=60 -->
+<rect x="30" y="59" width="55" height="2" rx="0.8" fill="#D6D2C8" opacity="0.6">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.20; 0.40; 0.60; 0.65; 0.80; 1"
+           dur="6s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="0.6; 0.6; 0.6; 0.6; 1; 0.6; 0.6"
+           keyTimes="0; 0.20; 0.40; 0.60; 0.65; 0.80; 1"
+           dur="6s" repeatCount="indefinite"/>
+</rect>
+
+<!-- Step 5 line: x=30 to x=78, y=74 -->
+<rect x="30" y="73" width="48" height="2" rx="0.8" fill="#D6D2C8" opacity="0.6">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #D6D2C8"
+           keyTimes="0; 0.20; 0.40; 0.60; 0.80; 0.85; 1"
+           dur="6s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="0.6; 0.6; 0.6; 0.6; 0.6; 1; 0.6"
+           keyTimes="0; 0.20; 0.40; 0.60; 0.80; 0.85; 1"
+           dur="6s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Pointer triangle (terracotta, descends through positions) ─── -->
+<!-- Triangle at y=18 by default: points (10, 15), (10, 21), (16, 18) -->
+<!-- Animate translation downward through five y-positions: 0, 14, 28, 42, 56 -->
+<polygon points="10,15 10,21 16,18" fill="#C96330">
+  <animateTransform attributeName="transform"
+                    type="translate"
+                    values="0,0; 0,0; 0,14; 0,28; 0,42; 0,56; 0,0"
+                    keyTimes="0; 0.20; 0.30; 0.50; 0.65; 0.85; 1"
+                    dur="6s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="1; 1; 1; 1; 1; 1; 0; 0"
+           keyTimes="0; 0.20; 0.30; 0.50; 0.65; 0.85; 0.95; 1"
+           dur="6s" repeatCount="indefinite"/>
+</polygon>
+</svg>

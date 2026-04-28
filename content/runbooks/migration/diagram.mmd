@@ -1,49 +1,115 @@
-flowchart TD
-    A([🚀 Start: Migration Runbook]) --> B[Assessment & Discovery]
+flowchart LR
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    %% ─── Pre-migration starting state ───
+    OLD_SYS[(Old System<br/>production traffic)]
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    %% ─── Phase 1: Preparation ───
+    subgraph PREP [Phase 1: Preparation]
+        direction TB
+        BUILD[Build new system<br/>deploy alongside old<br/>no production traffic]
+        REHEARSE[Rehearse rollback paths<br/>game days &middot; staging]
+    end
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    %% ─── Phase 2: Dual-running ───
+    subgraph DUAL [Phase 2: Dual-Running &mdash; reversible]
+        direction TB
+        SHADOW[Shadow Read<br/>new system observes<br/>compares outputs]
+        DUAL_WRITE[Dual-Write<br/>both systems take writes<br/>old remains source of truth]
+    end
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    %% ─── Phase 3: Progressive cutover ───
+    subgraph CUTOVER [Phase 3: Progressive Cutover &mdash; reversible until 100%]
+        direction TB
+        P1[1% traffic<br/>verify error rate<br/>verify latency]
+        P5[5% traffic<br/>soak]
+        P25[25% traffic<br/>verify under load]
+        P50[50% traffic<br/>verify scale]
+        P100[100% traffic<br/>new is source of truth]
+    end
 
-    G --> H[Architecture Review Board]
+    %% ─── Phase 4: Cleanup ───
+    subgraph CLEANUP [Phase 4: Cleanup &mdash; irreversible]
+        direction TB
+        SOAK[Soak period<br/>typically weeks]
+        DECOM[Decommission Old System<br/>terminate &middot; archive data<br/>remove monitoring]
+        REMOVE[Remove Scaffolding<br/>dual-write paths<br/>shadow-read pipelines<br/>migration feature flags]
+    end
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    %% ─── Verification gates ───
+    G1{Gate 1<br/>verify before<br/>dual-running}
+    G2{Gate 2<br/>verify before<br/>cutover}
+    G3{Gate 3<br/>verify before<br/>cleanup}
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    %% ─── Coordination layer ───
+    COORD[/Multi-Team Coordination<br/>named roles &middot; notifications<br/>dependency gates/]
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    %% ─── Rollback paths (from reversible phases) ───
+    ROLLBACK([Rollback Path<br/>to prior phase])
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    %% ─── Final state ───
+    NEW_SYS[(New System<br/>scaffolding removed<br/>old decommissioned)]
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    %% ─── Flow ───
+    OLD_SYS --> PREP
+    PREP --> G1
+    G1 -->|pass| DUAL
+    G1 -->|fail| PREP
+    DUAL --> G2
+    G2 -->|pass| CUTOVER
+    G2 -->|fail| ROLLBACK
+    P1 --> P5
+    P5 --> P25
+    P25 --> P50
+    P50 --> P100
+    CUTOVER --> G3
+    G3 -->|pass| CLEANUP
+    G3 -->|fail| ROLLBACK
+    CLEANUP --> NEW_SYS
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    %% Coordination cuts across phases
+    COORD -.governs.-> PREP
+    COORD -.governs.-> DUAL
+    COORD -.governs.-> CUTOVER
+    COORD -.governs.-> CLEANUP
+
+    %% Rollback feeds back
+    ROLLBACK -.restores.-> OLD_SYS
+
+    %% ─── NODE STYLES ───
+    style OLD_SYS fill:#DCEAFC,stroke:#2C5F9E,stroke-width:1.8px,color:#1A2840
+    style NEW_SYS fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+
+    %% Phase steps
+    style BUILD      fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style REHEARSE   fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style SHADOW     fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style DUAL_WRITE fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+
+    %% Cutover percentages: emphasised cream (the architectural progression)
+    style P1   fill:#FEF8E5,stroke:#A8956A,stroke-width:1.4px,color:#5C4316
+    style P5   fill:#FEF3C7,stroke:#92722C,stroke-width:1.4px,color:#5C4316
+    style P25  fill:#FBEDE0,stroke:#C96330,stroke-width:1.6px,color:#3A2410
+    style P50  fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+    style P100 fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+
+    %% Cleanup
+    style SOAK   fill:#F4E5DD,stroke:#A37050,stroke-width:1.5px,color:#3A2410
+    style DECOM  fill:#F4E5DD,stroke:#A37050,stroke-width:1.8px,color:#3A2410
+    style REMOVE fill:#F4E5DD,stroke:#A37050,stroke-width:1.8px,color:#3A2410
+
+    %% Gates: emphasised (the architectural decision points)
+    style G1 fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+    style G2 fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+    style G3 fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+
+    %% Coordination
+    style COORD fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.6px,color:#2C4258
+
+    %% Rollback path
+    style ROLLBACK fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% ─── CLUSTER STYLES ───
+    style PREP    fill:#FEF8E5,stroke:#D4C599,stroke-width:1.2px,color:#5C4316
+    style DUAL    fill:#FEF3C7,stroke:#D4A87A,stroke-width:1.2px,color:#5C4316
+    style CUTOVER fill:#FEF1E6,stroke:#D4A87A,stroke-width:1.4px,color:#3A2410
+    style CLEANUP fill:#F4E5DD,stroke:#A37050,stroke-width:1.4px,color:#3A2410
