@@ -1,49 +1,65 @@
-flowchart TD
-    A([🚀 Start: Deployment Patterns]) --> B[Assessment & Discovery]
+flowchart LR
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    %% ─── Source: developer ───
+    DEV([Developer])
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    %% ─── CI: build immutable artifact ───
+    BUILD[Immutable Artifact<br/>built &amp; tested in CI]
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    %% ─── Production: two coexisting versions ───
+    subgraph PROD [Production Environment]
+        direction TB
+        OLD[Version N&minus;1<br/>established baseline]
+        NEW[Version N<br/>candidate]
+    end
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    %% ─── Traffic router: weighted split ───
+    ROUTE[Traffic Router<br/>5% &rarr; 25% &rarr; 50% &rarr; 100%]
 
-    G --> H[Architecture Review Board]
+    %% ─── Users at the receiving end ───
+    USERS([Users])
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    %% ─── Observability: signals from prod ───
+    METRICS[Observability<br/>SLOs &middot; error rate &middot; latency]
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    %% ─── Decision: advance, hold, or rollback ───
+    DECIDE{Promote canary<br/>or roll back?}
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    %% ─── Build flow ───
+    DEV --> BUILD
+    BUILD --> NEW
+    BUILD -.keeps warm.-> OLD
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    %% ─── Traffic flow ───
+    OLD --> ROUTE
+    NEW --> ROUTE
+    ROUTE --> USERS
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    %% ─── Feedback loop ───
+    USERS -.signals.-> METRICS
+    METRICS --> DECIDE
+    DECIDE -.shift weights.-> ROUTE
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    %% ─── NODE STYLES ───
+    %% Entry / exit (humans)
+    style DEV   fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+    style USERS fill:#1ABC9C,stroke:#138D75,stroke-width:2px,color:#FFFFFF
+
+    %% Build artifact: cream (the immutable handoff)
+    style BUILD fill:#FBEDE0,stroke:#A07A4A,stroke-width:1.8px,color:#3A2410
+
+    %% Production versions: contrasting blue/amber to show coexistence
+    style OLD fill:#DCEAFC,stroke:#2C5F9E,stroke-width:2px,color:#1A2840
+    style NEW fill:#FEF3C7,stroke:#C96330,stroke-width:2.2px,color:#5C4316
+
+    %% Traffic router: emphasis (the control point)
+    style ROUTE fill:#FBEDE0,stroke:#C96330,stroke-width:2.5px,color:#3A2410
+
+    %% Observability: cross-cutting grey
+    style METRICS fill:#E8E8E2,stroke:#5C5C5C,stroke-width:1.5px,color:#2C2C2C
+
+    %% Decision: diamond (already shaped by syntax), styled with emphasis
+    style DECIDE fill:#FEF3C7,stroke:#92722C,stroke-width:2px,color:#5C4316
+
+    %% ─── CLUSTER STYLE ───
+    style PROD fill:#EDF4FC,stroke:#A8C0DD,stroke-width:1.2px,color:#1A2840

@@ -1,0 +1,71 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Deployment Patterns emblem.
+
+  Visual metaphor: a horizontal bar representing the production
+  environment progressively fills left-to-right with the new version,
+  pausing at canary checkpoints (5%, 25%, 50%, 100%). The pauses are
+  the architectural moment — the canary holds at each threshold while
+  metrics are compared. After the bar is fully filled, a brief soak
+  period, then a snap back to zero begins the next deployment cycle.
+
+  Three static tick marks above the bar correspond to the 25%, 50%,
+  and 100% checkpoints — visual reinforcement that this is not a
+  smooth progress meter but a stage-gated rollout.
+
+  Animation: the fill rectangle's WIDTH is animated through discrete
+  values with brief linear ramps between holds. Nothing else moves:
+  no traveling particles, no shape oscillation, no rotation, no
+  cross-fade between forms, no replication, no sequential highlighting
+  of fixed-position elements. The sole moving element is the boundary
+  of a single growing region.
+
+  Motion mechanic: PROGRESSIVE THRESHOLD FILL (the seventh mechanic
+  in the catalogue). The motion IS the deployment process — width
+  growing through stages, holding at checkpoints, advancing only
+  when the threshold is cleared. After full rollout, the boundary
+  snaps back; a new artifact begins its journey.
+
+  Two colours only: warm neutral (#D6D2C8) for the runway outline
+  and checkpoint marks; terracotta (#C96330) for the deployed region.
+-->
+
+<!-- ─── Production environment outline (the runway) ─── -->
+<rect x="15" y="40" width="90" height="14" rx="2"
+      fill="none" stroke="#D6D2C8" stroke-width="1.5"/>
+
+<!-- ─── Checkpoint tick marks at 25%, 50%, 100% ─── -->
+<!-- 25% of 90 = 22.5, so 25% line at x=15+22.5=37.5 -->
+<line x1="37.5" y1="36" x2="37.5" y2="40"
+      stroke="#D6D2C8" stroke-width="1" opacity="0.65"/>
+<!-- 50% line at x=60 -->
+<line x1="60" y1="36" x2="60" y2="40"
+      stroke="#D6D2C8" stroke-width="1" opacity="0.65"/>
+<!-- 100% line at x=105 -->
+<line x1="105" y1="36" x2="105" y2="40"
+      stroke="#D6D2C8" stroke-width="1" opacity="0.65"/>
+
+<!-- ─── Progressive fill: the deployed region ─── -->
+<!--
+  6-second cycle:
+    0.00–0.36s : idle at width=0  (waiting for next deploy)
+    0.36–0.60s : ramp 0 → 4.5     (canary 5%)
+    0.60–1.32s : hold at 4.5      (observation window)
+    1.32–1.56s : ramp 4.5 → 22.5  (canary 25%)
+    1.56–2.52s : hold at 22.5     (observation)
+    2.52–2.76s : ramp 22.5 → 45   (canary 50%)
+    2.76–3.72s : hold at 45       (observation)
+    3.72–3.96s : ramp 45 → 90     (full rollout)
+    3.96–5.52s : hold at 90       (in production / soak)
+    5.52–5.64s : snap 90 → 0      (next cycle)
+    5.64–6.00s : hold at 0        (idle)
+-->
+<rect x="15" y="40" height="14" rx="2" fill="#C96330">
+  <animate attributeName="width"
+           values="0; 0; 4.5; 4.5; 22.5; 22.5; 45; 45; 90; 90; 0; 0"
+           keyTimes="0; 0.06; 0.10; 0.22; 0.26; 0.42; 0.46; 0.62; 0.66; 0.92; 0.94; 1"
+           dur="6s"
+           repeatCount="indefinite"
+           calcMode="linear"/>
+</rect>
+</svg>

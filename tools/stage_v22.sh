@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPO=/home/claude/work/restoration
-PREVIEW=/tmp/preview21
+PREVIEW=/tmp/preview22
 OUT=/mnt/user-data/outputs
 
 rm -rf "$PREVIEW"
@@ -29,7 +29,7 @@ sed -i 's|href="../shared.css"|href="shared.css"|' "$PREVIEW/knowledge-graph-pre
 cp "$REPO/dist/shared.css" "$PREVIEW/shared.css"
 
 # Six-emblem comparison page
-cat > "$PREVIEW/six-emblems.html" <<'HTMLHEAD'
+cat > "$PREVIEW/seven-emblems.html" <<'HTMLHEAD'
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><title>Six motion mechanics</title>
 <style>
@@ -51,7 +51,7 @@ cat > "$PREVIEW/six-emblems.html" <<'HTMLHEAD'
   .emblem-frame svg { width: 100%; height: 100%; }
   .desc { font-size: 0.82rem; color: #4A4A4A; line-height: 1.5; margin-top: 1rem; }
 </style></head><body>
-<h1>Six pages, six motion mechanics</h1>
+<h1>Seven pages, seven motion mechanics</h1>
 <p class="lede">Each emblem uses a categorically different animation primitive. Same colour palette, same SVG primitives, same visual minimalism — but the motion itself carries the meaning of the page.</p>
 <div class="row">
 HTMLHEAD
@@ -64,7 +64,7 @@ add_card() {
     printf '<div class="emblem-frame">\n'
     cat "$REPO/content/$path/hero.svg"
     printf '</div><p class="desc">%s</p></div>\n' "$desc"
-  } >> "$PREVIEW/six-emblems.html"
+  } >> "$PREVIEW/seven-emblems.html"
 }
 
 add_card "principles/ai-native"       "AI-Native"        "PARTICLE FLOW"                "Many small particles converge to a central reasoning core. Distributed inputs becoming one thought."
@@ -73,8 +73,9 @@ add_card "principles/foundational"    "Foundational"     "RIGID-BODY ROTATION"  
 add_card "principles/modernization"   "Modernization"    "CROSS-FADE METAMORPHOSIS"     "A monolith form cross-fades into a service grid. Two complete forms trading visibility in the same space."
 add_card "principles/cloud-native"    "Cloud-Native"     "ELASTIC REPLICATION"          "Centre pod always present; surrounding pods appear and recede in waves under load."
 add_card "patterns/data"              "Data Patterns"    "SEQUENTIAL FRAME ILLUMINATION" "Four temporal frames take turns being highlighted. The motion is time, not movement."
+add_card "patterns/deployment"        "Deployment Patterns" "PROGRESSIVE THRESHOLD FILL" "A fill region grows left-to-right through canary checkpoints, pausing at each threshold. The motion is the deployment process itself."
 
-printf '</div></body></html>\n' >> "$PREVIEW/six-emblems.html"
+printf '</div></body></html>\n' >> "$PREVIEW/seven-emblems.html"
 
 # Stage tarball — exclude stub directories so the package is lean
 cd "$REPO"
@@ -88,8 +89,9 @@ for d in ai-native domain-specific foundational modernization cloud-native; do
   cp -r "content.full/principles/$d" "content/principles/$d"
 done
 cp -r "content.full/patterns/data" "content/patterns/data"
+cp -r "content.full/patterns/deployment" "content/patterns/deployment"
 
-tar czf "$OUT/ascendion-engineering-v21.tar.gz" \
+tar czf "$OUT/ascendion-engineering-v22.tar.gz" \
     --exclude='.git' --exclude='node_modules' --exclude='*.pyc' \
     tools src content infra .github
 
@@ -98,13 +100,13 @@ rm -rf content
 mv content.full content
 
 # Copy individual previews
-cp "$PREVIEW/six-emblems.html"             "$OUT/six-emblems-v21.html"
-cp "$PREVIEW/patterns-data-preview.html"   "$OUT/data-patterns-preview-v21.html"
-cp "$PREVIEW/knowledge-graph-preview.html" "$OUT/knowledge-graph-preview-v21.html"
+cp "$PREVIEW/seven-emblems.html"             "$OUT/six-emblems-v22.html"
+cp "$PREVIEW/patterns-data-preview.html"   "$OUT/data-patterns-preview-v22.html"
+cp "$PREVIEW/knowledge-graph-preview.html" "$OUT/knowledge-graph-preview-v22.html"
 
 echo
 echo "═══ STAGED ═══"
-ls -la "$OUT"/*v21* 2>&1
+ls -la "$OUT"/*v22* 2>&1
 echo
 echo "Tarball contents (top-level):"
-tar tzf "$OUT/ascendion-engineering-v21.tar.gz" | head -30
+tar tzf "$OUT/ascendion-engineering-v22.tar.gz" | head -30

@@ -42,13 +42,16 @@ LINK SECURITY (mechanical, build halts on violation):
 EMBLEM MOTION MECHANICS (each page must use a DISTINCT mechanic):
   Every emblem must use a categorically different animation primitive,
   not just different geometry around the same recipe. Catalogue so far:
-    ai-native        → particle flow      (centripetal convergence)
-    domain-specific  → shape oscillation  (whole shapes drift in/out)
-    foundational     → rigid-body rotation (pendulum)
-    modernization    → cross-fade metamorphosis (two forms trade visibility)
-    cloud-native     → elastic replication (pods appear/disappear in waves)
-    patterns/data    → sequential frame illumination (fixed frames take turns
-                       being highlighted; motion is time, not movement)
+    ai-native           → particle flow      (centripetal convergence)
+    domain-specific     → shape oscillation  (whole shapes drift in/out)
+    foundational        → rigid-body rotation (pendulum)
+    modernization       → cross-fade metamorphosis (two forms trade visibility)
+    cloud-native        → elastic replication (pods appear/disappear in waves)
+    patterns/data       → sequential frame illumination (fixed frames take turns
+                          being highlighted; motion is time, not movement)
+    patterns/deployment → progressive threshold fill (a fill region grows
+                          left-to-right through canary checkpoints, pausing
+                          at each threshold; only the fill boundary moves)
   Future pages must invent a new mechanic, not reuse one.
   Two colours only: warm neutral (#D6D2C8) + terracotta (#C96330).
   Basic SMIL primitives only (animate, animateTransform with type=rotate).
@@ -1099,6 +1102,9 @@ TAG_LINKS = {
     "CQRS Pattern": "https://martinfowler.com/bliki/CQRS.html",
     "Event Sourcing": "https://martinfowler.com/eaaDev/EventSourcing.html",
     "Polyglot Persistence": "https://martinfowler.com/bliki/PolyglotPersistence.html",
+    "DORA Metrics": "https://dora.dev/",
+    "Feature Toggles": "https://martinfowler.com/articles/feature-toggles.html",
+    "Trunk-Based Development": "https://trunkbaseddevelopment.com/",
 }
 
 
