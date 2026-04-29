@@ -1,10 +1,10 @@
 flowchart TB
 
-    %% ─── Service Input ───
+    %% ─── Service input ───
     SVC([Service Under Assessment])
 
-    %% ─── Dimensions ───
-    subgraph DIMENSIONS [Dimensions &mdash; what gets rated]
+    %% ─── Dimensions cluster ───
+    subgraph DIM [Six Dimensions Rated]
         direction TB
         D_PR[Production Readiness]
         D_OBS[Observability]
@@ -14,8 +14,8 @@ flowchart TB
         D_COST[Cost Efficiency]
     end
 
-    %% ─── Scoring (per dimension) ───
-    subgraph SCORING [Scoring &mdash; per dimension, owner-driven with peer review]
+    %% ─── Scoring cluster ───
+    subgraph SCORING [Scoring Workflow &mdash; per dimension, owner-driven with peer review]
         direction TB
         CRIT[Documented Criteria<br/>per level &middot; verifiable language]
         EVIDENCE[Evidence Gathering<br/>dashboards &middot; threat models<br/>runbooks &middot; metrics]
@@ -23,55 +23,56 @@ flowchart TB
         PEER[Peer Review<br/>architect &middot; platform team<br/>cross-team owner]
         DISAGREE{Rating<br/>Agreed?}
         FINAL[Final Level Assignment<br/>recorded with evidence + reviewer]
+
+        CRIT --> EVIDENCE
+        EVIDENCE --> OWNER_RATE
+        OWNER_RATE --> PEER
+        PEER --> DISAGREE
+        DISAGREE -->|yes| FINAL
+        DISAGREE -->|no| EVIDENCE
     end
 
-    %% ─── Aggregation (portfolio view) ───
-    subgraph AGGREGATION [Aggregation &mdash; portfolio view, no composite collapse]
+    %% ─── Aggregation cluster ───
+    subgraph AGG [Aggregation &mdash; portfolio view, no composite collapse]
         direction TB
         SC_THIS[Per-Service Scorecard<br/>this cycle &middot; versioned]
         MATRIX[Portfolio Matrix<br/>services &times; dimensions &times; levels]
         TRAJ[Trajectory View<br/>per-service per-dimension<br/>movement over cycles]
         PATTERNS[Pattern Aggregations<br/>median per dimension &middot; distribution<br/>at each level &middot; cohort movement]
+
+        SC_THIS --> MATRIX
+        MATRIX --> TRAJ
+        MATRIX --> PATTERNS
     end
 
-    %% ─── Calibration (feedback loop) ───
-    subgraph CALIBRATION [Calibration &mdash; criteria revised against operational outcomes]
+    %% ─── Calibration cluster ───
+    subgraph CAL [Calibration &mdash; criteria revised against operational outcomes]
         direction TB
         OPS_DATA[Operational Data<br/>incidents &middot; MTTR &middot; CFR<br/>customer-facing reliability]
-        DIVERGE{Ratings<br/>Predict<br/>Outcomes?}
+        DIVERGE{Ratings<br/>predict<br/>outcomes?}
         REVISE[Criteria Revision<br/>versioned &middot; reason recorded]
+
+        OPS_DATA --> DIVERGE
+        DIVERGE -->|no &mdash; criteria miss| REVISE
     end
 
-    %% ─── Investment Decisions ───
+    %% ─── Outcome ───
     DECISIONS([Investment Decisions<br/>platform / per-team support<br/>focused interventions])
 
-    %% ─── Flow ───
-    SVC --> DIMENSIONS
-    DIMENSIONS --> SCORING
+    %% ─── Cross-cluster edges (specific nodes only — never subgraph names) ───
+    SVC --> D_PR & D_OBS & D_SEC & D_REL & D_PERF & D_COST
+    D_PR & D_OBS & D_SEC & D_REL & D_PERF & D_COST --> CRIT
 
-    CRIT --> EVIDENCE
-    EVIDENCE --> OWNER_RATE
-    OWNER_RATE --> PEER
-    PEER --> DISAGREE
-    DISAGREE -->|yes| FINAL
-    DISAGREE -->|no| EVIDENCE
-    FINAL --> SC_THIS
+    FINAL    --> SC_THIS
 
-    SC_THIS --> MATRIX
-    MATRIX --> TRAJ
-    MATRIX --> PATTERNS
-    TRAJ --> DECISIONS
+    TRAJ     --> DECISIONS
     PATTERNS --> DECISIONS
 
-    %% Calibration loop
-    SC_THIS -.tracked against.-> OPS_DATA
-    OPS_DATA --> DIVERGE
-    DIVERGE -->|yes - keep criteria| MATRIX
-    DIVERGE -->|no - criteria miss something| REVISE
-    REVISE -.updates.-> CRIT
-
-    %% Disagreement feedback
-    DISAGREE -.recurring disagreements signal.-> REVISE
+    %% ─── Calibration loop edges ───
+    SC_THIS  -.tracked against.->        OPS_DATA
+    DIVERGE  -.yes &mdash; criteria hold.-> MATRIX
+    REVISE   -.updates.->                CRIT
+    DISAGREE -.recurring disagreements.-> REVISE
 
     %% ─── Node styles ───
     style SVC       fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
@@ -105,7 +106,7 @@ flowchart TB
     style REVISE   fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.8px,color:#2C4258
 
     %% ─── Cluster styles ───
-    style DIMENSIONS  fill:#FEF8E5,stroke:#D4C599,stroke-width:1.4px,color:#5C4316
-    style SCORING     fill:#FEF3C7,stroke:#D4A87A,stroke-width:1.4px,color:#5C4316
-    style AGGREGATION fill:#FBEDE0,stroke:#C96330,stroke-width:1.4px,color:#3A2410
-    style CALIBRATION fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.4px,color:#2C4258
+    style DIM     fill:#FEF8E5,stroke:#D4C599,stroke-width:1.4px,color:#5C4316
+    style SCORING fill:#FEF3C7,stroke:#D4A87A,stroke-width:1.4px,color:#5C4316
+    style AGG     fill:#FBEDE0,stroke:#C96330,stroke-width:1.4px,color:#3A2410
+    style CAL     fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.4px,color:#2C4258

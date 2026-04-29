@@ -82,23 +82,21 @@ classDiagram
         +String rationale_if_accepted_as_is
     }
 
-    Review *-- ScopeStatement : has
-    Review *-- "1..*" Finding : contains
-    Review *-- "0..*" Dialogue : captures
-    Review *-- Decision : concludes_with
-    Review *-- "0..*" OutcomeLink : tracks
+    Review       *-- "1"    ScopeStatement  : has
+    Review       *-- "1..*" Finding         : contains
+    Review       *-- "0..*" Dialogue        : captures
+    Review       *-- "1"    Decision        : concludes_with
+    Review       *-- "0..*" OutcomeLink     : tracks
 
-    Finding o-- Severity : classified_by
-    Finding *-- Location : references
-    Finding o-- ResolutionStatus : tracked_by
+    Finding      *-- "1"    Location        : references
+    Finding      ..>        Severity        : classified_by
+    Finding      ..>        ResolutionStatus : tracked_by
 
-    Decision o-- DecisionOutcome : selects
+    Decision     ..>        DecisionOutcome : selects
 
-    OutcomeLink o-- ResolutionStatus : reports
-    OutcomeLink ..> Finding : closes_loop_on
+    OutcomeLink  ..>        ResolutionStatus : reports
+    OutcomeLink  ..>        Finding         : closes_loop_on
 
-    note for Review "The document is a structured artefact.\nFields determine whether the review's\nwork survives the meeting or evaporates\ninto folklore."
-
-    note for Severity "Vocabulary documented at organisation\nlevel. Each tier has criteria.\nReviewers calibrate against the same scale."
-
-    note for OutcomeLink "Closes the loop: every finding\nresolves to fixed (PR), deferred\n(ticket), or accepted-as-is (rationale).\nReviews become auditable contracts."
+    note for Review "Composition root: the document is a structured artefact whose fields determine review survival."
+    note for Severity "Documented vocabulary at the organisation level; reviewers calibrate against the same scale."
+    note for OutcomeLink "Closes the loop: every finding resolves to fixed, deferred, or accepted-as-is with rationale."

@@ -2,44 +2,34 @@ stateDiagram-v2
 
     [*] --> Drafted
 
-    Drafted : Drafted<br/>--------<br/>title written<br/>context drafted<br/>not yet under review
+    Drafted     : title written and context drafted; not yet under review
+    Proposed    : under team review; discussion captured; not yet binding
+    Accepted    : decision binding; implementation underway or completed
+    Deprecated  : not preferred for new work; existing usage may continue
+    Superseded  : replaced by a specific newer ADR; document retained
+    Rejected    : decision not adopted; document retained as evidence of the alternative considered
 
-    Drafted --> Proposed : open for review<br/>(team notification)
+    Drafted     --> Proposed    : open for review
+    Proposed    --> Accepted    : team consensus reached
+    Proposed    --> Drafted     : feedback requires revision
+    Proposed    --> Rejected    : decision not adopted
+    Accepted    --> Deprecated  : approach no longer preferred
+    Accepted    --> Superseded  : replaced by ADR-NNN
+    Deprecated  --> Superseded  : replacement ADR now exists
 
-    Proposed : Proposed<br/>--------<br/>under team review<br/>not yet binding<br/>discussion captured
-
-    Proposed --> Accepted : team consensus<br/>(date + reviewer recorded)
-    Proposed --> Drafted : feedback requires revision
-    Proposed --> Rejected : decision not adopted<br/>(reason recorded)
-
-    Accepted : Accepted<br/>--------<br/>decision binding<br/>implementation underway<br/>or completed
-
-    Accepted --> Deprecated : approach no longer preferred<br/>(no replacement chosen)
-    Accepted --> Superseded : replaced by ADR-NNN<br/>(bidirectional cross-link)
-
-    Deprecated : Deprecated<br/>--------<br/>not preferred for new work<br/>existing usage may continue<br/>no formal replacement
-
-    Deprecated --> Superseded : replacement ADR<br/>now exists
-
-    Superseded : Superseded<br/>--------<br/>replaced by specific newer ADR<br/>cross-reference bidirectional<br/>document remains for history
-
-    Rejected : Rejected<br/>--------<br/>decision not adopted<br/>reason recorded<br/>document remains as evidence<br/>of the alternative considered
-
-    Superseded --> [*]
-    Rejected --> [*]
+    Superseded  --> [*]
+    Rejected    --> [*]
 
     note right of Proposed
-        Status changes append
-        to document history with
-        date and reason recorded.
-        The document accumulates
-        its own lifecycle log.
+        Each status change appends to the
+        document history with date and
+        reason recorded. The ADR
+        accumulates its own lifecycle log.
     end note
 
     note right of Superseded
-        Bidirectional cross-link:
-        superseded ADR points
-        forward to successor;
-        successor points back.
-        Corpus stays navigable.
+        Bidirectional cross-link discipline:
+        the superseded ADR points forward to
+        its successor; the successor points
+        back. The corpus stays navigable.
     end note
