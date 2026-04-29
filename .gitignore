@@ -22,3 +22,8 @@ Thumbs.db
 tools/stage_v*.sh
 tools/CLEANUP_v*.sh
 tools/migrate_repo.sh
+
+# Staging artifacts — built by Claude's container, not part of deploy chain
+tools/stage_v*.sh
+tools/CLEANUP_v*.sh
+tools/migrate_repo.sh
