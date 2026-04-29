@@ -1,30 +1,53 @@
-gantt
-    title API Version Lifecycle Coexistence
-    dateFormat  YYYY-MM-DD
-    axisFormat  %b %Y
+stateDiagram-v2
 
-    section v1 lifecycle
-    Design + pre-release review     :v1d,    2024-01-01, 90d
-    Beta (private design partners)  :v1b,    after v1d, 90d
-    GA (full support)               :active, v1ga,   after v1b, 540d
-    Maintenance (security fixes)    :v1m,    after v1ga, 180d
-    Deprecated (Sunset announced)   :crit,   v1dep,  after v1m, 360d
-    Retired (410 Gone)              :v1r,    after v1dep, 90d
+    [*] --> Drafted
 
-    section v2 lifecycle
-    Design + pre-release review     :v2d,    2025-04-01, 90d
-    Beta (parallel-run sandbox)     :v2b,    after v2d, 90d
-    GA (full support)               :active, v2ga,   after v2b, 720d
+    Drafted     : title written; pre-release design review against documented conventions
+    Beta        : private alpha or controlled beta with design partners; breaking changes expected
+    GA          : public release; full support; recommended version
+    Maintenance : security and high-severity bug fixes only; no new features
+    Deprecated  : Sunset announced; T-12, T-6, T-3, T-1 month reminders; migration tooling published
+    Retired     : 410 Gone responses; routes removed; code deleted; infrastructure destroyed
 
-    section Migration milestones
-    Migration tooling published     :milestone, m1, 2025-10-01, 0d
-    Sunset T-12 month notice        :milestone, m2, 2025-10-01, 0d
-    Sunset T-6 month notice         :milestone, m3, 2026-04-01, 0d
-    Sunset T-3 month notice         :milestone, m4, 2026-07-01, 0d
-    Sunset T-1 month notice         :milestone, m5, 2026-09-01, 0d
-    v1 sunset (binding date)        :milestone, m6, 2026-10-01, 0d
+    Drafted     --> Beta        : design + review complete
+    Beta        --> GA          : design partners validated
+    GA          --> Maintenance : next major version reaches GA
+    Maintenance --> Deprecated  : Sunset announcement
+    Deprecated  --> Retired     : binding sunset date arrived
 
-    section Retirement discipline
-    Routes return 410 Gone          :r1, 2026-10-01, 30d
-    Code removed from source repo   :r2, after r1, 30d
-    Infrastructure destroyed        :r3, after r2, 30d
+    Retired --> [*]
+
+    note right of Maintenance
+        Multi-version coexistence:
+        when this version enters
+        Maintenance, the next major
+        version (vN+1) enters its
+        own GA on a parallel track.
+        Both versions live in
+        production simultaneously,
+        bounded by the announced
+        sunset date.
+    end note
+
+    note right of Deprecated
+        Deprecation discipline:
+        Sunset HTTP header on every
+        response; minimum 12-24
+        month notice (public) or
+        shorter (internal); reminder
+        cadence T-12, T-6, T-3, T-1
+        months; identified consumers
+        receive direct outreach;
+        migration tooling published
+        alongside announcement.
+    end note
+
+    note right of Retired
+        Retirement actually executes:
+        sunset date is binding; routes
+        return 410 Gone with migration
+        documentation in response;
+        code deleted from source repo
+        after grace period;
+        infrastructure destroyed last.
+    end note

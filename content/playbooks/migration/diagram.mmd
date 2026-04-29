@@ -3,162 +3,67 @@ flowchart TB
     %% ─── Migration trigger ───
     START([Migration Required<br/>legacy system &rarr; new architecture])
 
-    %% ─── First decision ───
-    Q1{Can the system<br/>be sliced into independently<br/>migratable pieces?}
+    %% ─── Decision diamonds ───
+    Q1{Sliceable into<br/>independently<br/>migratable pieces?}
+    Q2{Tightly coupled<br/>at code level?}
+    Q3{Stateless or<br/>solved state sync?}
+    Q4{Behavioural<br/>equivalence verifiable<br/>empirically?}
+    Q5{Parallel cost prohibitive<br/>AND full pre-cutover<br/>validation possible?}
 
-    %% ─── Strangler path ───
-    subgraph STRANGLER [Strangler Fig &mdash; gradual replacement behind a routing layer]
-        direction TB
-        S1[Introduce routing layer<br/>callers go through abstraction]
-        S2[Migrate one slice at a time<br/>old + new coexist behind layer]
-        S3[Each slice cut over progressively<br/>1% &rarr; 10% &rarr; 50% &rarr; 100%]
-        S4[Continue until nothing<br/>of legacy remains]
+    %% ─── Strategy outcomes (one node per strategy, 3-line description) ───
+    S1[Strangler Fig<br/>incremental replacement<br/>behind a routing layer]
+    S2[Branch by Abstraction<br/>code-level interface;<br/>switch the binding]
+    S3[Blue-Green<br/>parallel deploy;<br/>traffic switch at gateway]
+    S4[Parallel Run<br/>both systems same input;<br/>compare outputs]
+    S5[Big-Bang Cutover<br/>last resort; high risk;<br/>tested rollback required]
+    RECON[Reconsider scope<br/>or invest in slicing first]
 
-        S1 --> S2 --> S3 --> S4
-    end
-
-    %% ─── Branch by Abstraction path ───
-    subgraph BRANCH [Branch by Abstraction &mdash; code-level abstraction]
-        direction TB
-        B1[Introduce wrapping interface<br/>around existing implementation]
-        B2[Build new implementation<br/>against same interface]
-        B3[Switch interface binding<br/>via feature flag or config]
-        B4[Remove old implementation<br/>after watch period]
-
-        B1 --> B2 --> B3 --> B4
-    end
-
-    %% ─── Q2: Stateless? ───
-    Q2{Is the system<br/>stateless or has<br/>solved state sync?}
-
-    %% ─── Blue-Green path ───
-    subgraph BLUEGREEN [Blue-Green &mdash; parallel deploy, traffic switch]
-        direction TB
-        BG1[Deploy new alongside old<br/>both reachable but not active]
-        BG2[Smoke test new<br/>against production-like traffic]
-        BG3[Switch traffic at gateway<br/>old retained as fallback]
-        BG4[Remove old<br/>after watch period]
-
-        BG1 --> BG2 --> BG3 --> BG4
-    end
-
-    %% ─── Q3: Validation possible? ───
-    Q3{Can behavioural<br/>equivalence be<br/>verified empirically?}
-
-    %% ─── Parallel Run path ───
-    subgraph PARALLEL [Parallel Run &mdash; both systems with same input, compared]
-        direction TB
-        P1[Both systems receive<br/>same production input]
-        P2[Outputs compared on<br/>every transaction]
-        P3[Differences logged<br/>and triaged]
-        P4[Cutover declared<br/>when outputs match]
-
-        P1 --> P2 --> P3 --> P4
-    end
-
-    %% ─── Q4: Last resort ───
-    Q4{Is parallel operation<br/>cost prohibitive AND<br/>full validation pre-cutover possible?}
-
-    %% ─── Big Bang path ───
-    subgraph BIGBANG [Big-Bang Cutover &mdash; high risk, last resort]
-        direction TB
-        BB1[Comprehensive pre-cutover validation<br/>characterisation tests, traffic replay]
-        BB2[Cutover at scheduled time<br/>tested rollback path ready]
-        BB3[Watch period at full traffic<br/>rollback executable for N hours]
-        BB4[Decommission only after<br/>extended stable period]
-
-        BB1 --> BB2 --> BB3 --> BB4
-    end
-
-    %% ─── Reconsider node ───
-    RECON[Reconsider migration scope<br/>or invest in slicing first]
-
-    %% ─── Common discipline applies to all paths ───
-    subgraph DISCIPLINE [Discipline Applied to Every Strategy]
-        direction TB
-        D1[Characterisation tests<br/>before reimplementation]
-        D2[Data migration discipline<br/>dual-write / replication / backfill]
-        D3[Rollback path tested<br/>before cutover begins]
-        D4[Decommissioning planned<br/>with date, owner, criteria]
-
-        D1 --> D2 --> D3 --> D4
-    end
+    %% ─── Universal discipline ───
+    DISC[Discipline applied to all paths<br/>characterisation tests &middot; data migration<br/>rollback rehearsal &middot; decommissioning]
 
     %% ─── Outcome ───
     DONE([Migration Complete<br/>legacy actually removed])
 
     %% ─── Decision flow ───
     START --> Q1
-    Q1 -->|yes - sliceable| STRANGLER
-    Q1 -->|no - tightly coupled at code level| BRANCH
-    Q1 -->|no - tightly coupled at system level| Q2
-
-    Q2 -->|yes| BLUEGREEN
+    Q1 -->|yes| S1
+    Q1 -->|no| Q2
+    Q2 -->|yes| S2
     Q2 -->|no| Q3
-
-    Q3 -->|yes - same-input comparison feasible| PARALLEL
+    Q3 -->|yes| S3
     Q3 -->|no| Q4
+    Q4 -->|yes| S4
+    Q4 -->|no| Q5
+    Q5 -->|yes| S5
+    Q5 -->|no| RECON
 
-    Q4 -->|yes - both conditions met| BIGBANG
-    Q4 -->|no - one or both conditions unmet| RECON
+    %% ─── All strategy paths converge through discipline to completion ───
+    S1 --> DISC
+    S2 --> DISC
+    S3 --> DISC
+    S4 --> DISC
+    S5 --> DISC
 
-    %% ─── All paths converge through discipline to completion ───
-    S4  --> DISCIPLINE
-    B4  --> DISCIPLINE
-    BG4 --> DISCIPLINE
-    P4  --> DISCIPLINE
-    BB4 --> DISCIPLINE
-
-    DISCIPLINE --> DONE
+    DISC --> DONE
 
     %% ─── Node styles ───
     style START fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
     style DONE  fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
     style RECON fill:#F4E5DD,stroke:#A37050,stroke-width:1.8px,color:#3A2410
 
-    %% Decision diamonds — terracotta accent
+    %% Decision diamonds — terracotta accent for prominence
     style Q1 fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
     style Q2 fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
     style Q3 fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
     style Q4 fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+    style Q5 fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
 
-    %% Strategy paths — distinct colours per strategy
+    %% Strategy outcomes — distinct fill per strategy for visual differentiation
     style S1 fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
-    style S2 fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
-    style S3 fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
-    style S4 fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style S2 fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style S3 fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style S4 fill:#FBEDE0,stroke:#C96330,stroke-width:1.5px,color:#3A2410
+    style S5 fill:#F4E5DD,stroke:#A37050,stroke-width:1.5px,color:#3A2410
 
-    style B1 fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
-    style B2 fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
-    style B3 fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
-    style B4 fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
-
-    style BG1 fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
-    style BG2 fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
-    style BG3 fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
-    style BG4 fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
-
-    style P1 fill:#FBEDE0,stroke:#C96330,stroke-width:1.5px,color:#3A2410
-    style P2 fill:#FBEDE0,stroke:#C96330,stroke-width:1.5px,color:#3A2410
-    style P3 fill:#FBEDE0,stroke:#C96330,stroke-width:1.5px,color:#3A2410
-    style P4 fill:#FBEDE0,stroke:#C96330,stroke-width:1.5px,color:#3A2410
-
-    %% Big-bang — red-ish warning tones
-    style BB1 fill:#F4E5DD,stroke:#A37050,stroke-width:1.5px,color:#3A2410
-    style BB2 fill:#F4E5DD,stroke:#A37050,stroke-width:1.5px,color:#3A2410
-    style BB3 fill:#F4E5DD,stroke:#A37050,stroke-width:1.5px,color:#3A2410
-    style BB4 fill:#F4E5DD,stroke:#A37050,stroke-width:1.5px,color:#3A2410
-
-    %% Discipline cluster — uniform across all paths
-    style D1 fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
-    style D2 fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
-    style D3 fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
-    style D4 fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
-
-    %% Cluster styles
-    style STRANGLER  fill:#FEF8E5,stroke:#D4C599,stroke-width:1.4px,color:#5C4316
-    style BRANCH     fill:#FEF3C7,stroke:#D4A87A,stroke-width:1.4px,color:#5C4316
-    style BLUEGREEN  fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.4px,color:#2C4258
-    style PARALLEL   fill:#FBEDE0,stroke:#C96330,stroke-width:1.4px,color:#3A2410
-    style BIGBANG    fill:#F4E5DD,stroke:#A37050,stroke-width:1.4px,color:#3A2410
-    style DISCIPLINE fill:#FEF8E5,stroke:#A8956A,stroke-width:1.6px,color:#5C4316
+    %% Universal discipline — emphasised
+    style DISC fill:#FEF8E5,stroke:#A8956A,stroke-width:1.8px,color:#5C4316
