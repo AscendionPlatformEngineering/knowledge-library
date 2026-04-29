@@ -70,6 +70,21 @@ body {
   background: var(--nav-bg); border-bottom: 1px solid var(--nav-border);
   height: 58px; display: flex; align-items: center; padding: 0 2.5rem;
 }
+.nav-brand {
+  display: flex; align-items: center; gap: 0.65rem;
+  text-decoration: none; flex-shrink: 0;
+  outline: none;
+}
+.nav-brand:focus-visible { outline: 2px solid var(--nav-hover, #FFA866); outline-offset: 4px; border-radius: 4px; }
+.brand-logo {
+  height: 28px; width: auto; display: block;
+  flex-shrink: 0;
+  /* Slight opacity gives the logo a calmer presence next to the wordmark;
+     full white plus the grey shadow can otherwise out-bright the text. */
+  opacity: 0.95;
+  transition: opacity var(--t);
+}
+.nav-brand:hover .brand-logo { opacity: 1; }
 .nav-wordmark {
   font-size: 1rem; font-weight: 600; color: #FFFFFF;
   text-decoration: none; letter-spacing: 0.01em; flex-shrink: 0;
@@ -360,9 +375,16 @@ a.hero-tag:focus-visible {
 .footer .shell {
   display: flex;
   align-items: center;
-  justify-content: flex-end;   /* copyright on right */
+  justify-content: space-between;   /* logo on left, copyright on right */
   gap: 2rem;
 }
+.footer-logo {
+  height: 26px; width: auto; display: block;
+  flex-shrink: 0;
+  opacity: 0.85;
+  transition: opacity var(--t);
+}
+.footer:hover .footer-logo { opacity: 1; }
 
 /* Footer meta (right side): styled to match the header nav-link
    (same font, size, weight, color, hover behavior). */

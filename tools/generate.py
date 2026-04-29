@@ -1357,6 +1357,117 @@ EMBLEM MOTION MECHANICS (each page must use a DISTINCT mechanic):
                            temporary impression on each layer,
                            and is fully absorbed with no
                            permanent deformation)
+  #57 STAIR-STEP MATURITY ASCENT (strategy/ai-readiness:
+                           four horizontal rungs at ascending
+                           heights — Aware at y=70, Experiment
+                           at y=55, Operate at y=40, Strategic
+                           at y=25 — with vertical dashed risers
+                           between them; a single terracotta
+                           marker dot ascends the staircase by
+                           sliding right along each rung then
+                           jumping vertically to the next; each
+                           rung lights up terracotta as the
+                           marker reaches it and stays lit
+                           until the cycle restarts; faint
+                           trace dot follows the path as a
+                           history marker; distinct from #11
+                           (vertical bars rising) — that is
+                           PURELY VERTICAL with no horizontal
+                           traversal; distinct from #15
+                           (horizontal traversal) — that is
+                           PURELY HORIZONTAL with no vertical
+                           ascent; distinct from #45 sequential
+                           vertical fill bottom-to-top — that
+                           shows BARS FILLING, not a marker
+                           moving; distinct from #51 lifecycle
+                           progression trail — that has SINGLE
+                           HORIZONTAL TRACK with history; #57
+                           is the first mechanic to compose
+                           horizontal slide + vertical step
+                           into a stair-step ascent — the
+                           architectural signature is staged
+                           progression: each level requires
+                           the prior level's foundation; the
+                           visual maps directly onto AI
+                           maturity progression where each
+                           stage builds on the previous one)
+  #58 QUADRANT POSITIONING CASCADE (strategy/modernization:
+                           a 2×2 grid with axis lines crossing
+                           at center represents the Strategic
+                           Value × System Health portfolio
+                           matrix; multiple small dots — each
+                           representing a system in the
+                           portfolio — appear in DIFFERENT
+                           quadrants in staggered sequence,
+                           encoding that portfolio assessment
+                           positions every system somewhere
+                           on the grid simultaneously; one
+                           dot migrates from upper-left
+                           quadrant (Migrate: high value, low
+                           health) to upper-right quadrant
+                           (Invest: high value, high health)
+                           mid-cycle, encoding modernization
+                           completion; trailing dashed arc
+                           shows the migration path; distinct
+                           from ALL prior mechanics which are
+                           1D-distributed (along a horizontal
+                           or vertical axis or perimeter); #58
+                           is the first to distribute multiple
+                           markers across a 2D quadrant grid
+                           SIMULTANEOUSLY, with semantically
+                           labelled regions (Migrate / Invest /
+                           Tolerate / Eliminate); the single-
+                           dot migration BETWEEN regions is
+                           also novel — no prior mechanic
+                           shows a marker traversing between
+                           named semantic regions as a
+                           narrative trajectory; the
+                           architectural signature is portfolio
+                           assessment with a strategic
+                           trajectory: many systems positioned,
+                           one being modernized)
+  #59 FORWARD-RETURN FEEDBACK CYCLE (strategy/principles:
+                           four stations arranged horizontally
+                           at y=55 — Intent, Decisions,
+                           Execution, Measurement — a single
+                           terracotta marker sweeps left-to-
+                           right through them at y=55 (the
+                           forward path), each station briefly
+                           highlighting as the marker passes;
+                           on reaching Measurement, the marker
+                           transitions to a CURVED RETURN ARC
+                           traced ABOVE the linear path,
+                           traveling right-to-left back to
+                           Intent via an apex at (60,16); the
+                           return arc is implemented through
+                           cx/cy keyframes sampled from a
+                           quadratic Bezier curve (NOT
+                           animateMotion, which is forbidden
+                           by convention); sampled Bezier
+                           points: (98,55) → (82,42) → (66,36)
+                           → (58,36) → (50,36) → (32,42) →
+                           (14,55); distinct from #15
+                           horizontal traversal — that has
+                           NO RETURN ARC; distinct from #47
+                           perimeter circle marker — that is
+                           PURELY CIRCULAR with no straight
+                           segment; distinct from #51
+                           lifecycle progression trail — that
+                           is SINGLE HORIZONTAL TRACK with
+                           NO RETURN; distinct from #57 stair-
+                           step ascent — that is STAIRCASE
+                           PATTERN with no return; distinct
+                           from #58 quadrant positioning —
+                           that is 2D STATIC distribution
+                           with no path; #59 is the first to
+                           compose a STRAIGHT forward sweep
+                           with a CURVED return arc into a
+                           single continuous path — encoding
+                           the closed-loop nature of the
+                           strategy cycle: forward execution
+                           plus feedback return, where
+                           measurement informs the next
+                           cycle's intent)
   Future pages must invent a new mechanic, not reuse one.
   Two colours only: warm neutral (#D6D2C8) + terracotta (#C96330).
   Basic SMIL primitives only (animate, animateTransform with type=rotate or translate; stroke-dasharray and opacity animations also valid via animate).
@@ -2746,6 +2857,24 @@ TAG_LINKS = {
     "Erlang/OTP": "https://www.erlang.org/",
     "FMEA — Failure Mode and Effects Analysis": "https://en.wikipedia.org/wiki/Failure_mode_and_effects_analysis",
     "Antifragile (Taleb)": "https://www.penguinrandomhouse.com/books/176227/antifragile-by-nassim-nicholas-taleb/",
+
+    # ─── v38 Architecture Strategy references ───
+    # Strategy principles
+    "Wardley Mapping": "https://learnwardleymapping.com/",
+    "Wardley Map (overview)": "https://en.wikipedia.org/wiki/Wardley_map",
+    "Good Strategy / Bad Strategy (Rumelt)": "https://en.wikipedia.org/wiki/Good_Strategy_Bad_Strategy",
+    "Good Strategy / Bad Strategy (publisher)": "https://profilebooks.com/work/good-strategy-bad-strategy/",
+    "Continuous Architecture in Practice": "https://www.oreilly.com/library/view/continuous-architecture-in/9780136523710/",
+    "Playing to Win (HBS)": "https://www.hbs.edu/faculty/Pages/item.aspx?num=44469",
+    # Modernization strategy
+    "Application Portfolio Management": "https://en.wikipedia.org/wiki/Application_portfolio_management",
+    # AI readiness
+    "McKinsey — The State of AI": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai",
+    "AI Transformation Playbook (Landing AI)": "https://landing.ai/ai-transformation-playbook",
+    "CRISP-DM": "https://en.wikipedia.org/wiki/Cross-industry_standard_process_for_data_mining",
+    "Google AI Adoption Framework": "https://services.google.com/fh/files/misc/ai_adoption_framework_whitepaper.pdf",
+    # Cross-cutting
+    "DORA Capabilities Catalog": "https://dora.dev/capabilities/",
 }
 
 
@@ -2951,9 +3080,64 @@ WORDMARK_JS = """<script>
 
 def is_substantive_readme(text):
     """True if README has the canonical full-page structure (not a stub).
-    A page is substantive iff it has either Six principles or an Architecture
-    Diagram section — both signals indicate an authored, full-template page."""
-    return "## Six principles" in text or "## Architecture Diagram" in text
+    A page is substantive iff it has either Six principles or any diagram-section
+    heading — both signals indicate an authored, full-template page. The diagram
+    heading text varies by diagram type (Flowchart, Mind Map, Quadrant Chart,
+    State Diagram, Class Diagram, Sequence Diagram, Timeline, Gantt Chart,
+    User Journey, Entity Relationship Diagram, Git Graph, Architecture Diagram)
+    so we match by the structural marker '## ' followed by any of the known
+    diagram-section titles."""
+    if "## Six principles" in text:
+        return True
+    for title in _ALL_DIAGRAM_SECTION_TITLES:
+        if f"## {title}" in text:
+            return True
+    return False
+
+
+# Mermaid type token (first non-blank line, first token) → human-readable title.
+# Used for the diagram section heading on each page.
+_DIAGRAM_TYPE_TO_TITLE = {
+    "flowchart":      "Flowchart",
+    "graph":          "Flowchart",
+    "stateDiagram":   "State Diagram",
+    "stateDiagram-v2": "State Diagram",
+    "classDiagram":   "Class Diagram",
+    "sequenceDiagram": "Sequence Diagram",
+    "timeline":       "Timeline",
+    "mindmap":        "Mind Map",
+    "gantt":          "Gantt Chart",
+    "quadrantChart":  "Quadrant Chart",
+    "journey":        "User Journey",
+    "userJourney":    "User Journey",
+    "erDiagram":      "Entity Relationship Diagram",
+    "gitGraph":       "Git Graph",
+    "C4Context":      "C4 Context Diagram",
+    "C4Container":    "C4 Container Diagram",
+    "C4Component":    "C4 Component Diagram",
+    "block-beta":     "Block Diagram",
+    "pie":            "Pie Chart",
+    "requirementDiagram": "Requirement Diagram",
+    "sankey-beta":    "Sankey Diagram",
+}
+
+_ALL_DIAGRAM_SECTION_TITLES = sorted(set(list(_DIAGRAM_TYPE_TO_TITLE.values()) + ["Architecture Diagram"]))
+
+
+def _diagram_type_to_title(mmd_text):
+    """Derive the diagram-section H2 heading from the Mermaid source's first
+    non-blank, non-comment line. Returns 'Architecture Diagram' as a generic
+    fallback for unknown diagram types or empty/malformed input."""
+    if not mmd_text:
+        return "Architecture Diagram"
+    for line in mmd_text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("%%") or stripped.startswith("---"):
+            continue
+        # First word of the first content line is the diagram type token
+        first_token = stripped.split()[0] if stripped.split() else ""
+        return _DIAGRAM_TYPE_TO_TITLE.get(first_token, "Architecture Diagram")
+    return "Architecture Diagram"
 
 
 def _extract_alignment_list(text):
@@ -3097,8 +3281,10 @@ def nav_html(prefix, active=""):
         links += f'    <a href="{prefix}{href}"{cls}>{label}</a>\n'
     return (
         f'<nav class="nav">\n'
-        f'  <a href="{prefix}index.html" class="nav-wordmark" id="nav-wm">'
-        f'Ascendion Engineering</a>\n'
+        f'  <a href="{prefix}index.html" class="nav-brand" aria-label="Ascendion Engineering — home">\n'
+        f'    <img class="brand-logo" src="{prefix}logo.png" alt="" aria-hidden="true">\n'
+        f'    <span class="nav-wordmark" id="nav-wm">Ascendion Engineering</span>\n'
+        f'  </a>\n'
         f'  <div class="nav-sep"></div>\n'
         f'  <div class="nav-links">\n{links}  </div>\n'
         f'  <a href="{prefix}knowledge-graph/" class="nav-cta">Knowledge Graph</a>\n'
@@ -3107,10 +3293,11 @@ def nav_html(prefix, active=""):
     )
 
 
-def footer_html(label=""):
+def footer_html(label="", prefix=""):
     return (
         f'<footer class="footer" role="button" tabindex="0" '
         f'aria-label="Scroll to top of page">\n  <div class="shell">\n'
+        f'    <img class="footer-logo" src="{prefix}logo.png" alt="" aria-hidden="true">\n'
         f'    <div class="footer-meta">© 2025 Ascendion Solutions Architecture Practice</div>\n'
         f'  </div>\n</footer>'
     )
@@ -3126,6 +3313,8 @@ def head(title, css, has_mermaid=False):
         f'  <meta charset="UTF-8">\n'
         f'  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
         f'  <title>{title}</title>\n'
+        f'  <link rel="icon" type="image/x-icon" href="{css}favicon.ico">\n'
+        f'  <link rel="icon" type="image/png" sizes="32x32" href="{css}favicon-32.png">\n'
         f'  <link rel="stylesheet" href="{css}shared.css">\n'
         f'{m}</head>\n<body>\n'
         f'<a class="skip-link" href="#main">Skip to main content</a>'
@@ -3271,7 +3460,7 @@ def gen_section(slug, src_dir, out_dir):
         f'    <div class="list-label">{len(subs)} topics in this section</div>\n'
         f'{rows}  </div>\n</div>\n'
         f'</main>\n\n'
-        f'{footer_html(f"{slug}/")}\n\n'
+        f'{footer_html(f"{slug}/", prefix="../")}\n\n'
         f'{WORDMARK_JS}\n</body>\n</html>'
     )
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -3344,18 +3533,33 @@ def gen_article(slug, sub_slug, sub_dir, out_sub, referenced_by=None, metadata=N
         )
 
     # Diagram placement strategy:
-    #   1. If README already has "## Architecture Diagram", insert wrap right after it.
-    #   2. Otherwise, fall back to inserting "<h2>Architecture Diagram</h2>" + wrap
+    #   1. Derive the diagram-section title from the Mermaid source (e.g.
+    #      "Flowchart", "State Diagram", "Quadrant Chart"). Falls back to
+    #      "Architecture Diagram" for unknown types or if there is no diagram.
+    #   2. If README already contains an H2 matching ANY known diagram-section
+    #      title (the dynamic title or any prior title), insert wrap right after it
+    #      AND rewrite that H2 to the current dynamic title (so existing
+    #      "Architecture Diagram" headings get auto-upgraded to type-specific
+    #      headings on rebuild).
+    #   3. Otherwise, fall back to inserting "<h2>{dynamic_title}</h2>" + wrap
     #      before "Related Sections" / "Related" / "References".
     if diag_wrap_html:
-        arch_h2_re = re.compile(r'(<h2[^>]*>\s*Architecture Diagram\s*</h2>)',
-                                re.IGNORECASE)
-        m = arch_h2_re.search(body)
+        diagram_title = _diagram_type_to_title(mmd)
+        # Match ANY known diagram-section H2, not just "Architecture Diagram"
+        any_diagram_h2_re = re.compile(
+            r'<h2[^>]*>\s*(' +
+            '|'.join(re.escape(t) for t in _ALL_DIAGRAM_SECTION_TITLES) +
+            r')\s*</h2>',
+            re.IGNORECASE)
+        m = any_diagram_h2_re.search(body)
         if m:
-            insert_at = m.end()
+            # Rewrite the H2 to the current dynamic title and insert wrap after it
+            new_h2 = f'<h2>{diagram_title}</h2>'
+            body = body[:m.start()] + new_h2 + body[m.end():]
+            insert_at = m.start() + len(new_h2)
             body = body[:insert_at] + '\n' + diag_wrap_html + body[insert_at:]
         else:
-            full_block = '<h2>Architecture Diagram</h2>\n' + diag_wrap_html
+            full_block = f'<h2>{diagram_title}</h2>\n' + diag_wrap_html
             body = _insert_before_heading(
                 body, full_block,
                 ['Related Sections', 'Related', 'References'])
@@ -3370,7 +3574,7 @@ def gen_article(slug, sub_slug, sub_dir, out_sub, referenced_by=None, metadata=N
         f'  </div>\n'
         f'</div>\n'
         f'</main>\n\n'
-        f'{footer_html(f"{slug}/{sub_slug}/")}\n\n'
+        f'{footer_html(f"{slug}/{sub_slug}/", prefix="../../")}\n\n'
         f'{WORDMARK_JS}\n</body>\n</html>'
     )
     # If this page has incoming references from other substantive pages,
@@ -3434,7 +3638,7 @@ def gen_knowledge_graph_page(graph_data, out_root):
 
     head_html = head("Knowledge Graph — Ascendion Engineering", "../")
     nav = nav_html("../")
-    foot = footer_html()
+    foot = footer_html(prefix="../")
 
     body = f"""
 {nav}
@@ -3668,6 +3872,23 @@ def main():
     else:
         print(f"  ! shared.css not found near {here}")
         sys.exit(1)
+
+    # Copy brand assets (logo + favicons). Same search strategy as shared.css.
+    # logo.png   — header + footer brand mark, transparent background
+    # favicon.ico — multi-resolution browser tab icon
+    # favicon-32.png — modern browsers prefer PNG favicons
+    for asset in ("logo.png", "favicon.ico", "favicon-32.png"):
+        for candidate in [
+            here.parent / "src" / asset,
+            here / "src" / asset,
+            here / asset,
+        ]:
+            if candidate.exists():
+                shutil.copy(candidate, out / asset)
+                print(f"  ✓ {asset} (from {candidate})")
+                break
+        else:
+            print(f"  ! {asset} not found near {here} (skipping)")
 
     print("\n── Generating v4 ─────────────────────────────────────────────")
 
