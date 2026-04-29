@@ -1,53 +1,39 @@
-stateDiagram-v2
+flowchart LR
 
-    [*] --> Drafted
+    %% ─── Six lifecycle phases as horizontal sequence ───
+    A["Drafted<br/>pre-release design review<br/>against documented conventions"]
+    B["Beta<br/>private alpha or controlled beta<br/>breaking changes expected"]
+    C["GA<br/>public release<br/>full support; recommended version"]
+    D["Maintenance<br/>security and high-severity<br/>bug fixes only"]
+    E["Deprecated<br/>Sunset announced<br/>migration tooling published"]
+    F["Retired<br/>410 Gone responses<br/>code and infrastructure removed"]
 
-    Drafted     : title written; pre-release design review against documented conventions
-    Beta        : private alpha or controlled beta with design partners; breaking changes expected
-    GA          : public release; full support; recommended version
-    Maintenance : security and high-severity bug fixes only; no new features
-    Deprecated  : Sunset announced; T-12, T-6, T-3, T-1 month reminders; migration tooling published
-    Retired     : 410 Gone responses; routes removed; code deleted; infrastructure destroyed
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
 
-    Drafted     --> Beta        : design + review complete
-    Beta        --> GA          : design partners validated
-    GA          --> Maintenance : next major version reaches GA
-    Maintenance --> Deprecated  : Sunset announcement
-    Deprecated  --> Retired     : binding sunset date arrived
+    %% ─── Three discipline annotations attached to the relevant phases ───
+    COEX["<b>Multi-version coexistence</b><br/>when this version enters Maintenance,<br/>the next major version (vN+1) enters its own GA;<br/>both versions live in production simultaneously,<br/>bounded by the announced sunset date"]
 
-    Retired --> [*]
+    DISC["<b>Deprecation discipline</b><br/>Sunset HTTP header on every response;<br/>reminder cadence at T-12, T-6, T-3, T-1 months;<br/>identified consumers receive direct outreach;<br/>migration tooling published with announcement"]
 
-    note right of Maintenance
-        Multi-version coexistence:
-        when this version enters
-        Maintenance, the next major
-        version (vN+1) enters its
-        own GA on a parallel track.
-        Both versions live in
-        production simultaneously,
-        bounded by the announced
-        sunset date.
-    end note
+    EXEC["<b>Retirement executes</b><br/>sunset date is binding (no rolling extensions);<br/>routes return 410 Gone with migration docs;<br/>code deleted from source repo after grace period;<br/>infrastructure destroyed last"]
 
-    note right of Deprecated
-        Deprecation discipline:
-        Sunset HTTP header on every
-        response; minimum 12-24
-        month notice (public) or
-        shorter (internal); reminder
-        cadence T-12, T-6, T-3, T-1
-        months; identified consumers
-        receive direct outreach;
-        migration tooling published
-        alongside announcement.
-    end note
+    D -.-> COEX
+    E -.-> DISC
+    F -.-> EXEC
 
-    note right of Retired
-        Retirement actually executes:
-        sunset date is binding; routes
-        return 410 Gone with migration
-        documentation in response;
-        code deleted from source repo
-        after grace period;
-        infrastructure destroyed last.
-    end note
+    %% ─── Phase styles: progression from neutral through terracotta ───
+    style A fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style B fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style C fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+    style D fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style E fill:#FBEDE0,stroke:#C96330,stroke-width:1.8px,color:#3A2410
+    style F fill:#F4E5DD,stroke:#A37050,stroke-width:1.5px,color:#3A2410
+
+    %% ─── Annotation styles: subtle backgrounds matching their attached phase ───
+    style COEX fill:#FEF8E5,stroke:#D4C599,stroke-width:1px,color:#5C4316
+    style DISC fill:#FBEDE0,stroke:#D4C599,stroke-width:1px,color:#3A2410
+    style EXEC fill:#F4E5DD,stroke:#D4C599,stroke-width:1px,color:#3A2410
