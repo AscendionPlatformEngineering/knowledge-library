@@ -1,49 +1,111 @@
-flowchart TD
-    A([🚀 Start: Scorecard Template]) --> B[Assessment & Discovery]
+flowchart TB
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    %% ─── Service Input ───
+    SVC([Service Under Assessment])
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    %% ─── Dimensions ───
+    subgraph DIMENSIONS [Dimensions &mdash; what gets rated]
+        direction TB
+        D_PR[Production Readiness]
+        D_OBS[Observability]
+        D_SEC[Security]
+        D_REL[Reliability]
+        D_PERF[Performance]
+        D_COST[Cost Efficiency]
+    end
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    %% ─── Scoring (per dimension) ───
+    subgraph SCORING [Scoring &mdash; per dimension, owner-driven with peer review]
+        direction TB
+        CRIT[Documented Criteria<br/>per level &middot; verifiable language]
+        EVIDENCE[Evidence Gathering<br/>dashboards &middot; threat models<br/>runbooks &middot; metrics]
+        OWNER_RATE[Owner Rating<br/>L1 / L2 / L3 / L4<br/>backed by evidence]
+        PEER[Peer Review<br/>architect &middot; platform team<br/>cross-team owner]
+        DISAGREE{Rating<br/>Agreed?}
+        FINAL[Final Level Assignment<br/>recorded with evidence + reviewer]
+    end
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    %% ─── Aggregation (portfolio view) ───
+    subgraph AGGREGATION [Aggregation &mdash; portfolio view, no composite collapse]
+        direction TB
+        SC_THIS[Per-Service Scorecard<br/>this cycle &middot; versioned]
+        MATRIX[Portfolio Matrix<br/>services &times; dimensions &times; levels]
+        TRAJ[Trajectory View<br/>per-service per-dimension<br/>movement over cycles]
+        PATTERNS[Pattern Aggregations<br/>median per dimension &middot; distribution<br/>at each level &middot; cohort movement]
+    end
 
-    G --> H[Architecture Review Board]
+    %% ─── Calibration (feedback loop) ───
+    subgraph CALIBRATION [Calibration &mdash; criteria revised against operational outcomes]
+        direction TB
+        OPS_DATA[Operational Data<br/>incidents &middot; MTTR &middot; CFR<br/>customer-facing reliability]
+        DIVERGE{Ratings<br/>Predict<br/>Outcomes?}
+        REVISE[Criteria Revision<br/>versioned &middot; reason recorded]
+    end
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    %% ─── Investment Decisions ───
+    DECISIONS([Investment Decisions<br/>platform / per-team support<br/>focused interventions])
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    %% ─── Flow ───
+    SVC --> DIMENSIONS
+    DIMENSIONS --> SCORING
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    CRIT --> EVIDENCE
+    EVIDENCE --> OWNER_RATE
+    OWNER_RATE --> PEER
+    PEER --> DISAGREE
+    DISAGREE -->|yes| FINAL
+    DISAGREE -->|no| EVIDENCE
+    FINAL --> SC_THIS
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    SC_THIS --> MATRIX
+    MATRIX --> TRAJ
+    MATRIX --> PATTERNS
+    TRAJ --> DECISIONS
+    PATTERNS --> DECISIONS
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    %% Calibration loop
+    SC_THIS -.tracked against.-> OPS_DATA
+    OPS_DATA --> DIVERGE
+    DIVERGE -->|yes - keep criteria| MATRIX
+    DIVERGE -->|no - criteria miss something| REVISE
+    REVISE -.updates.-> CRIT
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    %% Disagreement feedback
+    DISAGREE -.recurring disagreements signal.-> REVISE
+
+    %% ─── Node styles ───
+    style SVC       fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+    style DECISIONS fill:#4A90E2,stroke:#2C5F9E,stroke-width:2px,color:#FFFFFF
+
+    %% Dimensions (palest tier — what gets rated)
+    style D_PR    fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style D_OBS   fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style D_SEC   fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style D_REL   fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style D_PERF  fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+    style D_COST  fill:#FEF8E5,stroke:#A8956A,stroke-width:1.5px,color:#5C4316
+
+    %% Scoring (mid amber — process)
+    style CRIT       fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style EVIDENCE   fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style OWNER_RATE fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style PEER       fill:#FEF3C7,stroke:#92722C,stroke-width:1.5px,color:#5C4316
+    style DISAGREE   fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+    style FINAL      fill:#FEF3C7,stroke:#92722C,stroke-width:1.8px,color:#5C4316
+
+    %% Aggregation (warm — output)
+    style SC_THIS  fill:#FBEDE0,stroke:#C96330,stroke-width:1.5px,color:#3A2410
+    style MATRIX   fill:#FBEDE0,stroke:#C96330,stroke-width:2px,color:#3A2410
+    style TRAJ     fill:#FBEDE0,stroke:#C96330,stroke-width:1.5px,color:#3A2410
+    style PATTERNS fill:#FBEDE0,stroke:#C96330,stroke-width:1.5px,color:#3A2410
+
+    %% Calibration (cooler tones — feedback)
+    style OPS_DATA fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.5px,color:#2C4258
+    style DIVERGE  fill:#E5ECF3,stroke:#5A7A9A,stroke-width:2px,color:#2C4258
+    style REVISE   fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.8px,color:#2C4258
+
+    %% ─── Cluster styles ───
+    style DIMENSIONS  fill:#FEF8E5,stroke:#D4C599,stroke-width:1.4px,color:#5C4316
+    style SCORING     fill:#FEF3C7,stroke:#D4A87A,stroke-width:1.4px,color:#5C4316
+    style AGGREGATION fill:#FBEDE0,stroke:#C96330,stroke-width:1.4px,color:#3A2410
+    style CALIBRATION fill:#E5ECF3,stroke:#5A7A9A,stroke-width:1.4px,color:#2C4258

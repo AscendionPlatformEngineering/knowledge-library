@@ -723,9 +723,427 @@ EMBLEM MOTION MECHANICS (each page must use a DISTINCT mechanic):
                            NESTED CIRCLES at INCREASING RADII; the
                            architectural signature is perimeter-to-core
                            defense layer activation)
+    tools/ai-agents      → cyclic path marker (a single closed circular
+                           path of radius 26 centred at (60, 45),
+                           rendered as stroke-only with a dashed warm-
+                           neutral stroke, with FOUR FIXED PHASE
+                           MARKERS (small filled circles, radius 3) at
+                           the quarter positions around the perimeter:
+                           top (60, 19), right (86, 45), bottom
+                           (60, 71), left (34, 45); a small terracotta
+                           dot (radius 2.8) starts at the top of the
+                           circle and travels around the perimeter
+                           continuously via animateTransform type=rotate
+                           with values "0 60 45; 360 60 45" over 6s,
+                           tracing the full circumference; each fixed
+                           phase marker briefly transitions from warm
+                           neutral to terracotta when the traveling dot
+                           is near it (its angular position aligned to
+                           that phase) and back to warm neutral as the
+                           dot moves on, so the markers light up in
+                           clockwise sequence (top → right → bottom →
+                           left → top); FIRST CLOSED-LOOP TRAVELING
+                           MARKER mechanic in the catalogue; distinct
+                           from #1 particle flow (RADIAL CENTRIPETAL
+                           convergence — particles travel inward from
+                           edge to centre on radial paths) by being a
+                           SINGLE DOT traveling AROUND a closed
+                           PERIMETER, never converging; distinct from
+                           #21 reciprocating arc (uses ARCS as visual
+                           elements with zone-cycling perimeter
+                           highlighting) by having a SINGLE TRAVELING
+                           DOT around a CIRCLE with FIXED PHASE
+                           MARKERS that brighten as the dot passes —
+                           not zone-cycling on the perimeter; distinct
+                           from #38 sweeping gauge needle (SINGLE
+                           rotating NEEDLE on a 180° arc) by being a
+                           TRAVELING DOT on a 360° closed circle with
+                           fixed markers along the path; distinct from
+                           #44 radial check bloom (centre pivot +
+                           SPOKES + terminal markers, terminals
+                           activate clockwise) by having NO SPOKES and
+                           NO CENTRE PIVOT, just a closed circular
+                           path with traveling dot; distinct from #46
+                           concentric ring activation (FOUR NESTED
+                           circles at different radii activating
+                           outermost-to-innermost) by being a SINGLE
+                           CIRCLE with a traveling dot)
+    tools/cli            → character sequence typing (six small
+                           horizontal terracotta rectangles in a row
+                           at fixed y=43, height=4, width=12, with
+                           gaps of 2 between them and rounded corners
+                           rx=0.8; positioned at x=19, 33, 47, 61, 75,
+                           89; a small terracotta wedge prompt
+                           indicator at x=9-13 always visible; a thin
+                           warm-neutral baseline line at y=51 from
+                           x=9 to x=103 always visible; over a
+                           5-second cycle, each rectangle's opacity
+                           is animated to fade in sequentially —
+                           rectangle 1 at phase 0.10, rectangle 2 at
+                           0.16, rectangle 3 at 0.22, rectangle 4 at
+                           0.28, rectangle 5 at 0.34, rectangle 6 at
+                           0.40; once visible, each stays visible
+                           through phase 0.80 (command typed, ready
+                           to execute); all six fade out
+                           SIMULTANEOUSLY at phase 0.90 (terminal
+                           cleared / command executed); brief pause
+                           before restart; visual metaphor is typing
+                           a command into a terminal character by
+                           character; distinct from #6 sequential
+                           frame illumination (SINGLE row of frames
+                           where ONLY ONE is lit at any moment —
+                           frames TAKE TURNS, do NOT ACCUMULATE) by
+                           having items APPEAR and STAY VISIBLE
+                           (accumulating until all six visible) then
+                           ALL CLEAR SIMULTANEOUSLY; distinct from
+                           #34 tiered escalation cascade (THREE TIERS
+                           of dots, all dots within a tier light
+                           TOGETHER with variable cascade depth) by
+                           being SINGLE ROW of items appearing
+                           SEQUENTIALLY and ACCUMULATING; distinct
+                           from #41 sequential pointer descent
+                           (VERTICAL list of stationary text-line
+                           shapes with pointer triangle DESCENDING)
+                           by being HORIZONTAL row with NO POINTER
+                           ELEMENT, items fading in directly via
+                           opacity animation; distinct from #45
+                           sequential vertical fill (FIVE VERTICAL
+                           bars filling bottom-to-top via y/height
+                           animation) by being HORIZONTAL ROW of
+                           small items fading in via OPACITY (no
+                           fill animation, just opacity transitions))
+    tools/scripts        → perimeter fill ring (a single circle of
+                           radius 24 centred at (60, 45) rendered as
+                           stroke-only; warm-neutral baseline circle
+                           always visible at stroke-width 3 opacity
+                           0.5; terracotta foreground circle with
+                           same geometry and stroke-width 3 has its
+                           stroke-dasharray animated from "0 151"
+                           (empty) to "151 0" (full) over a 6-second
+                           cycle, with -90° rotation transform
+                           applied to the foreground circle around
+                           (60, 45) so the fill grows clockwise from
+                           the 12 o'clock position rather than 3
+                           o'clock; circumference of 151 chosen as
+                           2π * 24 ≈ 150.8 rounded; the cycle phases
+                           are 0.000-0.067 empty (initial), 0.067-
+                           0.750 fill grows clockwise (0% to 100%),
+                           0.750-0.833 full (briefly hold completed
+                           state), 0.833-1.000 snap back to empty
+                           and brief pause; a small terracotta centre
+                           dot at (60, 45) radius 2.8 pulses subtly
+                           via radius animation (2.8 → 3.5 → 2.8)
+                           during the fill phase representing the
+                           task being processed; small warm-neutral
+                           tick marks at quarter positions (12, 3,
+                           6, 9 o'clock) frame the perimeter
+                           decoratively; FIRST STROKE-DASHARRAY
+                           PERIMETER-FILL mechanic in the catalogue;
+                           visual metaphor is a loading-spinner-style
+                           progress ring where the perimeter fills
+                           rather than rotates; distinct from #21
+                           reciprocating arc (uses ARCS as visual
+                           elements with zone-cycling perimeter
+                           highlighting — different zones light up
+                           around the perimeter in a cycling pattern)
+                           by being CONTINUOUS PERIMETER FILL that
+                           GROWS from 0% to 100% then RESETS, not
+                           zone-cycling; distinct from #38 sweeping
+                           gauge needle (180° arc with rotating
+                           needle) by being a 360° CIRCLE with
+                           PERIMETER FILL animation, no rotating
+                           element; distinct from #46 concentric ring
+                           activation (FOUR NESTED RINGS at different
+                           radii activating in sequence) by being a
+                           SINGLE RING with PERIMETER FILL growing
+                           clockwise; distinct from #44 radial check
+                           bloom (centre pivot + spokes + terminal
+                           markers) by being a perimeter fill on a
+                           CIRCLE with NO SPOKES OR TERMINALS, just
+                           continuous fill of the perimeter)
+    tools/validators     → branching decision flow (a horizontal warm-
+                           neutral entry line from (15, 45) to
+                           (58, 45) representing input arrival; a
+                           small terracotta diamond marker at
+                           (60, 45) of width and height 8 (points at
+                           60,41 / 64,45 / 60,49 / 56,45) representing
+                           the validation decision point, always
+                           visible; an UP-branch line from (62, 43)
+                           to (100, 20) and a DOWN-branch line from
+                           (62, 47) to (100, 70), both warm neutral;
+                           terminal markers (small warm-neutral
+                           circles radius 2.5) at (100, 20) and
+                           (100, 70); a small terracotta dot of
+                           radius 2.5 travels along the path through
+                           a 14-second cycle composed of TWO
+                           sub-cycles of 7 seconds each — sub-cycle 1
+                           (pass): dot animates from (15, 45) along
+                           main line to (58, 45) at decision, then
+                           up-right to (100, 20), brief pause at
+                           endpoint, fade and snap reset; sub-cycle 2
+                           (fail): dot animates from (15, 45) along
+                           main line to (58, 45), then down-right to
+                           (100, 70), brief pause, fade and snap
+                           reset; the two endpoint markers brighten
+                           to terracotta as the traveling dot
+                           reaches them in their respective
+                           sub-cycles, then fade back to warm
+                           neutral; FIRST BRANCHING-PATH-TRAVERSAL
+                           mechanic in the catalogue; visual
+                           metaphor is validation as a binary gate
+                           that produces pass (up) or fail (down)
+                           outcomes on alternating cycles; distinct
+                           from #1 particle flow (RADIAL CENTRIPETAL
+                           convergence — particles travel inward
+                           from edge to centre on radial paths) by
+                           being HORIZONTAL → BRANCHING travel path
+                           with ALTERNATING up-branch and down-branch
+                           across cycles; distinct from #41
+                           sequential pointer descent (VERTICAL list
+                           with pointer DESCENDING through stationary
+                           items) by being HORIZONTAL travel with
+                           BRANCHING DIVERGENCE at the decision
+                           point; distinct from #15 simple horizontal
+                           traversal (single horizontal motion left
+                           to right with no branching) by having a
+                           BRANCHING POINT in the middle that
+                           alternates direction across cycles; the
+                           architectural signature is BRANCHING with
+                           cycle-level alternation between branches)
+    templates/adr-template → lifecycle progression trail (a horizontal
+                           lifecycle axis at y=45 with FOUR fixed
+                           phase markers (small circles, radius 4) at
+                           x positions (20, 47, 74, 101) representing
+                           the four ADR statuses Proposed / Accepted /
+                           Deprecated / Superseded; three warm-neutral
+                           connecting line segments between adjacent
+                           markers always visible at low opacity; each
+                           marker has THREE distinct visual states
+                           rather than the binary on/off of prior
+                           mechanics: state A warm-neutral baseline
+                           (#D6D2C8) — the marker has not yet been
+                           visited; state B dim terracotta (opacity
+                           0.45) — the marker has previously been
+                           active and now represents accumulated
+                           history; state C bright terracotta (full
+                           opacity) — the marker is currently active;
+                           a 9-second cycle moves the active state
+                           from marker 1 (Proposed, 0.5-2.0s) through
+                           marker 2 (Accepted, 2.0-3.5s), marker 3
+                           (Deprecated, 3.5-5.0s), marker 4
+                           (Superseded, 5.0-6.5s); after a marker has
+                           been active and the active dot moves on,
+                           that marker drops to the dim history state
+                           and remains visible (so by the time marker
+                           4 is active, markers 1-3 are all in dim
+                           history state); brief hold at 6.5-7.5s
+                           with all four markers visible (full
+                           lifecycle complete), then all reset
+                           simultaneously to warm-neutral at
+                           7.5-8.5s, brief pause and restart;
+                           implementation uses animate on the fill
+                           attribute of each marker through the three
+                           states with appropriate keyTimes; FIRST
+                           ACTIVE-VS-HISTORY THREE-STATE MARKER
+                           mechanic in the catalogue; visual metaphor
+                           is an ADR moving through its lifecycle
+                           with prior states accumulated as visible
+                           history; distinct from #6 sequential frame
+                           illumination (single horizontal row of
+                           frames where ONLY ONE is lit at any moment
+                           — frames TAKE TURNS, do NOT ACCUMULATE
+                           HISTORY) by having THREE visual states per
+                           marker with PRIOR markers accumulating in
+                           DIM HISTORY state; distinct from #41
+                           sequential pointer descent (VERTICAL list
+                           with pointer triangle DESCENDING through
+                           stationary text-line items) by being
+                           HORIZONTAL with active state moving and
+                           prior positions accumulating dimmed;
+                           distinct from #44 radial check bloom
+                           (centre pivot + spokes + terminal markers
+                           that activate clockwise and STAY at FULL
+                           BRIGHTNESS until global reset) by:
+                           (a) being LINEAR HORIZONTAL not
+                           RADIAL/CIRCULAR; (b) having THREE visual
+                           states per marker (off/dim/bright) rather
+                           than just two (off/on); (c) only ONE
+                           marker is bright at a time, with PRIOR
+                           markers DIMMED rather than at full
+                           brightness; distinct from #48 character
+                           sequence typing (six rectangles fading in
+                           via opacity, all visible at end with all
+                           clearing simultaneously) by having the
+                           active state SHIFTING POSITION over time
+                           rather than items being purely additive,
+                           and by having three visual states per
+                           marker rather than binary; the
+                           architectural signature is lifecycle
+                           progression with accumulated history
+                           visible)
+    templates/review-template → branching tree formation (a single
+                           central terracotta node (filled circle
+                           radius 4) at (60, 45) representing the
+                           Review document itself, always visible;
+                           three terminal nodes (warm-neutral filled
+                           circles radius 3.5) at IRREGULAR positions
+                           around the central node — top (35, 18),
+                           right (98, 38), bottom (45, 72) —
+                           representing the three review components
+                           Findings / Decision / Outcomes; three
+                           branch lines connecting central node to
+                           each terminal at IRREGULAR angles, each
+                           drawn via stroke-dasharray animation that
+                           grows the line in from the central node
+                           toward its terminal: branch line stroke-
+                           dasharray animates from "0 length" (no
+                           visible stroke) to "length 0" (full
+                           stroke drawn from start to end), where
+                           "length" is the line's actual length plus
+                           a small buffer; an 8-second cycle draws
+                           branch 1 in 0.4-1.6s, then terminal 1
+                           brightens from warm-neutral to terracotta
+                           1.6-1.8s; branch 2 draws in 1.8-3.0s,
+                           terminal 2 brightens 3.0-3.2s; branch 3
+                           draws in 3.2-4.4s, terminal 3 brightens
+                           4.4-4.6s; hold complete with all branches
+                           and terminals visible 4.6-6.5s; all clear
+                           simultaneously 6.5-7.0s (snap reset);
+                           brief pause 7.0-8.0s before restart;
+                           FIRST STROKE-DASHARRAY-ON-LINE-SEGMENTS
+                           mechanic in the catalogue (prior stroke-
+                           dasharray usage in #49 was on a CIRCLE
+                           PERIMETER, not on straight line segments);
+                           visual metaphor is a review document
+                           branching out into its constituent
+                           findings/decision/outcomes; distinct from
+                           #44 radial check bloom (centre pivot + 6
+                           SPOKES at evenly distributed angles + 6
+                           terminal markers; spokes ALWAYS VISIBLE
+                           from cycle start, only terminal markers
+                           brighten in clockwise sequence) by:
+                           (a) only THREE branches not six;
+                           (b) branches at IRREGULAR angles not
+                           evenly distributed; (c) branches
+                           THEMSELVES are ANIMATED to draw in via
+                           stroke-dasharray (NOT always-visible —
+                           they grow into existence sequentially);
+                           (d) terminal nodes APPEAR (brighten)
+                           AFTER their respective branch completes
+                           drawing rather than the always-present-
+                           then-brighten pattern; distinct from #46
+                           concentric ring activation (FOUR NESTED
+                           rings activating outermost-to-innermost)
+                           by being SPOKES AT IRREGULAR ANGLES not
+                           nested rings; distinct from #49 perimeter
+                           fill ring (stroke-dasharray on a CIRCLE
+                           PERIMETER filling clockwise) by being
+                           stroke-dasharray on STRAIGHT LINE SEGMENTS
+                           at different angles, with discrete
+                           branches not a continuous perimeter; the
+                           architectural signature is sequential
+                           drawing-in of irregular branches with
+                           terminal-after-branch activation)
+    templates/scorecard-template → radial dimension bars (a central
+                           terracotta pivot (filled circle radius
+                           2.5) at (60, 45) always visible; SIX guide
+                           spokes (warm neutral, opacity 0.4 always
+                           visible at low contrast) extending from
+                           centre to maximum-radius positions at
+                           evenly-spaced 60° angles: spoke 1 to
+                           (60, 15) (12 o'clock), spoke 2 to (86, 30)
+                           (2 o'clock), spoke 3 to (86, 60) (4
+                           o'clock), spoke 4 to (60, 75) (6 o'clock),
+                           spoke 5 to (34, 60) (8 o'clock), spoke 6
+                           to (34, 30) (10 o'clock); SIX max-position
+                           guide markers (warm-neutral filled circles
+                           radius 1.8 at the spoke endpoints, opacity
+                           0.7 always visible) representing the
+                           "max possible level" on each dimension;
+                           SIX terracotta active bars (lines with
+                           stroke-width 2.2, stroke-linecap round)
+                           starting at centre and extending OUTWARD
+                           to VARIABLE end positions representing
+                           per-dimension current ratings: bar 1 to
+                           (60, 21) (high readiness 24/30), bar 2 to
+                           (76, 33) (moderate observability 19/30),
+                           bar 3 to (83, 58) (strong security 26/30),
+                           bar 4 to (60, 62) (moderate reliability
+                           17/30), bar 5 to (41, 56) (good
+                           performance 22/30), bar 6 to (49, 34)
+                           (weak cost efficiency 13/30) — the SIX
+                           VARIABLE end positions form a radar-chart
+                           polygon when all bars are extended; an
+                           8-second cycle: 0-0.4s all bars retracted
+                           to centre; bar 1 extends 0.4-1.4s; bar 2
+                           extends 1.4-2.4s; bar 3 extends 2.4-3.4s;
+                           bar 4 extends 3.4-4.4s; bar 5 extends
+                           4.4-5.4s; bar 6 extends 5.4-6.4s (all six
+                           dimensions now rated, full radar polygon
+                           visible); hold 6.4-7.4s; all bars retract
+                           simultaneously 7.4-7.8s; brief pause
+                           7.8-8.0s before restart; implementation
+                           uses animate on x2 and y2 attributes of
+                           each line element with keyTimes designed
+                           for sequential extension and simultaneous
+                           retraction; FIRST CENTRIFUGAL VARIABLE-
+                           LENGTH RADIAL EXTENSION mechanic in the
+                           catalogue; visual metaphor is a multi-
+                           dimensional service rating extending
+                           outward from a central pivot to encode
+                           per-dimension scores in the polygon
+                           shape; distinct from #1 particle flow
+                           (RADIAL CENTRIPETAL — particles travel
+                           inward from edge to centre) by being
+                           CENTRIFUGAL (lines extend OUTWARD from
+                           centre) and by extending to VARIABLE end
+                           positions, not converging on a single
+                           point; distinct from #44 radial check
+                           bloom (centre pivot + 6 FIXED-LENGTH
+                           SPOKES + 6 terminal markers at FIXED
+                           max-radius positions; markers brighten in
+                           clockwise sequence) by: (a) bars EXTEND
+                           from centre OUTWARD via x2/y2 line-
+                           endpoint animation — they grow into
+                           existence — rather than fixed-length
+                           spokes whose terminals brighten; (b) each
+                           bar's endpoint is at a VARIABLE position
+                           (per-dimension rating, lower than max),
+                           not at the max-radius position; (c) the
+                           accumulated radar shape (6 bars at
+                           variable end positions) IS the rating
+                           visual — a multi-dimensional polygon
+                           whose shape encodes the per-dimension
+                           scores; distinct from #46 concentric ring
+                           activation (FOUR NESTED rings at different
+                           radii activating outermost-to-innermost)
+                           by being SPOKES at evenly-distributed
+                           angles, not nested rings; distinct from
+                           #47 cyclic path marker (single dot
+                           traveling around a closed CIRCLE
+                           perimeter; fixed phase markers brighten
+                           as the dot passes) by having SIX STATIC
+                           bars that EXTEND from centre, not a
+                           traveling marker; distinct from #49
+                           perimeter fill ring (stroke-dasharray on
+                           a CIRCLE PERIMETER filling clockwise) by
+                           extending RADIAL LINES outward via line-
+                           endpoint animation, not by filling a
+                           perimeter; distinct from #52 branching
+                           tree formation (3 IRREGULAR branches with
+                           stroke-dasharray growth and terminal
+                           nodes that appear after each branch
+                           completes) by having 6 EVENLY-SPACED bars
+                           with VARIABLE end positions (radar-chart
+                           polygon, not branching tree) and using
+                           x2/y2 line-endpoint animation rather than
+                           stroke-dasharray; the architectural
+                           signature is multi-dimensional centrifugal
+                           extension to variable end positions
+                           encoding per-dimension scores)
   Future pages must invent a new mechanic, not reuse one.
   Two colours only: warm neutral (#D6D2C8) + terracotta (#C96330).
-  Basic SMIL primitives only (animate, animateTransform with type=rotate or translate).
+  Basic SMIL primitives only (animate, animateTransform with type=rotate or translate; stroke-dasharray and opacity animations also valid via animate).
   No animateMotion / mpath (proven unreliable across browsers).
 
 STUB CONTENT IS LOREM IPSUM:
@@ -809,7 +1227,7 @@ SECTIONS = {
     "data":          ("Data Architecture",                    "Data modeling, governance, lineage, mesh patterns, and analytics."),
     "integration":   ("Integration Architecture",             "API, event, messaging, workflow, and partner integration patterns."),
     "observability": ("Observability",                        "The foundational observability primitives — incident response, structured logging, metrics, SLIs/SLOs, and distributed tracing — that any production system depends on, separate from AI-specific monitoring."),
-    "tools":         ("Architecture Tooling",                 "Automation, validation, and architecture-as-code tooling."),
+    "tools":         ("Architecture Tooling",                 "The engineering tools the team uses to build, validate, and operate systems — AI agents, CLI tools, scripts, and validators — as designed artefacts with composability, observability, and lifecycle properties, distinct from the systems they help build."),
     "checklists":    ("Review Checklists",                    "The artefacts a reviewer applies during structured review work — architecture, deployment readiness, and security checklists — as designed coverage instruments with dimensions, calibration, and tier-awareness, distinct from the governance disciplines that produce them."),
     "runbooks":      ("Operational Runbooks",                 "The artefacts a responder picks up under pressure — incident, migration, and rollback runbooks — as designed documents with structure, calibration, and lifecycle, distinct from the operational disciplines they execute."),
     "scorecards":    ("Architecture Scorecards",              "Scoring templates for continuous architecture quality measurement."),
@@ -817,7 +1235,7 @@ SECTIONS = {
     "playbooks":     ("Engineering Playbooks",                "Step-by-step playbooks for common architecture challenges."),
     "strategy":      ("Architecture Strategy",                "AI readiness, modernization roadmaps, and foundational strategy."),
     "roadmaps":      ("Architecture Roadmaps",                "Platform evolution and capability uplift roadmaps."),
-    "templates":     ("Architecture Templates",               "Reusable templates for ADRs, reviews, and scorecards."),
+    "templates":     ("Architecture Templates",               "The structured artefacts the team uses to record decisions, document designs for review, and rate services across dimensions — ADRs, review templates, and scorecards — as designed instruments whose fields, lifecycle, and calibration determine whether they accumulate as institutional memory or as ceremonial paperwork."),
 }
 
 NAV_LINKS = [
@@ -2040,6 +2458,53 @@ TAG_LINKS = {
     "Release It! (Nygard)": "https://pragprog.com/titles/mnee2/release-it-second-edition/",
     "Code Review Best Practices (Google)": "https://google.github.io/eng-practices/review/",
     "Pull Request Review Patterns": "https://martinfowler.com/articles/ship-show-ask.html",
+    # Architecture Tooling — agents, CLI, scripts, validators
+    "Anthropic Model Context Protocol (MCP)": "https://modelcontextprotocol.io/",
+    "Anthropic Building Effective Agents": "https://www.anthropic.com/research/building-effective-agents",
+    "Anthropic Tool Use": "https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview",
+    "ReAct (Reasoning and Acting)": "https://arxiv.org/abs/2210.03629",
+    "Toolformer (Schick et al.)": "https://arxiv.org/abs/2302.04761",
+    "OpenAI Function Calling": "https://platform.openai.com/docs/guides/function-calling",
+    "LangChain Agents": "https://python.langchain.com/docs/concepts/agents/",
+    "Click — Python CLI Framework": "https://click.palletsprojects.com/",
+    "Cobra — Go CLI Framework": "https://cobra.dev/",
+    "Clap — Rust CLI Framework": "https://docs.rs/clap/latest/clap/",
+    "12-Factor CLI Apps": "https://medium.com/@jdxcode/12-factor-cli-apps-dd3c227a0e46",
+    "Command Line Interface Guidelines": "https://clig.dev/",
+    "POSIX Utility Conventions": "https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html",
+    "Bash Pitfalls": "https://mywiki.wooledge.org/BashPitfalls",
+    "Idempotence (Wikipedia)": "https://en.wikipedia.org/wiki/Idempotence",
+    "Make as Build Tool": "https://www.gnu.org/software/make/",
+    "Ansible — Configuration Management": "https://docs.ansible.com/",
+    "Salt — Configuration Management": "https://saltproject.io/",
+    "Terraform — Infrastructure as Code": "https://www.terraform.io/",
+    "Pulumi — Infrastructure as Code": "https://www.pulumi.com/",
+    "JSON Schema": "https://json-schema.org/",
+    "OpenAPI Specification": "https://www.openapis.org/",
+    "Protobuf — Protocol Buffers": "https://protobuf.dev/",
+    "Pydantic — Python Validation": "https://docs.pydantic.dev/",
+    "Pact — Contract Testing": "https://pact.io/",
+    "Schemathesis — API Testing": "https://schemathesis.readthedocs.io/",
+    "Open Policy Agent (OPA) Rego": "https://www.openpolicyagent.org/docs/latest/policy-language/",
+    "Conftest — Policy Testing": "https://www.conftest.dev/",
+    "ESLint — JavaScript Linter": "https://eslint.org/",
+    "ruff — Python Linter": "https://docs.astral.sh/ruff/",
+    "shellcheck — Bash Linter": "https://www.shellcheck.net/",
+    # Architecture Templates — ADRs, review docs, scorecards
+    "Documenting Architecture Decisions (Nygard)": "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
+    "MADR — Markdown ADRs": "https://adr.github.io/madr/",
+    "Building Evolutionary Architectures (Ford et al.)": "https://www.oreilly.com/library/view/building-evolutionary-architectures/9781491986356/",
+    "ThoughtWorks Tech Radar": "https://www.thoughtworks.com/radar",
+    "Google Engineering Practices Documentation": "https://google.github.io/eng-practices/",
+    "Rust RFC Process": "https://rust-lang.github.io/rfcs/",
+    "Python PEP Process": "https://peps.python.org/",
+    "IETF RFC Process": "https://www.ietf.org/standards/rfcs/",
+    "ARID — Active Reviews for Intermediate Designs": "https://resources.sei.cmu.edu/library/asset-view.cfm?assetid=6276",
+    "CNCF Cloud Native Maturity Model": "https://maturitymodel.cncf.io/",
+    "DORA — DevOps Research and Assessment": "https://dora.dev/",
+    "Google SRE Workbook — Production Readiness Reviews": "https://sre.google/workbook/evolving-sre-engagement-model/",
+    "Backstage — Software Catalog": "https://backstage.io/docs/features/software-catalog/",
+    "Diátaxis Documentation Framework": "https://diataxis.fr/",
 }
 
 

@@ -1,0 +1,119 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  AI Agents Tooling emblem.
+
+  Visual metaphor: the agentic reasoning-and-acting loop. A single
+  closed circular path represents the agent's continuous cycle
+  (plan → act → observe → reflect → repeat). Four fixed markers at
+  quarter positions around the perimeter represent the four phases.
+  A small terracotta dot travels around the perimeter continuously,
+  briefly brightening each fixed marker as it passes — capturing
+  the agent's continuous traversal of its loop.
+
+  Geometry:
+    Centre: (60, 45)
+    Path radius: 26
+    Four fixed phase markers at quarter positions:
+      Top:    (60, 19)  — 12 o'clock — "Plan"
+      Right:  (86, 45)  — 3 o'clock  — "Act"
+      Bottom: (60, 71)  — 6 o'clock  — "Observe"
+      Left:   (34, 45)  — 9 o'clock  — "Reflect"
+
+  Animation: 6-second cycle.
+    The traveling dot circles the perimeter once per cycle (6s).
+    Position computed via animateTransform rotate around centre,
+    then offset to perimeter via initial circle position.
+
+  Implementation strategy: place the traveling dot at (60, 19)
+  initially (top of circle), wrapped in a <g> element. Apply
+  animateTransform type="rotate" around (60, 45) with values
+  "0 60 45; 360 60 45" over 6s. The dot rotates with the group,
+  tracing out the full perimeter.
+
+  Each fixed marker brightens (terracotta) when the traveling dot
+  is near it (i.e., during the brief window when the dot's angular
+  position corresponds to that marker). Implemented via animate on
+  fill attribute with phase-specific keyTimes:
+    Top marker: bright during 0.0-0.1 and 0.95-1.0 (when traveling
+                dot is near 12 o'clock)
+    Right marker: bright during 0.2-0.3 (3 o'clock)
+    Bottom marker: bright during 0.45-0.55 (6 o'clock)
+    Left marker: bright during 0.7-0.8 (9 o'clock)
+
+  The closed circular path itself is drawn as a stroke-only circle
+  in warm neutral, always visible — representing the agent loop's
+  perpetual structure.
+
+  Motion mechanic: CYCLIC PATH MARKER (the forty-seventh mechanic
+  in the catalogue). FIRST CLOSED-LOOP TRAVELING MARKER mechanic.
+  Distinct from #1 particle flow (RADIAL CENTRIPETAL convergence,
+  particles travel inward from edge to centre) by being a SINGLE
+  DOT traveling AROUND a CLOSED PERIMETER, never converging.
+  Distinct from #21 reciprocating arc (ARCS as visual elements
+  with zone-cycling perimeter highlighting) by having a SINGLE
+  TRAVELING DOT around a CIRCLE, with FIXED PHASE MARKERS that
+  brighten as the dot passes — not zone-cycling on the perimeter.
+  Distinct from #38 sweeping gauge needle (SINGLE rotating NEEDLE
+  on 180° arc) by being a TRAVELING DOT on a 360° circle, with
+  fixed markers along the path. Distinct from #44 radial check
+  bloom (centre pivot + spokes + terminal markers, terminals
+  activate clockwise) by having NO SPOKES and NO CENTRE PIVOT,
+  just a closed circular path with traveling dot. Distinct from
+  #46 concentric ring activation (FOUR NESTED CIRCLES at different
+  radii activating outermost-to-innermost) by being a SINGLE
+  CIRCLE with a traveling dot.
+
+  Two colours only: warm neutral (#D6D2C8) for the perimeter path
+  and inactive markers, terracotta (#C96330) for the traveling dot
+  and the briefly-active markers as it passes them.
+-->
+
+<!-- ─── The perimeter path (warm neutral, always visible) ─── -->
+<circle cx="60" cy="45" r="26" fill="none" stroke="#D6D2C8" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.7"/>
+
+<!-- ─── Four fixed phase markers ─── -->
+
+<!-- Top marker (Plan) at (60, 19) -->
+<circle cx="60" cy="19" r="3" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#C96330; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330"
+           keyTimes="0; 0.10; 0.30; 0.55; 0.80; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Right marker (Act) at (86, 45) -->
+<circle cx="86" cy="45" r="3" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #D6D2C8; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.20; 0.30; 0.40; 0.80; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Bottom marker (Observe) at (60, 71) -->
+<circle cx="60" cy="71" r="3" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #C96330; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.20; 0.45; 0.55; 0.80; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Left marker (Reflect) at (34, 45) -->
+<circle cx="34" cy="45" r="3" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #D6D2C8"
+           keyTimes="0; 0.30; 0.55; 0.70; 0.80; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Traveling dot (rotates around centre via animateTransform) ─── -->
+<!-- Initial position at top of circle: (60, 19) -->
+<!-- Rotation around (60, 45) makes it trace the perimeter -->
+<g>
+  <circle cx="60" cy="19" r="2.8" fill="#C96330"/>
+  <animateTransform attributeName="transform"
+                    type="rotate"
+                    values="0 60 45; 360 60 45"
+                    keyTimes="0; 1"
+                    dur="6s" repeatCount="indefinite"/>
+</g>
+</svg>

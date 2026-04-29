@@ -1,0 +1,134 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  ADR Template emblem.
+
+  Visual metaphor: an ADR moving through its lifecycle states.
+  Four fixed phase markers represent the lifecycle states:
+  Proposed → Accepted → Deprecated → Superseded. A bright
+  terracotta active-state dot moves from left to right between
+  the markers; as it leaves each marker, that marker stays
+  dimmed-terracotta (representing history accumulation — the ADR
+  has been through that state). At the far right (Superseded),
+  the cycle holds briefly, then all markers reset to warm neutral
+  baseline and the cycle restarts.
+
+  Geometry:
+    Horizontal axis at y=45
+    Four fixed phase markers (small circles, radius 4) at:
+      Marker 1: (20, 45) — Proposed
+      Marker 2: (47, 45) — Accepted
+      Marker 3: (74, 45) — Deprecated
+      Marker 4: (101, 45) — Superseded
+    Three connecting line segments (warm neutral) between markers:
+      Segment 1: (24, 45) to (43, 45)
+      Segment 2: (51, 45) to (70, 45)
+      Segment 3: (78, 45) to (97, 45)
+
+  Three visual states for each marker:
+    State A: warm neutral (#D6D2C8) baseline — not yet visited
+    State B: dimmed terracotta (#C96330 with opacity 0.45) —
+              previously visited (history)
+    State C: bright terracotta (#C96330 full opacity) —
+              currently active
+
+  Animation: 9-second cycle.
+    0.0–0.5s   : All markers warm neutral (initial state)
+    0.5–2.0s   : Marker 1 active (Proposed)
+    2.0–3.5s   : Marker 1 dims to history; Marker 2 active (Accepted)
+    3.5–5.0s   : Marker 2 dims; Marker 3 active (Deprecated)
+    5.0–6.5s   : Marker 3 dims; Marker 4 active (Superseded)
+    6.5–7.5s   : All markers visible (full lifecycle complete)
+    7.5–8.5s   : All reset to warm neutral
+    8.5–9.0s   : Brief pause before restart
+
+  Each marker's fill colour is animated through three states via
+  the animate primitive on the fill attribute.
+
+  Motion mechanic: LIFECYCLE PROGRESSION TRAIL (the fifty-first
+  mechanic in the catalogue). FIRST ACTIVE-VS-HISTORY THREE-STATE
+  MARKER mechanic. Distinct from #6 sequential frame illumination
+  (single horizontal row of frames where ONLY ONE is lit at any
+  moment — frames TAKE TURNS, do NOT ACCUMULATE) by having
+  ACCUMULATED HISTORY: previously-visited markers stay visibly
+  transitioned (dim terracotta), so the visual displays not just
+  the current state but the path taken. Distinct from #41
+  sequential pointer descent (VERTICAL list with pointer triangle
+  DESCENDING through stationary items) by being HORIZONTAL with
+  active dot moving and prior positions accumulating in dimmed
+  state. Distinct from #44 radial check bloom (centre pivot +
+  spokes + terminal markers, terminals activate clockwise and
+  STAY active until global reset) by:
+  (a) being LINEAR HORIZONTAL not RADIAL/CIRCULAR;
+  (b) having THREE visual states per marker (off / dim / bright)
+      not just TWO (off / on);
+  (c) only ONE marker is bright at a time, with PRIOR markers
+      DIMMED (not bright like #44).
+  Distinct from #48 character sequence typing (six rectangles
+  fading in, all visible at end) by having THREE visual states
+  per marker and the active marker SHIFTING POSITION over time
+  rather than items being purely additive.
+
+  Two colours only: warm neutral (#D6D2C8) for inactive markers
+  and connecting lines; terracotta (#C96330) for active markers
+  (full opacity) and history markers (opacity 0.45 via SMIL).
+-->
+
+<!-- ─── Connecting line segments between markers (warm neutral, always visible) ─── -->
+<line x1="24" y1="45" x2="43" y2="45" stroke="#D6D2C8" stroke-width="1.5" opacity="0.6"/>
+<line x1="51" y1="45" x2="70" y2="45" stroke="#D6D2C8" stroke-width="1.5" opacity="0.6"/>
+<line x1="78" y1="45" x2="97" y2="45" stroke="#D6D2C8" stroke-width="1.5" opacity="0.6"/>
+
+<!-- ─── Subtle phase labels below markers (warm neutral dots) ─── -->
+<circle cx="20"  cy="64" r="1.2" fill="#D6D2C8" opacity="0.6"/>
+<circle cx="47"  cy="64" r="1.2" fill="#D6D2C8" opacity="0.6"/>
+<circle cx="74"  cy="64" r="1.2" fill="#D6D2C8" opacity="0.6"/>
+<circle cx="101" cy="64" r="1.2" fill="#D6D2C8" opacity="0.6"/>
+
+<!-- ─── Marker 1 (Proposed) ─── -->
+<!-- Active during 0.056–0.222; history during 0.222–0.833; reset to warm neutral 0.833–1.0 -->
+<circle cx="20" cy="45" r="4" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #C96330; #C96330; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.056; 0.222; 0.833; 1"
+           dur="9s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="1; 1; 0.45; 0.45; 1; 1"
+           keyTimes="0; 0.056; 0.222; 0.833; 0.944; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Marker 2 (Accepted) ─── -->
+<!-- Active during 0.222–0.389; history during 0.389–0.833 -->
+<circle cx="47" cy="45" r="4" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.222; 0.222; 0.389; 0.833; 1"
+           dur="9s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="1; 1; 1; 1; 0.45; 0.45; 1; 1"
+           keyTimes="0; 0.056; 0.222; 0.389; 0.389; 0.833; 0.944; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Marker 3 (Deprecated) ─── -->
+<!-- Active during 0.389–0.556; history during 0.556–0.833 -->
+<circle cx="74" cy="45" r="4" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.389; 0.389; 0.556; 0.833; 1"
+           dur="9s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="1; 1; 1; 1; 0.45; 0.45; 1; 1"
+           keyTimes="0; 0.222; 0.389; 0.556; 0.556; 0.833; 0.944; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Marker 4 (Superseded) ─── -->
+<!-- Active during 0.556–0.722; held bright through 0.833 -->
+<circle cx="101" cy="45" r="4" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.556; 0.556; 0.833; 0.833; 1"
+           dur="9s" repeatCount="indefinite"/>
+</circle>
+</svg>

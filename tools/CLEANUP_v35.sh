@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# CLEANUP_v34.sh — run from the root of the knowledge-library repo.
+# CLEANUP_v35.sh — run from the root of the knowledge-library repo.
 #
 # Removes the five orphan stub directories under content/ai/ — these
-# were the pre-v34 placeholder seeds for AI System Architecture, AI
+# were the pre-v35 placeholder seeds for AI System Architecture, AI
 # Ethics, AI Monitoring, RAG, and AI Security. The substantive
-# replacements now live under content/ai-native/ as part of v34.
+# replacements now live under content/ai-native/ as part of v35.
 #
 # Under the v29 strict build, these directories produce loud orphan
 # warnings at build time. This script removes them from the repo so
@@ -12,7 +12,7 @@
 #
 # After this script runs, commit the deletions and push:
 #   git add -A
-#   git commit -m "chore: remove content/ai/* orphan stubs (v34 ai-native group)"
+#   git commit -m "chore: remove content/ai/* orphan stubs (v35 ai-native group)"
 #   git push origin main
 set -e
 
@@ -48,6 +48,6 @@ else
   echo
   echo "Removed $REMOVED orphan director(y/ies). Next:"
   echo "  git add -A"
-  echo "  git commit -m 'chore: remove content/ai/* orphan stubs (v34 ai-native group)'"
+  echo "  git commit -m 'chore: remove content/ai/* orphan stubs (v35 ai-native group)'"
   echo "  git push origin main"
 fi

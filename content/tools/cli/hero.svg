@@ -1,0 +1,131 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  CLI Tooling emblem.
+
+  Visual metaphor: a command being typed into a terminal,
+  character by character. Six small terracotta rectangles in a
+  horizontal row represent the characters of a typed command.
+  Each starts invisible (opacity 0). Sequentially each fades in,
+  left-to-right, simulating typing. After all six are visible
+  (command typed, ready to execute), brief hold, then all fade
+  out simultaneously (terminal cleared / command executed) and
+  the cycle restarts.
+
+  Geometry:
+    Each character: 12 wide, 4 tall, with rounded corners
+    Vertical position: y=43, height=4 (so y range 43-47)
+    Spacing: 2 between characters
+    Total width: 6 * 12 + 5 * 2 = 82
+    Horizontal centre: viewBox 120, so left margin (120-82)/2 = 19
+    Character 1: x=19
+    Character 2: x=33
+    Character 3: x=47
+    Character 4: x=61
+    Character 5: x=75
+    Character 6: x=89
+
+  A subtle prompt indicator (a small terracotta `>` or `$`
+  character represented as a small triangle/wedge) sits at x=10
+  to the left of the first character, always visible.
+
+  Below the row, a thin warm-neutral horizontal line acts as the
+  text baseline, always visible — representing the terminal
+  command line.
+
+  Animation: 5-second cycle.
+    0.0–0.2s : All characters invisible (empty prompt)
+    0.2–0.5s : Character 1 fades in
+    0.5–0.8s : Character 2 fades in
+    0.8–1.1s : Character 3 fades in
+    1.1–1.4s : Character 4 fades in
+    1.4–1.7s : Character 5 fades in
+    1.7–2.0s : Character 6 fades in
+    2.0–4.0s : All visible (command typed, ready)
+    4.0–4.5s : All fade out simultaneously (executed/cleared)
+    4.5–5.0s : All invisible (brief pause before restart)
+
+  Each character also has a SLIGHT VARIATION in width to suggest
+  different characters of different widths — char 1 width 11
+  (narrow letter), char 2 width 14 (wider), char 3 width 12,
+  char 4 width 10 (narrow), char 5 width 13, char 6 width 11.
+  Wait, this would mess up positioning. Let me keep all chars
+  uniform width 12 for clean geometry. The implication of
+  characters being different widths is a design touch but not
+  worth the complexity.
+
+  Motion mechanic: CHARACTER SEQUENCE TYPING (the forty-eighth
+  mechanic in the catalogue). Distinct from #6 sequential frame
+  illumination which has a SINGLE row of frames where ONLY ONE
+  is lit at any moment (frames take TURNS, do NOT accumulate) —
+  here characters APPEAR and STAY VISIBLE (accumulating until
+  all six visible), then ALL CLEAR SIMULTANEOUSLY. Distinct
+  from #34 tiered escalation cascade (THREE TIERS of dots, all
+  dots within a tier light TOGETHER with variable cascade depth)
+  by being SINGLE ROW of items appearing in SEQUENCE and
+  ACCUMULATING. Distinct from #41 sequential pointer descent
+  (VERTICAL list of stationary text-line shapes with pointer
+  triangle DESCENDING) by being HORIZONTAL row with NO POINTER
+  ELEMENT, just items fading in directly. Distinct from #45
+  sequential vertical fill (FIVE VERTICAL bars filling
+  bottom-to-top in sequence) by being HORIZONTAL ROW of small
+  items fading in (no fill animation, just opacity).
+
+  Two colours only: warm neutral (#D6D2C8) for the prompt
+  indicator and baseline line, terracotta (#C96330) for the
+  character rectangles as they fade in.
+-->
+
+<!-- ─── Prompt indicator (small terracotta wedge, always visible) ─── -->
+<polygon points="9,42 13,45 9,48" fill="#C96330" opacity="0.9"/>
+
+<!-- ─── Terminal baseline (warm neutral, decorative) ─── -->
+<line x1="9" y1="51" x2="103" y2="51" stroke="#D6D2C8" stroke-width="0.8" opacity="0.5"/>
+
+<!-- ─── Character 1 at x=19 ─── -->
+<rect x="19" y="43" width="12" height="4" rx="0.8" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 1; 1; 1; 1; 1; 1; 1; 0; 0"
+           keyTimes="0; 0.04; 0.10; 0.16; 0.22; 0.28; 0.34; 0.40; 0.80; 0.90; 1"
+           dur="5s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Character 2 at x=33 ─── -->
+<rect x="33" y="43" width="12" height="4" rx="0.8" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 1; 1; 1; 1; 1; 1; 0; 0"
+           keyTimes="0; 0.10; 0.16; 0.22; 0.28; 0.34; 0.40; 0.50; 0.80; 0.90; 1"
+           dur="5s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Character 3 at x=47 ─── -->
+<rect x="47" y="43" width="12" height="4" rx="0.8" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 1; 1; 1; 1; 1; 0; 0"
+           keyTimes="0; 0.16; 0.22; 0.28; 0.34; 0.40; 0.50; 0.60; 0.80; 0.90; 1"
+           dur="5s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Character 4 at x=61 ─── -->
+<rect x="61" y="43" width="12" height="4" rx="0.8" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 1; 1; 1; 1; 0; 0"
+           keyTimes="0; 0.22; 0.28; 0.34; 0.40; 0.46; 0.55; 0.65; 0.80; 0.90; 1"
+           dur="5s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Character 5 at x=75 ─── -->
+<rect x="75" y="43" width="12" height="4" rx="0.8" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 0; 1; 1; 1; 0; 0"
+           keyTimes="0; 0.28; 0.34; 0.40; 0.46; 0.52; 0.58; 0.70; 0.80; 0.90; 1"
+           dur="5s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Character 6 at x=89 ─── -->
+<rect x="89" y="43" width="12" height="4" rx="0.8" fill="#C96330" opacity="0">
+  <animate attributeName="opacity"
+           values="0; 0; 0; 0; 0; 0; 0; 1; 1; 0; 0"
+           keyTimes="0; 0.34; 0.40; 0.46; 0.52; 0.58; 0.64; 0.70; 0.80; 0.90; 1"
+           dur="5s" repeatCount="indefinite"/>
+</rect>
+</svg>

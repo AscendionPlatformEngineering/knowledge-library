@@ -1,0 +1,91 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Scripts & Automation emblem.
+
+  Visual metaphor: an automation task progressing to completion.
+  A single full circle is rendered with stroke only. The warm-
+  neutral baseline circle is always visible. A terracotta
+  foreground circle (same radius/centre) has its stroke-dasharray
+  animated to grow clockwise from the 12-o'clock position around
+  to fully filled (100% perimeter), then snap back to 0% and
+  restart. Like a loading-spinner that fills rather than rotates.
+
+  Geometry:
+    Centre: (60, 45)
+    Radius: 24
+    Circumference: 2 * π * 24 ≈ 150.8 (we'll use 151)
+
+  Animation: stroke-dasharray on the terracotta circle is animated.
+    Format: "<filled-length> <gap-length>"
+    To fill from 0% to 100% clockwise from the top:
+      - Start: stroke-dasharray="0 151" (no fill, full gap)
+      - End:   stroke-dasharray="151 0" (full fill, no gap)
+    
+    To start from the top (12 o'clock) instead of the default
+    (3 o'clock), rotate the circle's transform by -90°.
+
+  Animation: 6-second cycle.
+    0.0–0.4s : Empty (dasharray="0 151")
+    0.4–4.5s : Fills clockwise (dasharray grows from "0 151" to "151 0")
+    4.5–5.0s : Full (dasharray="151 0", briefly hold completion)
+    5.0–5.3s : Snap back to empty
+    5.3–6.0s : Empty hold before next cycle
+
+  A small terracotta dot at the centre represents the "task"
+  being processed; it pulses subtly during the fill phase.
+
+  Motion mechanic: PERIMETER FILL RING (the forty-ninth mechanic
+  in the catalogue). FIRST STROKE-DASHARRAY PERIMETER-FILL
+  mechanic in the catalogue. Distinct from #21 reciprocating arc
+  (uses ARCS as visual elements with zone-cycling perimeter
+  highlighting — different zones light up around the perimeter
+  in a cycling pattern) by being CONTINUOUS PERIMETER FILL that
+  GROWS from 0% to 100% then resets, not zone-cycling. Distinct
+  from #38 sweeping gauge needle (180° arc with rotating NEEDLE)
+  by being a 360° CIRCLE with PERIMETER FILL animation, no
+  rotating element. Distinct from #46 concentric ring activation
+  (FOUR NESTED RINGS at different radii activating in sequence)
+  by being a SINGLE RING with PERIMETER FILL growing clockwise.
+  Distinct from #44 radial check bloom (centre pivot + spokes +
+  terminal markers, terminals activate clockwise) by being a
+  perimeter fill on a CIRCLE with NO SPOKES OR TERMINALS, just
+  continuous fill of the perimeter.
+
+  Two colours only: warm neutral (#D6D2C8) for the baseline
+  circle (always visible), terracotta (#C96330) for the perimeter
+  fill that grows clockwise.
+-->
+
+<!-- ─── Baseline circle (warm neutral, always visible) ─── -->
+<circle cx="60" cy="45" r="24" fill="none" stroke="#D6D2C8" stroke-width="3" opacity="0.5"/>
+
+<!-- ─── Foreground perimeter fill (terracotta, animated stroke-dasharray) ─── -->
+<!-- Rotate -90° around centre (60, 45) to start fill from 12 o'clock -->
+<!-- Stroke-dasharray animates from "0 151" (empty) to "151 0" (full) -->
+<circle cx="60" cy="45" r="24" fill="none" stroke="#C96330" stroke-width="3"
+        stroke-dasharray="0 151"
+        transform="rotate(-90 60 45)">
+  <animate attributeName="stroke-dasharray"
+           values="0 151; 0 151; 151 0; 151 0; 0 151"
+           keyTimes="0; 0.067; 0.750; 0.833; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Centre dot (terracotta, pulses during fill phase) ─── -->
+<circle cx="60" cy="45" r="2.8" fill="#C96330">
+  <animate attributeName="r"
+           values="2.8; 3.5; 2.8; 3.5; 2.8; 2.8"
+           keyTimes="0; 0.20; 0.40; 0.60; 0.75; 1"
+           dur="6s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Subtle stage tick marks at quarter positions (warm neutral, decorative) ─── -->
+<!-- 12 o'clock tick: from r=27 to r=30 at angle 270° (which is up in SVG: (60, 45-r)) -->
+<line x1="60" y1="15" x2="60" y2="18" stroke="#D6D2C8" stroke-width="1" opacity="0.5"/>
+<!-- 3 o'clock tick: at angle 0°, position (60+r, 45) -->
+<line x1="90" y1="45" x2="93" y2="45" stroke="#D6D2C8" stroke-width="1" opacity="0.5"/>
+<!-- 6 o'clock tick: at angle 90°, position (60, 45+r) -->
+<line x1="60" y1="72" x2="60" y2="75" stroke="#D6D2C8" stroke-width="1" opacity="0.5"/>
+<!-- 9 o'clock tick: at angle 180°, position (60-r, 45) -->
+<line x1="30" y1="45" x2="27" y2="45" stroke="#D6D2C8" stroke-width="1" opacity="0.5"/>
+</svg>

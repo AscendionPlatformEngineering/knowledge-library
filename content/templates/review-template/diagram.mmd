@@ -1,49 +1,104 @@
-flowchart TD
-    A([🚀 Start: Review Template]) --> B[Assessment & Discovery]
+classDiagram
+    direction TB
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    class Review {
+        +ScopeStatement scope
+        +List~Finding~ findings
+        +List~Dialogue~ discussions
+        +Decision decision
+        +List~OutcomeLink~ outcomes
+        +DateTime conducted_at
+        +String reviewer_identity
+    }
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    class ScopeStatement {
+        +String artefact_under_review
+        +String version_or_reference
+        +List~String~ criteria_evaluated
+        +String review_depth
+        +List~String~ explicitly_out_of_scope
+    }
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    class Finding {
+        +Severity severity
+        +String issue_description
+        +Location location
+        +String recommendation
+        +ResolutionStatus resolution
+    }
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    class Severity {
+        <<enumeration>>
+        BLOCKER
+        SIGNIFICANT
+        MINOR
+        OBSERVATION
+    }
 
-    G --> H[Architecture Review Board]
+    class Location {
+        +String document_section
+        +String code_file
+        +Integer line_number
+        +String component_name
+        +String configuration_key
+    }
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    class Dialogue {
+        +String finding_reference
+        +String author_response
+        +String reviewer_followup
+        +String resolution_reached
+        +Boolean dissent_preserved
+    }
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    class Decision {
+        +DecisionOutcome outcome
+        +String decision_authority
+        +String rationale
+        +List~String~ required_changes
+    }
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    class DecisionOutcome {
+        <<enumeration>>
+        PROCEED
+        PROCEED_WITH_CHANGES
+        DEFER
+        REJECT
+    }
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    class ResolutionStatus {
+        <<enumeration>>
+        FIXED
+        DEFERRED
+        ACCEPTED_AS_IS
+        OPEN
+    }
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    class OutcomeLink {
+        +String finding_reference
+        +ResolutionStatus status
+        +String pr_url
+        +String ticket_url
+        +String rationale_if_accepted_as_is
+    }
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    Review *-- ScopeStatement : has
+    Review *-- "1..*" Finding : contains
+    Review *-- "0..*" Dialogue : captures
+    Review *-- Decision : concludes_with
+    Review *-- "0..*" OutcomeLink : tracks
+
+    Finding o-- Severity : classified_by
+    Finding *-- Location : references
+    Finding o-- ResolutionStatus : tracked_by
+
+    Decision o-- DecisionOutcome : selects
+
+    OutcomeLink o-- ResolutionStatus : reports
+    OutcomeLink ..> Finding : closes_loop_on
+
+    note for Review "The document is a structured artefact.\nFields determine whether the review's\nwork survives the meeting or evaporates\ninto folklore."
+
+    note for Severity "Vocabulary documented at organisation\nlevel. Each tier has criteria.\nReviewers calibrate against the same scale."
+
+    note for OutcomeLink "Closes the loop: every finding\nresolves to fixed (PR), deferred\n(ticket), or accepted-as-is (rationale).\nReviews become auditable contracts."

@@ -1,49 +1,46 @@
-flowchart TD
-    A([🚀 Start: Scripts & Automation]) --> B[Assessment & Discovery]
+timeline
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    title Automation Maturity Progression
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    section Stage 0 &mdash; Primitive script
+        Single-use helper : Hard-coded paths
+                          : No error handling
+                          : No logging
+                          : Works on author's machine
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    section Stage 1 &mdash; Parameterised
+        Arguments and config : Inputs as args / env vars
+                             : Removes hard-coded values
+                             : Still continues past failures
+                             : Still no logging
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    section Stage 2 &mdash; Fail-fast
+        Strict error handling : set -euo pipefail (bash)
+                              : Explicit exceptions (Python)
+                              : Bad halt beats silent corruption
+                              : Informative error messages
 
-    G --> H[Architecture Review Board]
+    section Stage 3 &mdash; Observable
+        Structured logging : Run identity logged
+                          : Arguments and outcome
+                          : Decision points logged
+                          : Queryable run history
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    section Stage 4 &mdash; Idempotent
+        Desired-state design : Ensure X exists vs create X
+                             : Re-run produces same state
+                             : Partial completion recoverable
+                             : Recovery scenarios use re-run
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    section Stage 5 &mdash; Preflight + Scoped
+        Explicit assumptions : Requirements block documented
+                             : Preflight validates at start
+                             : Least-privilege execution
+                             : Service accounts for shared use
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
-
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
-
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
-
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    section Stage 6 &mdash; Graduated Tool
+        Proper CLI tool : Configuration layering
+                        : Distinct exit codes
+                        : Structured output (--json)
+                        : Distributed as versioned package
+                        : Integration tests

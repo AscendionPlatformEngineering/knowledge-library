@@ -1,49 +1,57 @@
-flowchart TD
-    A([🚀 Start: CLI Tooling]) --> B[Assessment & Discovery]
+stateDiagram-v2
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    [*] --> Parsing
+    Parsing : Parsing<br/>--------<br/>parse argv<br/>read env vars<br/>read config files
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    Parsing --> Validating : args parsed
+    Parsing --> UsageError : malformed args<br/>(exit 64)
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    Validating : Validating<br/>--------<br/>check required<br/>verify constraints<br/>resolve config layering
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    Validating --> Authenticating : valid + auth needed
+    Validating --> Executing : valid + no auth
+    Validating --> ConfigError : missing config<br/>(exit 78)
 
-    G --> H[Architecture Review Board]
+    Authenticating : Authenticating<br/>--------<br/>read credentials<br/>(env / stdin / helper)<br/>NOT command-line args
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    Authenticating --> Executing : auth ok
+    Authenticating --> AuthError : auth failed<br/>(exit 77)
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    Executing : Executing<br/>--------<br/>perform action<br/>tool's primary work<br/>handle SIGPIPE
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    Executing --> Formatting : success
+    Executing --> NetworkError : network failed<br/>(exit 71)
+    Executing --> RuntimeError : action failed<br/>(exit 1)
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    Formatting : Formatting<br/>--------<br/>detect TTY vs pipe<br/>human or JSON<br/>emit to stdout
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    Formatting --> Success : output emitted
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    Success : Success<br/>--------<br/>exit code 0
+    UsageError : UsageError<br/>--------<br/>stderr: usage<br/>exit 64
+    ConfigError : ConfigError<br/>--------<br/>stderr: config issue<br/>exit 78
+    AuthError : AuthError<br/>--------<br/>stderr: auth failure<br/>exit 77
+    NetworkError : NetworkError<br/>--------<br/>stderr: network error<br/>exit 71
+    RuntimeError : RuntimeError<br/>--------<br/>stderr: action failed<br/>exit 1
+
+    Success --> [*]
+    UsageError --> [*]
+    ConfigError --> [*]
+    AuthError --> [*]
+    NetworkError --> [*]
+    RuntimeError --> [*]
+
+    note right of Authenticating
+        Credentials read from
+        env / stdin / helper —
+        never from command-line
+        flags (leak to shell history,
+        ps listings, CI logs)
+    end note
+
+    note right of Formatting
+        TTY detection drives format:
+        human-readable for terminals,
+        structured (JSON) for pipes.
+        stdout = data; stderr = status.
+    end note

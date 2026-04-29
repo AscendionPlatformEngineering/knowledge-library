@@ -1,0 +1,136 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Review Template emblem.
+
+  Visual metaphor: a review document branching into its three
+  components — findings, decision, outcome traceability. A central
+  terracotta node represents the Review document itself; three
+  branch lines extend outward to terminal nodes, each branch
+  drawing itself in sequentially via stroke-dasharray growth.
+  After all three are drawn, brief hold (review complete with
+  all elements captured), then all clear and the cycle restarts.
+
+  Geometry:
+    Central node (terracotta filled circle, radius 4) at (60, 45)
+    Three terminal nodes (warm-neutral circles, radius 3.5) at:
+      Top:         (35, 18) — Findings
+      Right:       (98, 38) — Decision
+      Bottom:      (45, 72) — Outcomes
+    Three branch lines connecting central node to each terminal:
+      Branch 1: from (57, 42) to (37, 21) — length ~30
+      Branch 2: from (64, 44) to (95, 38) — length ~32
+      Branch 3: from (58, 48) to (45, 70) — length ~26
+
+  Each branch line uses stroke-dasharray animation to "draw in"
+  from the central node toward the terminal. The terminal node
+  brightens to terracotta as its branch completes.
+
+  Animation: 8-second cycle.
+    0.0–0.4s   : All clear (initial state — only central node visible)
+    0.4–1.6s   : Branch 1 draws in (Findings)
+    1.6–1.8s   : Terminal 1 brightens to terracotta
+    1.8–3.0s   : Branch 2 draws in (Decision)
+    3.0–3.2s   : Terminal 2 brightens to terracotta
+    3.2–4.4s   : Branch 3 draws in (Outcomes)
+    4.4–4.6s   : Terminal 3 brightens to terracotta
+    4.6–6.5s   : Hold complete (all branches and terminals visible)
+    6.5–7.0s   : All clear simultaneously (snap reset)
+    7.0–8.0s   : Brief pause before restart
+
+  Stroke-dasharray implementation:
+    Each line has stroke-dasharray="<filled> <gap>" where the
+    sum equals the line's length. To draw in from start to end,
+    animate dasharray from "0 length" (no fill) to "length 0"
+    (full line drawn).
+    
+    Branch 1 length ≈ 33 (use 35 for buffer) → dasharray 0 35 → 35 0
+    Branch 2 length ≈ 32 (use 35) → dasharray 0 35 → 35 0
+    Branch 3 length ≈ 26 (use 30) → dasharray 0 30 → 30 0
+
+  Motion mechanic: BRANCHING TREE FORMATION (the fifty-second
+  mechanic in the catalogue). FIRST STROKE-DASHARRAY-ON-LINE-
+  SEGMENTS mechanic. Distinct from #44 radial check bloom (centre
+  pivot + 6 spokes + 6 terminal markers, terminals activate
+  CLOCKWISE in sequence; spokes are ALWAYS visible from cycle
+  start, only terminal markers brighten) by:
+  (a) Only THREE branches (not six) at IRREGULAR angles
+      (not evenly distributed quarter or sixth positions);
+  (b) Branches THEMSELVES are ANIMATED to draw in via
+      stroke-dasharray (NOT always-visible — they grow into
+      existence sequentially);
+  (c) Terminal nodes appear AFTER their respective branch
+      completes drawing (not the always-present-then-brighten
+      pattern of #44).
+  Distinct from #46 concentric ring activation (FOUR NESTED
+  rings activating outermost-to-innermost) by being SPOKES
+  AT IRREGULAR ANGLES, not nested rings. Distinct from #49
+  perimeter fill ring (stroke-dasharray on a CIRCLE perimeter,
+  filling clockwise) by being stroke-dasharray on STRAIGHT LINE
+  SEGMENTS at different angles, with discrete branches not a
+  continuous perimeter. The architectural signature is
+  branches-grow-into-existence sequential formation.
+
+  Two colours only: warm neutral (#D6D2C8) for invisible/about-
+  to-be-drawn branch lines (which are present in stroke-dasharray
+  state) and the not-yet-active terminal nodes; terracotta
+  (#C96330) for the central node, the drawn-in branch lines, and
+  the activated terminal nodes.
+-->
+
+<!-- ─── Central node (terracotta, always visible) ─── -->
+<circle cx="60" cy="45" r="4" fill="#C96330"/>
+
+<!-- ─── Branch 1 (top-left to Findings terminal) ─── -->
+<!-- From (57, 42) to (37, 21), length ≈ 29.2; use buffer 33 -->
+<line x1="57" y1="42" x2="37" y2="21" stroke="#C96330" stroke-width="2"
+      stroke-dasharray="0 33">
+  <animate attributeName="stroke-dasharray"
+           values="0 33; 0 33; 33 0; 33 0; 0 33; 0 33"
+           keyTimes="0; 0.05; 0.20; 0.81; 0.875; 1"
+           dur="8s" repeatCount="indefinite"/>
+</line>
+
+<!-- ─── Terminal 1 (Findings) ─── -->
+<circle cx="35" cy="18" r="3.5" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.20; 0.225; 0.81; 0.875; 1"
+           dur="8s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Branch 2 (right to Decision terminal) ─── -->
+<!-- From (64, 44) to (95, 38), length ≈ 31.6; use buffer 33 -->
+<line x1="64" y1="44" x2="95" y2="38" stroke="#C96330" stroke-width="2"
+      stroke-dasharray="0 33">
+  <animate attributeName="stroke-dasharray"
+           values="0 33; 0 33; 33 0; 33 0; 0 33; 0 33"
+           keyTimes="0; 0.225; 0.375; 0.81; 0.875; 1"
+           dur="8s" repeatCount="indefinite"/>
+</line>
+
+<!-- ─── Terminal 2 (Decision) ─── -->
+<circle cx="98" cy="38" r="3.5" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.375; 0.40; 0.81; 0.875; 1"
+           dur="8s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Branch 3 (lower-left to Outcomes terminal) ─── -->
+<!-- From (58, 48) to (45, 70), length ≈ 25.6; use buffer 28 -->
+<line x1="58" y1="48" x2="45" y2="70" stroke="#C96330" stroke-width="2"
+      stroke-dasharray="0 28">
+  <animate attributeName="stroke-dasharray"
+           values="0 28; 0 28; 28 0; 28 0; 0 28; 0 28"
+           keyTimes="0; 0.40; 0.55; 0.81; 0.875; 1"
+           dur="8s" repeatCount="indefinite"/>
+</line>
+
+<!-- ─── Terminal 3 (Outcomes) ─── -->
+<circle cx="45" cy="72" r="3.5" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.55; 0.575; 0.81; 0.875; 1"
+           dur="8s" repeatCount="indefinite"/>
+</circle>
+</svg>

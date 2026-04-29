@@ -1,0 +1,123 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Validators emblem.
+
+  Visual metaphor: validation as a branching decision on input.
+  Input arrives from the left, travels along a horizontal main
+  line to a decision point (small terracotta diamond marker),
+  then branches either UP-RIGHT (pass) or DOWN-RIGHT (fail). A
+  small terracotta dot travels along the path, taking the up
+  branch on one cycle and the down branch on the next cycle —
+  capturing validation as a binary gate that produces pass/fail
+  outcomes.
+
+  Geometry:
+    Main line entry: from (15, 45) to (58, 45)
+    Decision point: at (60, 45) — small terracotta diamond
+    Up branch: from (62, 43) to (100, 20) — passes upward-right
+    Down branch: from (62, 47) to (100, 70) — fails downward-right
+    Endpoints (terminal markers): small warm-neutral dots at
+      (100, 20) and (100, 70)
+
+  Animation: 14-second cycle (two sub-cycles of 7s each, one for
+  each branch).
+    Phase 1 (pass cycle, 0-7s):
+      0.0–0.5s : Dot at (15, 45), entry
+      0.5–2.0s : Dot travels along main line to (58, 45)
+      2.0–2.5s : Dot at decision point briefly
+      2.5–4.5s : Dot travels up-right to (100, 20)
+      4.5–5.5s : Dot at endpoint, briefly
+      5.5–7.0s : Dot fades out, snap reset to (15, 45)
+    Phase 2 (fail cycle, 7-14s):
+      7.0–7.5s : Dot at (15, 45), entry
+      7.5–9.0s : Dot travels along main line to (58, 45)
+      9.0–9.5s : Dot at decision point briefly
+      9.5–11.5s: Dot travels down-right to (100, 70)
+      11.5–12.5s: Dot at endpoint briefly
+      12.5–14.0s: Dot fades out, snap reset
+
+  Implementation: ONE dot with x and y coordinates animated
+  through both sub-cycles. The y coordinate goes from 45 to 20
+  in the first sub-cycle (up-branch) and from 45 to 70 in the
+  second sub-cycle (down-branch).
+
+  Decision diamond at (60, 45) is small (4 wide x 4 tall),
+  always visible in terracotta. Lights up briefly when the dot
+  reaches it.
+
+  Endpoint markers (small warm-neutral dots) at (100, 20) and
+  (100, 70) brighten to terracotta when the dot reaches them.
+
+  Motion mechanic: BRANCHING DECISION FLOW (the fiftieth mechanic
+  in the catalogue). FIRST BRANCHING-PATH-TRAVERSAL mechanic in
+  the catalogue. Distinct from #1 particle flow (RADIAL
+  CENTRIPETAL convergence — particles travel inward from edge
+  to centre on radial paths) by being HORIZONTAL → BRANCHING
+  travel path with ALTERNATING up-branch and down-branch on
+  successive cycles. Distinct from #15 simple horizontal traversal
+  (single horizontal motion left to right) by having a BRANCHING
+  POINT in the middle that alternates direction across cycles.
+  Distinct from #41 sequential pointer descent (VERTICAL list
+  with pointer DESCENDING through stationary items) by being
+  HORIZONTAL travel with BRANCHING DIVERGENCE at the decision
+  point. The architectural signature is BRANCHING with cycle-
+  level alternation between branches.
+
+  Two colours only: warm neutral (#D6D2C8) for inactive path
+  lines and inactive endpoints; terracotta (#C96330) for the
+  decision diamond, the traveling dot, and the active endpoint
+  as the dot reaches it.
+-->
+
+<!-- ─── Main entry line (warm neutral) ─── -->
+<line x1="15" y1="45" x2="58" y2="45" stroke="#D6D2C8" stroke-width="1.5" opacity="0.6"/>
+
+<!-- ─── Up branch (pass) ─── -->
+<line x1="62" y1="43" x2="100" y2="20" stroke="#D6D2C8" stroke-width="1.5" opacity="0.6"/>
+
+<!-- ─── Down branch (fail) ─── -->
+<line x1="62" y1="47" x2="100" y2="70" stroke="#D6D2C8" stroke-width="1.5" opacity="0.6"/>
+
+<!-- ─── Decision diamond (terracotta, always visible) ─── -->
+<polygon points="60,41 64,45 60,49 56,45" fill="#C96330" opacity="0.9"/>
+
+<!-- ─── Up endpoint marker (warm neutral; brightens when dot arrives) ─── -->
+<circle cx="100" cy="20" r="2.5" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8"
+           keyTimes="0; 0.30; 0.32; 0.39; 0.42; 0.50; 0.95; 1"
+           dur="14s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Down endpoint marker ─── -->
+<circle cx="100" cy="70" r="2.5" fill="#D6D2C8">
+  <animate attributeName="fill"
+           values="#D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #D6D2C8; #C96330; #C96330; #D6D2C8"
+           keyTimes="0; 0.30; 0.50; 0.80; 0.82; 0.85; 0.89; 1"
+           dur="14s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Traveling dot ─── -->
+<!-- Sub-cycle 1 (0-7s, up branch): (15,45) → (58,45) → (100,20)
+     Sub-cycle 2 (7-14s, down branch): (15,45) → (58,45) → (100,70)
+     Total 14s cycle.
+-->
+<circle r="2.5" fill="#C96330" cx="15" cy="45" opacity="0">
+  <!-- x: traverses 15 → 58 → 100 in each sub-cycle, with snap reset -->
+  <animate attributeName="cx"
+           values="15; 15; 58; 58; 100; 100; 15; 15; 15; 58; 58; 100; 100; 15"
+           keyTimes="0; 0.036; 0.143; 0.179; 0.321; 0.393; 0.500; 0.500; 0.536; 0.643; 0.679; 0.821; 0.893; 1"
+           dur="14s" repeatCount="indefinite"/>
+  <!-- y: 45 throughout sub-cycle 1 (along main + up branch ending at 20)
+          45 throughout sub-cycle 2 (along main + down branch ending at 70) -->
+  <animate attributeName="cy"
+           values="45; 45; 45; 45; 20; 20; 45; 45; 45; 45; 45; 70; 70; 45"
+           keyTimes="0; 0.036; 0.143; 0.179; 0.321; 0.393; 0.500; 0.500; 0.536; 0.643; 0.679; 0.821; 0.893; 1"
+           dur="14s" repeatCount="indefinite"/>
+  <!-- opacity: visible during travel, fade out after reaching endpoint -->
+  <animate attributeName="opacity"
+           values="0; 1; 1; 1; 1; 0; 0; 0; 1; 1; 1; 1; 0; 0"
+           keyTimes="0; 0.036; 0.143; 0.179; 0.321; 0.420; 0.500; 0.500; 0.536; 0.643; 0.679; 0.821; 0.920; 1"
+           dur="14s" repeatCount="indefinite"/>
+</circle>
+</svg>

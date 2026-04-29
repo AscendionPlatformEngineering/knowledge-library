@@ -1,49 +1,66 @@
-flowchart TD
-    A([🚀 Start: AI Agents Tooling]) --> B[Assessment & Discovery]
+sequenceDiagram
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    actor Dev as Developer
+    participant Agent as Agent<br/>(reasoning loop)
+    participant Tools as Tool Layer<br/>(scoped, sandboxed)
+    participant System as System Under<br/>Modification
+    participant Trace as Observability<br/>Trace
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    Note over Dev,Trace: Task Definition Phase
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    Dev->>Agent: Define task + context<br/>(desired outcome, constraints)
+    Agent->>Trace: Log task + initial reasoning
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    Note over Dev,Trace: Planning Phase
 
-    G --> H[Architecture Review Board]
+    Agent->>Agent: Generate plan<br/>(steps + tool calls)
+    Agent->>Dev: Present plan for review
+    Agent->>Trace: Log plan
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    alt Plan needs revision
+        Dev->>Agent: Modify plan / add constraints
+        Agent->>Agent: Revise plan
+    else Plan approved
+        Dev->>Agent: Approve plan
+    end
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    Note over Dev,Trace: Execution Phase &mdash; routine actions
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    loop For each routine step
+        Agent->>Tools: Tool call (read, list, query)
+        Tools->>System: Execute (sandboxed, scoped)
+        System-->>Tools: Result
+        Tools-->>Agent: Tool result
+        Agent->>Trace: Log call + parameters + result
+    end
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    Note over Dev,Trace: Human-in-the-Loop Checkpoint
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    Agent->>Dev: High-stakes action requires approval<br/>(deploy / delete / write)
+    Dev->>Agent: Approve / reject / modify
+    Agent->>Trace: Log decision + reasoning
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    alt Approved
+        Agent->>Tools: Execute high-stakes action
+        Tools->>System: Apply change
+        System-->>Tools: Result
+        Tools-->>Agent: Confirmation
+    else Rejected
+        Agent->>Agent: Adjust plan or halt
+    end
+
+    Note over Dev,Trace: Verification Phase
+
+    Agent->>Tools: Verify outcome<br/>(re-read state, check signals)
+    Tools->>System: Read for verification
+    System-->>Tools: Current state
+    Tools-->>Agent: Verification result
+    Agent->>Trace: Log verification
+
+    alt Verification passed
+        Agent->>Dev: Task complete + summary
+    else Verification failed
+        Agent->>Dev: Failure + diagnostic + suggested next step
+    end
+
+    Note over Dev,Trace: Trace queryable post-hoc<br/>by run ID for debugging

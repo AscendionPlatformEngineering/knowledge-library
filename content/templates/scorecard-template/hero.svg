@@ -1,0 +1,212 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Scorecard Template emblem.
+
+  Visual metaphor: a multi-dimensional rating extending outward
+  from a central pivot. Six radial guide spokes (warm neutral)
+  extend from centre (60, 45) at evenly-spaced 60° angles,
+  representing the six rated dimensions. Six small warm-neutral
+  guide markers sit at the maximum-radius position on each
+  spoke (the L4 / "max" position). Six terracotta bars (lines
+  rendered as stroke) extend OUTWARD from centre to variable
+  end positions — each bar's end position represents the
+  dimension's current rating, lower than the max for most. The
+  bars extend in sequence (one dimension at a time, sweeping
+  clockwise), all hold briefly with the full radar shape
+  visible (the multi-dimensional rating captured), then all
+  retract simultaneously back to centre and the cycle restarts.
+
+  Geometry:
+    Centre pivot: (60, 45) — small terracotta dot, always visible
+    Maximum radius: 30
+    Six spoke directions (angles measured clockwise from 12 o'clock,
+    in SVG coordinates with y-axis pointing down):
+      Spoke 1 (12 o'clock, up):       endpoint (60, 15)   — Production Readiness
+      Spoke 2 (2 o'clock, up-right):  endpoint (86, 30)   — Observability
+      Spoke 3 (4 o'clock, down-right):endpoint (86, 60)   — Security
+      Spoke 4 (6 o'clock, down):      endpoint (60, 75)   — Reliability
+      Spoke 5 (8 o'clock, down-left): endpoint (34, 60)   — Performance
+      Spoke 6 (10 o'clock, up-left):  endpoint (34, 30)   — Cost Efficiency
+    
+    Per-dimension current ratings (variable, like a radar chart):
+      Dim 1: 24/30 → bar end at (60, 21)   — high readiness
+      Dim 2: 19/30 → bar end at (76, 33)   — moderate observability
+      Dim 3: 26/30 → bar end at (83, 58)   — strong security
+      Dim 4: 17/30 → bar end at (60, 62)   — moderate reliability
+      Dim 5: 22/30 → bar end at (41, 56)   — good performance
+      Dim 6: 13/30 → bar end at (49, 34)   — weak cost efficiency
+
+  Visual elements:
+    - Six warm-neutral guide spokes (always visible, opacity 0.4):
+      thin straight lines from centre to max-radius position
+    - Six warm-neutral guide markers (small filled circles radius
+      1.8) at the max-radius positions on each spoke
+    - One terracotta centre dot (radius 2.5), always visible
+    - Six terracotta bars (stroke-width 2.2 lines): start at
+      centre, end at variable rating positions, animated to
+      extend out and retract back
+
+  Animation: 8-second cycle.
+    0.0–0.4s   : All bars retracted to centre (initial state — only
+                 spokes, max-markers, and centre dot visible)
+    0.4–1.4s   : Bar 1 extends from centre to its rating endpoint
+    1.4–2.4s   : Bar 2 extends (clockwise sweep)
+    2.4–3.4s   : Bar 3 extends
+    3.4–4.4s   : Bar 4 extends
+    4.4–5.4s   : Bar 5 extends
+    5.4–6.4s   : Bar 6 extends — full radar shape now visible
+    6.4–7.4s   : Hold complete (the multi-dimensional rating shown)
+    7.4–7.8s   : All bars retract simultaneously back to centre
+    7.8–8.0s   : Brief pause before restart
+
+  Each bar is a <line> with x1=60 y1=45 (centre, fixed) and x2,y2
+  animated. Extension: x2,y2 animate from (60,45) to endpoint over
+  the bar's extension window, then hold at endpoint until the
+  global retraction phase, then animate back to (60,45).
+
+  Motion mechanic: RADIAL DIMENSION BARS (the fifty-third mechanic
+  in the catalogue). FIRST CENTRIFUGAL VARIABLE-LENGTH RADIAL
+  EXTENSION mechanic. Distinct from #1 particle flow (RADIAL
+  CENTRIPETAL convergence — particles travel inward from edge to
+  centre on radial paths) by being CENTRIFUGAL (lines extend
+  OUTWARD from centre) and by extending to VARIABLE end
+  positions, not converging on a single point. Distinct from #44
+  radial check bloom (centre pivot + 6 spokes + 6 terminal
+  markers at FIXED max positions; markers brighten in clockwise
+  sequence, spokes always visible from cycle start) by:
+    (a) Bars EXTEND from centre OUTWARD via x2/y2 animation —
+        they grow into existence — rather than fixed-length
+        spokes whose terminals brighten;
+    (b) Each bar's endpoint is at a VARIABLE position
+        (per-dimension rating, lower than max), not at the
+        max-radius position;
+    (c) Guide spokes and max-markers are visible throughout
+        as PALE BACKGROUND CONTEXT, against which the active
+        bars extend;
+    (d) The accumulated radar shape (6 bars at variable end
+        positions) IS the rating — a multi-dimensional polygon
+        whose shape encodes the per-dimension scores.
+  Distinct from #46 concentric ring activation (FOUR NESTED
+  rings at different radii activating outermost-to-innermost)
+  by being SPOKES at evenly-distributed angles, not nested
+  rings. Distinct from #47 cyclic path marker (single dot
+  traveling around a closed perimeter; fixed phase markers
+  brighten as the dot passes) by having 6 STATIC bars that
+  EXTEND from centre, not a traveling marker. Distinct from
+  #49 perimeter fill ring (stroke-dasharray on a CIRCLE
+  perimeter, filling clockwise) by extending RADIAL LINES
+  outward via line-endpoint animation, not by filling a
+  perimeter. Distinct from #52 branching tree formation
+  (3 IRREGULAR branches with stroke-dasharray growth and
+  terminal nodes that appear after each branch completes) by
+  having 6 EVENLY-SPACED bars with VARIABLE end positions
+  (radar-chart polygon, not branching tree). The architectural
+  signature is multi-dimensional centrifugal extension to
+  variable end positions encoding per-dimension scores.
+
+  Two colours only: warm neutral (#D6D2C8) for guide spokes
+  and max-markers; terracotta (#C96330) for centre dot and
+  active extending bars.
+-->
+
+<!-- ─── Six guide spokes (warm neutral, always visible at low opacity) ─── -->
+<line x1="60" y1="45" x2="60" y2="15" stroke="#D6D2C8" stroke-width="0.8" opacity="0.4"/>
+<line x1="60" y1="45" x2="86" y2="30" stroke="#D6D2C8" stroke-width="0.8" opacity="0.4"/>
+<line x1="60" y1="45" x2="86" y2="60" stroke="#D6D2C8" stroke-width="0.8" opacity="0.4"/>
+<line x1="60" y1="45" x2="60" y2="75" stroke="#D6D2C8" stroke-width="0.8" opacity="0.4"/>
+<line x1="60" y1="45" x2="34" y2="60" stroke="#D6D2C8" stroke-width="0.8" opacity="0.4"/>
+<line x1="60" y1="45" x2="34" y2="30" stroke="#D6D2C8" stroke-width="0.8" opacity="0.4"/>
+
+<!-- ─── Six max-position guide markers (warm neutral, always visible) ─── -->
+<circle cx="60" cy="15" r="1.8" fill="#D6D2C8" opacity="0.7"/>
+<circle cx="86" cy="30" r="1.8" fill="#D6D2C8" opacity="0.7"/>
+<circle cx="86" cy="60" r="1.8" fill="#D6D2C8" opacity="0.7"/>
+<circle cx="60" cy="75" r="1.8" fill="#D6D2C8" opacity="0.7"/>
+<circle cx="34" cy="60" r="1.8" fill="#D6D2C8" opacity="0.7"/>
+<circle cx="34" cy="30" r="1.8" fill="#D6D2C8" opacity="0.7"/>
+
+<!-- ─── Centre pivot (terracotta, always visible) ─── -->
+<circle cx="60" cy="45" r="2.5" fill="#C96330"/>
+
+<!-- ─── Bar 1 — Production Readiness, rating 24/30, endpoint (60, 21) ─── -->
+<!-- 8s cycle keytimes:
+     Phase 1 (extend): bar 1 extends 0.05-0.175 (0.4s-1.4s of 8s)
+     Hold: 0.175-0.925 (1.4s-7.4s)
+     Retract: 0.925-0.975 (7.4s-7.8s)
+     Reset: 0.975-1.0 (7.8s-8.0s) -->
+<line x1="60" y1="45" x2="60" y2="45" stroke="#C96330" stroke-width="2.2" stroke-linecap="round">
+  <animate attributeName="x2"
+           values="60; 60; 60; 60; 60"
+           keyTimes="0; 0.05; 0.175; 0.925; 1"
+           dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="y2"
+           values="45; 45; 21; 21; 45"
+           keyTimes="0; 0.05; 0.175; 0.925; 1"
+           dur="8s" repeatCount="indefinite"/>
+</line>
+
+<!-- ─── Bar 2 — Observability, rating 19/30, endpoint (76, 33) ─── -->
+<!-- Bar 2 extends 0.175-0.30 (1.4s-2.4s) -->
+<line x1="60" y1="45" x2="60" y2="45" stroke="#C96330" stroke-width="2.2" stroke-linecap="round">
+  <animate attributeName="x2"
+           values="60; 60; 60; 76; 76; 60"
+           keyTimes="0; 0.05; 0.175; 0.30; 0.925; 1"
+           dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="y2"
+           values="45; 45; 45; 33; 33; 45"
+           keyTimes="0; 0.05; 0.175; 0.30; 0.925; 1"
+           dur="8s" repeatCount="indefinite"/>
+</line>
+
+<!-- ─── Bar 3 — Security, rating 26/30, endpoint (83, 58) ─── -->
+<!-- Bar 3 extends 0.30-0.425 (2.4s-3.4s) -->
+<line x1="60" y1="45" x2="60" y2="45" stroke="#C96330" stroke-width="2.2" stroke-linecap="round">
+  <animate attributeName="x2"
+           values="60; 60; 60; 83; 83; 60"
+           keyTimes="0; 0.05; 0.30; 0.425; 0.925; 1"
+           dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="y2"
+           values="45; 45; 45; 58; 58; 45"
+           keyTimes="0; 0.05; 0.30; 0.425; 0.925; 1"
+           dur="8s" repeatCount="indefinite"/>
+</line>
+
+<!-- ─── Bar 4 — Reliability, rating 17/30, endpoint (60, 62) ─── -->
+<!-- Bar 4 extends 0.425-0.55 (3.4s-4.4s) -->
+<line x1="60" y1="45" x2="60" y2="45" stroke="#C96330" stroke-width="2.2" stroke-linecap="round">
+  <animate attributeName="x2"
+           values="60; 60; 60; 60; 60; 60"
+           keyTimes="0; 0.05; 0.425; 0.55; 0.925; 1"
+           dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="y2"
+           values="45; 45; 45; 62; 62; 45"
+           keyTimes="0; 0.05; 0.425; 0.55; 0.925; 1"
+           dur="8s" repeatCount="indefinite"/>
+</line>
+
+<!-- ─── Bar 5 — Performance, rating 22/30, endpoint (41, 56) ─── -->
+<!-- Bar 5 extends 0.55-0.675 (4.4s-5.4s) -->
+<line x1="60" y1="45" x2="60" y2="45" stroke="#C96330" stroke-width="2.2" stroke-linecap="round">
+  <animate attributeName="x2"
+           values="60; 60; 60; 41; 41; 60"
+           keyTimes="0; 0.05; 0.55; 0.675; 0.925; 1"
+           dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="y2"
+           values="45; 45; 45; 56; 56; 45"
+           keyTimes="0; 0.05; 0.55; 0.675; 0.925; 1"
+           dur="8s" repeatCount="indefinite"/>
+</line>
+
+<!-- ─── Bar 6 — Cost Efficiency, rating 13/30, endpoint (49, 34) ─── -->
+<!-- Bar 6 extends 0.675-0.80 (5.4s-6.4s) -->
+<line x1="60" y1="45" x2="60" y2="45" stroke="#C96330" stroke-width="2.2" stroke-linecap="round">
+  <animate attributeName="x2"
+           values="60; 60; 60; 49; 49; 60"
+           keyTimes="0; 0.05; 0.675; 0.80; 0.925; 1"
+           dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="y2"
+           values="45; 45; 45; 34; 34; 45"
+           keyTimes="0; 0.05; 0.675; 0.80; 0.925; 1"
+           dur="8s" repeatCount="indefinite"/>
+</line>
+</svg>
