@@ -1141,6 +1141,222 @@ EMBLEM MOTION MECHANICS (each page must use a DISTINCT mechanic):
                            signature is multi-dimensional centrifugal
                            extension to variable end positions
                            encoding per-dimension scores)
+    playbooks/api-lifecycle → dual-track parallel lifecycle (TWO
+                           horizontal tracks at y=32 and y=58
+                           with semi-transparent baselines (warm
+                           neutral, opacity 0.4) running x=15
+                           to x=105; each track has FOUR phase
+                           markers (warm-neutral filled circles
+                           radius 1.6, opacity 0.7) at evenly
+                           spaced positions x=29, 54, 79, 104
+                           representing FOUR LIFECYCLE PHASES
+                           per track; upper track v1 phases are
+                           GA→Maintenance→Deprecated→Retired;
+                           lower track v2 phases are
+                           Design→Beta→GA→Maintenance; TWO
+                           terracotta version blocks (rounded
+                           rectangles 14×6, rx=1.5) one per
+                           track, sliding rightward through
+                           phase positions over a 10-second
+                           cycle; v1 block (upper) at full
+                           opacity slides through GA at t=0,
+                           Maintenance at t=2.5s, Deprecated at
+                           t=5s, Retired at t=7.5s, fades to
+                           opacity 0 by t=8.8s, snaps back to
+                           start position at t=9s, fades back
+                           in by t=10s; v2 block (lower) starts
+                           at low opacity 0.35 in Design phase
+                           at t=0, brightens to opacity 1 at
+                           t=2.5s entering Beta, slides through
+                           GA at t=5s, Maintenance at t=7.5s,
+                           fades and snaps back at t=8.8-9s;
+                           the two blocks at any given moment
+                           are at DIFFERENT phase positions on
+                           their respective tracks, encoding
+                           multi-version coexistence (when v1
+                           is in Deprecated, v2 is in GA — same
+                           horizontal pixel position but
+                           different lifecycle meaning per
+                           track); FIRST DUAL-TRACK PARALLEL
+                           TIMELINE mechanic in the catalogue;
+                           visual metaphor is two API versions
+                           coexisting through their lifecycles
+                           on parallel tracks with version
+                           blocks moving along them in sync but
+                           encoding different lifecycle phases;
+                           distinct from #51 lifecycle progression
+                           trail (SINGLE track with FOUR phase
+                           markers and an ACTIVE-STATE DOT moving
+                           with HISTORY-BAR ACCUMULATION
+                           connecting visited markers on the
+                           same single track) by having TWO
+                           PARALLEL tracks with TWO different
+                           blocks at DIFFERENT phase positions
+                           — encoding coexistence rather than
+                           progression-with-history; distinct
+                           from #15 horizontal traversal (single
+                           marker traversing one track) by having
+                           TWO blocks on TWO tracks; distinct
+                           from #41 sequential pointer descent
+                           (vertical pointer moving down through
+                           items) by being HORIZONTAL with two
+                           tracks; distinct from #50 branching
+                           decision flow (one marker on a path
+                           with branching alternation) by having
+                           parallel non-branching tracks; the
+                           architectural signature is multi-
+                           version parallel lifecycle with
+                           coexistence visible through different
+                           positions on parallel tracks)
+    playbooks/migration → proportional traffic shift (a SINGLE
+                           composite horizontal bar centred at
+                           y=45 with total span x=20 to x=100,
+                           height 12, rx=1.5; bar is divided
+                           into TWO segments by a vertical
+                           DIVIDER line at variable x position;
+                           LEFT segment (terracotta) is the
+                           legacy share; RIGHT segment (warm
+                           neutral, opacity 0.55) is the new
+                           share; warm-neutral frame outline
+                           wraps the full bar at low opacity;
+                           "legacy" label at (28, 30) and "new"
+                           label at (88, 30) above the bar in
+                           warm neutral; FOUR tick marks below
+                           the bar at x=36, 52, 68, 84 with
+                           "25%" "50%" "75%" "100%" percentage
+                           labels in warm neutral at low opacity;
+                           DIVIDER LINE is a vertical warm-neutral
+                           line of stroke-width 1.5 from y=35 to
+                           y=55 with two cap dots (warm-neutral
+                           filled circles radius 1.5) at the top
+                           and bottom of the divider; over an
+                           8-second cycle, the divider's x
+                           position animates from x=100 (start,
+                           full legacy: left segment width 80,
+                           right segment width 0) to x=20 (end,
+                           full new: left segment width 0, right
+                           segment width 80); divider holds at
+                           x=20 from t=7s to t=8s for "all-new
+                           settled" pause; at t=8s the divider
+                           snaps back to x=100 (cycle restart);
+                           keyTimes are 0; 0.05; 0.875; 1; 1
+                           with values 100; 100; 20; 20; 100 for
+                           the divider position; the legacy
+                           segment's WIDTH animates synchronously
+                           from 80 to 0; the new segment's BOTH
+                           x AND width animate synchronously (x
+                           from 100 to 20, width from 0 to 80);
+                           FIRST PROPORTIONAL-DIVIDER-MIGRATION
+                           mechanic in the catalogue; visual
+                           metaphor is strangler-fig progressive
+                           cutover where traffic shifts
+                           proportionally from legacy to new on
+                           the same channel as the divider
+                           migrates leftward over time; distinct
+                           from #45 sequential vertical fill
+                           (VERTICAL bars filling from BOTTOM
+                           upward in DISCRETE STAGES that
+                           ACCUMULATE) by being a HORIZONTAL
+                           composite bar with a CONTINUOUS
+                           MIGRATING DIVIDER between TWO co-
+                           existing PROPORTIONAL SEGMENTS rather
+                           than vertical bars filling
+                           sequentially; distinct from #18
+                           horizontal sliding bars (SEPARATE
+                           bars sliding into POSITION) by having
+                           ONE composite bar with an INTERNAL
+                           DIVIDER, not separate bars; distinct
+                           from #11 vertical bars rising (HEIGHT-
+                           based growth from baseline) by being
+                           WIDTH-based PROPORTION shift; distinct
+                           from #15 single horizontal traversal
+                           (one marker traversing a path) by
+                           having a DIVIDING LINE between TWO
+                           PROPORTIONAL SEGMENTS rather than a
+                           traveling marker; distinct from #54
+                           dual-track parallel lifecycle (TWO
+                           tracks with TWO blocks moving along
+                           them) by having ONE composite bar
+                           with internal proportional division;
+                           the architectural signature is
+                           proportional-divider migration
+                           encoding gradual cutover with old and
+                           new co-existing on the same channel
+                           at varying ratios)
+    playbooks/resilience → elastic pulse propagation (FIVE
+                           vertical bars at x = 24, 42, 60, 78,
+                           96, each width 8 with rx=1.5, baseline
+                           y=30 height=40 (extending from y=30
+                           to y=70); horizontal baseline ground
+                           line from x=15 to x=105 at y=72,
+                           opacity 0.5 (warm neutral); a SHOCK
+                           DOT (terracotta filled circle radius
+                           2) traverses from x=10 to x=110 at
+                           y=20 over the 7-second cycle, fading
+                           in at the start and out at the end;
+                           as the shock dot reaches each bar's
+                           x position, that bar TEMPORARILY
+                           COMPRESSES — the bar's TOP (y) animates
+                           DOWN from y=30 to y=42 while its
+                           HEIGHT animates DOWN from 40 to 20
+                           (the bar's BOTTOM stays anchored at
+                           y=70 since y+height = 70 in both
+                           states), then the bar RESTORES to
+                           full height; each bar's compression
+                           lasts ~0.4 seconds with restoration
+                           by ~0.5 seconds after compression;
+                           the cascade is staggered by ~1 second
+                           per bar; bar 1 compressed at t=0.7-1.5s
+                           (keyTimes 0.1, 0.157, 0.214); bar 2
+                           at t=1.7-2.5s (keyTimes 0.243, 0.3,
+                           0.357); bar 3 at t=2.7-3.5s; bar 4
+                           at t=3.7-4.5s; bar 5 at t=4.7-5.5s;
+                           all bars at rest from 5.5-7s; the
+                           bottom edge of each bar stays
+                           anchored to the baseline ground line
+                           throughout; FIRST ELASTIC-PULSE-
+                           PROPAGATION mechanic in the catalogue
+                           with TEMPORARY DEFORMATION AND FULL
+                           RECOVERY; visual metaphor is a shock
+                           wave passing through system layers,
+                           each layer absorbing the impact
+                           visibly (compressing) then restoring
+                           to original height — encoding
+                           resilience as the universal
+                           restoration after the cascade;
+                           distinct from #11 vertical bars
+                           rising (bars GROWING UP from zero
+                           height to full height as the
+                           accumulating outcome) by having bars
+                           at FULL HEIGHT that COMPRESS DOWN
+                           and RECOVER (deformation, not growth);
+                           distinct from #18 horizontal sliding
+                           bars (bars moving in POSITION
+                           horizontally) by changing bars' HEIGHT
+                           and Y position temporarily, not
+                           position; distinct from #45 sequential
+                           vertical fill (bars filling bottom-
+                           to-top in DISCRETE STAGES that
+                           ACCUMULATE) by having bars deform
+                           briefly and FULLY RESTORE to original
+                           state — nothing accumulates; distinct
+                           from #46 concentric ring activation
+                           (rings expanding OUTWARD from a centre)
+                           by propagating LATERALLY through
+                           vertical bars; distinct from #54 dual-
+                           track parallel lifecycle (two
+                           horizontal tracks with version blocks
+                           moving) and #55 proportional traffic
+                           shift (composite horizontal bar with
+                           migrating divider) by being FIVE
+                           SEPARATE VERTICAL bars with cascade
+                           DEFORM-RECOVER mechanics; the
+                           architectural signature is elastic
+                           pulse propagation: a shock that moves
+                           through the system, leaves a
+                           temporary impression on each layer,
+                           and is fully absorbed with no
+                           permanent deformation)
   Future pages must invent a new mechanic, not reuse one.
   Two colours only: warm neutral (#D6D2C8) + terracotta (#C96330).
   Basic SMIL primitives only (animate, animateTransform with type=rotate or translate; stroke-dasharray and opacity animations also valid via animate).
@@ -2505,6 +2721,31 @@ TAG_LINKS = {
     "Google SRE Workbook — Production Readiness Reviews": "https://sre.google/workbook/evolving-sre-engagement-model/",
     "Backstage — Software Catalog": "https://backstage.io/docs/features/software-catalog/",
     "Diátaxis Documentation Framework": "https://diataxis.fr/",
+
+    # ─── v37 Engineering Playbooks references ───
+    # API Lifecycle
+    "Stripe API Reference": "https://stripe.com/docs/api",
+    "Microsoft REST API Guidelines": "https://github.com/microsoft/api-guidelines",
+    "Google API Improvement Proposals (AIP)": "https://google.aip.dev/",
+    "Semantic Versioning 2.0": "https://semver.org/",
+    "RFC 8594 — Sunset HTTP Header": "https://www.rfc-editor.org/rfc/rfc8594",
+    "API Stylebook": "https://apistylebook.com/",
+    # Migration Playbook
+    "Branch by Abstraction (Fowler)": "https://martinfowler.com/bliki/BranchByAbstraction.html",
+    "Refactoring Databases": "https://databaserefactoring.com/",
+    "Working Effectively with Legacy Code (Feathers)": "https://www.oreilly.com/library/view/working-effectively-with/0131177052/",
+    "AWS Migration Strategies — 7 Rs": "https://docs.aws.amazon.com/prescriptive-guidance/latest/migration-strategies/migration-strategies.html",
+    "Liquibase": "https://www.liquibase.org/",
+    "Flyway Database Migrations": "https://flywaydb.org/",
+    # Resilience Playbook
+    "Resilience4j": "https://resilience4j.readme.io/",
+    "Polly — .NET resilience library": "https://www.thepollyproject.org/",
+    "Hystrix (Netflix)": "https://github.com/Netflix/Hystrix",
+    "Bulkhead Pattern (Microsoft)": "https://learn.microsoft.com/en-us/azure/architecture/patterns/bulkhead",
+    "Circuit Breaker (Fowler)": "https://martinfowler.com/bliki/CircuitBreaker.html",
+    "Erlang/OTP": "https://www.erlang.org/",
+    "FMEA — Failure Mode and Effects Analysis": "https://en.wikipedia.org/wiki/Failure_mode_and_effects_analysis",
+    "Antifragile (Taleb)": "https://www.penguinrandomhouse.com/books/176227/antifragile-by-nassim-nicholas-taleb/",
 }
 
 

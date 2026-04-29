@@ -1,0 +1,142 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Migration Playbook emblem.
+
+  Visual metaphor: traffic shifting proportionally from the
+  legacy system to the new system through a strangler-fig
+  cutover. A single horizontal composite bar represents the
+  total traffic. The bar has two segments: the LEFT segment
+  (terracotta) is the share routed to the legacy system; the
+  RIGHT segment (warm-neutral) is the share routed to the new
+  system. A vertical divider line marks the boundary between
+  the two segments and animates leftward over the cycle —
+  starting at far-right (~100% on legacy) and ending at far-left
+  (~0% on legacy, ~100% on new).
+
+  This is a strangler-fig signature: the new system grows and
+  the legacy shrinks proportionally, on the same channel,
+  without the cutover ever being a single switch.
+
+  Geometry:
+    Composite bar centred at y=45, height 12, total span x=20
+    to x=100 (width 80).
+    Top label "legacy" at (28, 30), warm-neutral, opacity 0.8.
+    Top label "new"    at (88, 30), warm-neutral, opacity 0.8.
+    Bottom labels (small percentage indicators) at y=68 follow
+    the divider's position, showing the cutover progressing.
+
+    Divider line: vertical, height 16, stroke warm-neutral,
+    crosses the bar at x=DIVIDER_X.
+    DIVIDER_X animates from 100 (start of cycle, all legacy)
+    to 20 (end of cycle, all new).
+
+    LEFT segment (legacy/terracotta): rect at (20, 39), width =
+    DIVIDER_X − 20, height 12. Width animates as the divider
+    moves leftward; width shrinks toward 0.
+    RIGHT segment (new/warm-neutral, opacity 0.55): rect at
+    (DIVIDER_X, 39), width = 100 − DIVIDER_X, height 12. Width
+    animates as the divider moves leftward; width grows toward 80.
+
+  Animation: 8-second cycle, snap-restart at end (no awkward
+  reverse animation; the strangler is monotone).
+    0.0s    : divider at x=100, legacy segment full (width 80),
+              new segment empty (width 0). All-legacy state.
+    7.0s    : divider at x=20,  legacy segment empty (width 0),
+              new segment full (width 80). All-new state.
+    7.0–8.0s: brief hold at all-new state.
+    8.0s    : snap reset to start (divider at x=100).
+
+  Implementation: three <animate> elements drive the divider's
+  x position, the legacy rect's width, and the new rect's
+  x-and-width simultaneously.
+
+  Motion mechanic: PROPORTIONAL TRAFFIC SHIFT (the fifty-fifth
+  mechanic in the catalogue). FIRST PROPORTIONAL-DIVIDER-MIGRATION
+  mechanic. Distinct from #45 (sequential vertical fill) which
+  fills VERTICAL bars from the bottom upward in DISCRETE STAGES.
+  #55 is a HORIZONTAL composite bar with a CONTINUOUS DIVIDER
+  migrating between two co-existing segments — the same channel
+  carries both old and new at varying proportions throughout
+  the cycle. Distinct from #18 (horizontal sliding bars) which
+  has SEPARATE bars sliding into POSITION; #55 has ONE composite
+  bar with an INTERNAL DIVIDER. Distinct from #11 (vertical
+  bars rising) which is HEIGHT-based growth; #55 is WIDTH-based
+  proportion. Distinct from #15 (single horizontal traversal)
+  which has ONE marker traversing a path; #55 is a DIVIDING LINE
+  between TWO PROPORTIONAL SEGMENTS, not a single marker. The
+  architectural signature is proportional-divider migration
+  encoding gradual cutover with old and new co-existing on the
+  same channel at varying ratios.
+
+  Two colours only: warm neutral (#D6D2C8) for the new segment,
+  divider, labels, and frame; terracotta (#C96330) for the
+  legacy segment.
+-->
+
+<!-- ─── Frame outline ─── -->
+<rect x="20" y="39" width="80" height="12" rx="1.5"
+      fill="none" stroke="#D6D2C8" stroke-width="0.6" opacity="0.5"/>
+
+<!-- ─── Top labels ─── -->
+<text x="28" y="30" font-family="monospace" font-size="6" fill="#D6D2C8" opacity="0.85">legacy</text>
+<text x="88" y="30" font-family="monospace" font-size="6" fill="#D6D2C8" opacity="0.85">new</text>
+
+<!-- ─── LEFT segment: legacy / terracotta. Width shrinks from 80 → 0 as divider moves left. ─── -->
+<rect x="20" y="39" height="12" fill="#C96330" rx="1.5">
+  <animate attributeName="width"
+           values="80; 80; 0; 0; 80"
+           keyTimes="0; 0.05; 0.875; 1; 1"
+           dur="8s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── RIGHT segment: new / warm-neutral. x and width animate together. ─── -->
+<!-- At t=0: x=100, width=0 (segment is collapsed at far-right edge of frame). -->
+<!-- At t=7s: x=20,  width=80 (segment fills the entire frame). -->
+<rect y="39" height="12" fill="#D6D2C8" opacity="0.55" rx="1.5" x="100" width="0">
+  <animate attributeName="x"
+           values="100; 100; 20; 20; 100"
+           keyTimes="0; 0.05; 0.875; 1; 1"
+           dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="width"
+           values="0; 0; 80; 80; 0"
+           keyTimes="0; 0.05; 0.875; 1; 1"
+           dur="8s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Divider line: tracks the boundary between segments. ─── -->
+<line y1="35" y2="55" stroke="#D6D2C8" stroke-width="1.5" x1="100" x2="100">
+  <animate attributeName="x1"
+           values="100; 100; 20; 20; 100"
+           keyTimes="0; 0.05; 0.875; 1; 1"
+           dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="x2"
+           values="100; 100; 20; 20; 100"
+           keyTimes="0; 0.05; 0.875; 1; 1"
+           dur="8s" repeatCount="indefinite"/>
+</line>
+
+<!-- ─── Divider cap dots (top and bottom) for visual emphasis ─── -->
+<circle cy="35" r="1.5" fill="#D6D2C8" cx="100">
+  <animate attributeName="cx"
+           values="100; 100; 20; 20; 100"
+           keyTimes="0; 0.05; 0.875; 1; 1"
+           dur="8s" repeatCount="indefinite"/>
+</circle>
+<circle cy="55" r="1.5" fill="#D6D2C8" cx="100">
+  <animate attributeName="cx"
+           values="100; 100; 20; 20; 100"
+           keyTimes="0; 0.05; 0.875; 1; 1"
+           dur="8s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Phase milestone tick-marks below the bar (cutover stage indicators) ─── -->
+<line x1="36" y1="58" x2="36" y2="62" stroke="#D6D2C8" stroke-width="0.5" opacity="0.5"/>
+<line x1="52" y1="58" x2="52" y2="62" stroke="#D6D2C8" stroke-width="0.5" opacity="0.5"/>
+<line x1="68" y1="58" x2="68" y2="62" stroke="#D6D2C8" stroke-width="0.5" opacity="0.5"/>
+<line x1="84" y1="58" x2="84" y2="62" stroke="#D6D2C8" stroke-width="0.5" opacity="0.5"/>
+
+<text x="32" y="68" font-family="monospace" font-size="4" fill="#D6D2C8" opacity="0.55">25%</text>
+<text x="48" y="68" font-family="monospace" font-size="4" fill="#D6D2C8" opacity="0.55">50%</text>
+<text x="64" y="68" font-family="monospace" font-size="4" fill="#D6D2C8" opacity="0.55">75%</text>
+<text x="80" y="68" font-family="monospace" font-size="4" fill="#D6D2C8" opacity="0.55">100%</text>
+</svg>

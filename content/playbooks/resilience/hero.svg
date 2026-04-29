@@ -1,0 +1,161 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  Resilience Playbook emblem.
+
+  Visual metaphor: a shock wave passes through a system with
+  multiple layers; each layer absorbs the impact (visibly
+  compressing for a moment) then RESTORES to full height.
+  This is the resilience signature: the system is not
+  unaffected by failure, but recovers from it. The compression
+  represents absorption; the restoration represents resilience.
+
+  Five vertical bars represent five system layers (network,
+  service, data, platform, observability). Each bar at default
+  state stands at full height. As a shock wave propagates from
+  left to right, each bar is hit in sequence with a brief
+  height compression, then springs back to full height. The
+  cascade of compressions encodes the wave; the universal
+  restoration encodes the resilience.
+
+  Geometry:
+    Five vertical bars positioned at x = 24, 42, 60, 78, 96.
+    Each bar:
+      width 8, rounded corners rx=1.5
+      Default state: y=30, height=40 (extends from y=30 to y=70).
+      Compressed state: y=42, height=20 (top moves DOWN to y=42,
+      bottom remains at y=70 — the bar appears to be pressed
+      down by the impact). The bottom edge stays anchored;
+      the top dips and recovers.
+    Baseline horizontal line at y=72, opacity 0.5 (represents
+    the ground / unmoving floor that bars stand on).
+
+    Wave indicator: a small terracotta dot of radius 2 traverses
+    the upper region at y=20, moving from x=15 to x=105 in sync
+    with the cascade. The dot is the visible shock; its path
+    correlates with the impact moments. After traversing, the
+    dot fades out at the right edge before restarting.
+
+  Animation: 7-second cycle.
+    The shock wave traverses the system in 5 sequential impact
+    moments, with each impact lasting ~0.5 seconds (compression
+    duration). The dot moves continuously from left to right.
+
+    Bar 1 (x=24):  compressed at t = 0.7–1.2 (recovery by 1.5s)
+    Bar 2 (x=42):  compressed at t = 1.7–2.2 (recovery by 2.5s)
+    Bar 3 (x=60):  compressed at t = 2.7–3.2 (recovery by 3.5s)
+    Bar 4 (x=78):  compressed at t = 3.7–4.2 (recovery by 4.5s)
+    Bar 5 (x=96):  compressed at t = 4.7–5.2 (recovery by 5.5s)
+    All bars at rest from 5.5–7.0s (settled state).
+    7.0s: cycle restarts with shock entering the left.
+
+    Each bar's animation:
+      y values:      30 → 30 → 42 → 30 → 30
+      height values: 40 → 40 → 20 → 40 → 40
+      keyTimes vary per bar to stagger the cascade.
+
+    Wave dot:
+      cx values: 10 → 24 → 42 → 60 → 78 → 96 → 110 → 110 (fade)
+      cx animation matches impact timing on each bar.
+      Opacity transitions briefly to 0 between cycles.
+
+  Implementation: five <rect> elements with y and height
+  animated; one <circle> for the shock dot.
+
+  Motion mechanic: ELASTIC PULSE PROPAGATION (the fifty-sixth
+  mechanic in the catalogue). FIRST ELASTIC-PULSE-PROPAGATION
+  mechanic with TEMPORARY DEFORMATION AND RECOVERY. Distinct
+  from #11 (vertical bars rising from baseline) which has bars
+  GROWING UP from zero height — #56 has bars at full height
+  that COMPRESS and RECOVER. Distinct from #18 (horizontal
+  sliding bars) which moves bars in POSITION — #56 changes
+  bars' HEIGHT temporarily. Distinct from #45 (sequential
+  vertical fill) which fills bars from bottom-to-top in DISCRETE
+  STAGES that ACCUMULATE — #56's bars deform briefly and FULLY
+  RESTORE to original state; nothing accumulates. Distinct
+  from #46 (concentric ring activation) which expands rings
+  OUTWARD from a centre — #56 propagates LATERALLY through
+  vertical bars. The architectural signature is elastic pulse
+  propagation: a shock that moves through the system, leaves
+  a temporary impression on each layer, and is fully absorbed
+  with no permanent deformation.
+
+  Two colours only: warm neutral (#D6D2C8) for the bars and
+  baseline; terracotta (#C96330) for the shock dot.
+-->
+
+<!-- ─── Baseline ground line ─── -->
+<line x1="15" y1="72" x2="105" y2="72" stroke="#D6D2C8" stroke-width="0.8" opacity="0.5"/>
+
+<!-- ─── Shock wave dot (terracotta) — traverses left to right ─── -->
+<circle r="2" fill="#C96330" cx="10" cy="20" opacity="1">
+  <animate attributeName="cx"
+           values="10; 24; 42; 60; 78; 96; 110; 10"
+           keyTimes="0; 0.1; 0.243; 0.386; 0.529; 0.671; 0.85; 1"
+           dur="7s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="0; 1; 1; 1; 1; 1; 0; 0"
+           keyTimes="0; 0.07; 0.243; 0.386; 0.529; 0.75; 0.88; 1"
+           dur="7s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ─── Bar 1 at x=24: compressed at t=0.7–1.2 (keyTimes 0.1–0.171) ─── -->
+<!-- recovery at t=1.5 (keyTime 0.214); at rest from then -->
+<rect x="24" width="8" rx="1.5" fill="#D6D2C8" y="30" height="40">
+  <animate attributeName="y"
+           values="30; 30; 42; 30; 30"
+           keyTimes="0; 0.1; 0.157; 0.214; 1"
+           dur="7s" repeatCount="indefinite"/>
+  <animate attributeName="height"
+           values="40; 40; 20; 40; 40"
+           keyTimes="0; 0.1; 0.157; 0.214; 1"
+           dur="7s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Bar 2 at x=42: compressed at t=1.7–2.2 (keyTimes 0.243–0.314) ─── -->
+<rect x="42" width="8" rx="1.5" fill="#D6D2C8" y="30" height="40">
+  <animate attributeName="y"
+           values="30; 30; 42; 30; 30"
+           keyTimes="0; 0.243; 0.3; 0.357; 1"
+           dur="7s" repeatCount="indefinite"/>
+  <animate attributeName="height"
+           values="40; 40; 20; 40; 40"
+           keyTimes="0; 0.243; 0.3; 0.357; 1"
+           dur="7s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Bar 3 at x=60: compressed at t=2.7–3.2 (keyTimes 0.386–0.457) ─── -->
+<rect x="60" width="8" rx="1.5" fill="#D6D2C8" y="30" height="40">
+  <animate attributeName="y"
+           values="30; 30; 42; 30; 30"
+           keyTimes="0; 0.386; 0.443; 0.5; 1"
+           dur="7s" repeatCount="indefinite"/>
+  <animate attributeName="height"
+           values="40; 40; 20; 40; 40"
+           keyTimes="0; 0.386; 0.443; 0.5; 1"
+           dur="7s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Bar 4 at x=78: compressed at t=3.7–4.2 (keyTimes 0.529–0.6) ─── -->
+<rect x="78" width="8" rx="1.5" fill="#D6D2C8" y="30" height="40">
+  <animate attributeName="y"
+           values="30; 30; 42; 30; 30"
+           keyTimes="0; 0.529; 0.586; 0.643; 1"
+           dur="7s" repeatCount="indefinite"/>
+  <animate attributeName="height"
+           values="40; 40; 20; 40; 40"
+           keyTimes="0; 0.529; 0.586; 0.643; 1"
+           dur="7s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── Bar 5 at x=96: compressed at t=4.7–5.2 (keyTimes 0.671–0.742) ─── -->
+<rect x="96" width="8" rx="1.5" fill="#D6D2C8" y="30" height="40">
+  <animate attributeName="y"
+           values="30; 30; 42; 30; 30"
+           keyTimes="0; 0.671; 0.728; 0.785; 1"
+           dur="7s" repeatCount="indefinite"/>
+  <animate attributeName="height"
+           values="40; 40; 20; 40; 40"
+           keyTimes="0; 0.671; 0.728; 0.785; 1"
+           dur="7s" repeatCount="indefinite"/>
+</rect>
+</svg>

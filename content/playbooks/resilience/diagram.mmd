@@ -1,49 +1,99 @@
-flowchart TD
-    A([🚀 Start: Resilience Playbook]) --> B[Assessment & Discovery]
-
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
-
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
-
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
-
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
-
-    G --> H[Architecture Review Board]
-
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
-
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
-
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
-
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
-
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
-
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+mindmap
+  root((Resilience<br/>Playbook))
+    Network Layer
+      Timeouts
+        Per-call timeout configured
+        Shorter than upstream timeout
+        Failure propagates with bounded delay
+      Retries
+        Exponential backoff
+        Jitter to prevent retry storms
+        Idempotency-aware
+        Bounded attempt count
+      Circuit Breakers
+        Closed / Open / Half-Open
+        Failure rate threshold
+        Recovery probe logic
+      Connection Management
+        Connection pools sized
+        Keep-alive tuned
+        DNS caching policy
+    Service Layer
+      Bulkheads
+        Resource isolation per workload
+        Tenant separation
+        Failure contained within domain
+      Rate Limiting
+        Token bucket
+        Per-tenant quotas
+        Backpressure to caller
+      Graceful Degradation
+        Required vs enhancing dependencies
+        Cached fallback
+        Default values
+        Partial results
+      Load Shedding
+        Priority-aware drop
+        Health-based admission
+    Data Layer
+      Replication
+        Synchronous for tight RPO
+        Asynchronous for loose RPO
+        Multi-region for regional resilience
+      Backup Strategy
+        Frequency matched to RPO
+        Restoration verified periodically
+        Cross-region copies
+      Schema Evolution
+        Expand-then-contract patterns
+        Backward-compatible changes only
+        Version coexistence during overlap
+      Consistency Models
+        Strong / eventual / causal
+        Choice per data set
+    Platform Layer
+      Multi-AZ Deployment
+        Zonal failure tolerated
+        Stateless services balance across AZs
+      Multi-Region
+        Active-active for tight RTO
+        Active-passive for moderate RTO
+        Failover orchestration
+      Capacity Headroom
+        Surge buffer above peak
+        Auto-scaling policies
+        Quota limits
+      Stateful Failover
+        Leader election
+        Split-brain prevention
+    Failure Detection &amp; Discipline
+      Failure Mode Inventory
+        FMEA discipline
+        Per-service enumeration
+        Updated from incident retrospectives
+      Chaos Engineering
+        Steady-state hypothesis
+        Blast-radius control
+        Cadence weekly to quarterly
+      Game Days
+        Coordinated team simulation
+        Response exercised
+        Gaps prioritised
+      Recovery Rehearsal
+        Backup restoration timed
+        Failover drills
+        Cross-region cutover annually
+    Targets &amp; Measurement
+      RPO Targets
+        Per-service business analysis
+        Cost trade-off explicit
+      RTO Targets
+        Per-service business analysis
+        Drives architecture choice
+      SLO &amp; Error Budgets
+        User-perceived reliability
+        Burn rate alerts
+      Incident Metrics
+        MTTD time to detect
+        MTTR time to restore
+        Trend over time

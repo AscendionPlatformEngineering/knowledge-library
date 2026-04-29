@@ -1,49 +1,30 @@
-flowchart TD
-    A([🚀 Start: API Lifecycle]) --> B[Assessment & Discovery]
+gantt
+    title API Version Lifecycle Coexistence
+    dateFormat  YYYY-MM-DD
+    axisFormat  %b %Y
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    section v1 lifecycle
+    Design + pre-release review     :v1d,    2024-01-01, 90d
+    Beta (private design partners)  :v1b,    after v1d, 90d
+    GA (full support)               :active, v1ga,   after v1b, 540d
+    Maintenance (security fixes)    :v1m,    after v1ga, 180d
+    Deprecated (Sunset announced)   :crit,   v1dep,  after v1m, 360d
+    Retired (410 Gone)              :v1r,    after v1dep, 90d
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    section v2 lifecycle
+    Design + pre-release review     :v2d,    2025-04-01, 90d
+    Beta (parallel-run sandbox)     :v2b,    after v2d, 90d
+    GA (full support)               :active, v2ga,   after v2b, 720d
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    section Migration milestones
+    Migration tooling published     :milestone, m1, 2025-10-01, 0d
+    Sunset T-12 month notice        :milestone, m2, 2025-10-01, 0d
+    Sunset T-6 month notice         :milestone, m3, 2026-04-01, 0d
+    Sunset T-3 month notice         :milestone, m4, 2026-07-01, 0d
+    Sunset T-1 month notice         :milestone, m5, 2026-09-01, 0d
+    v1 sunset (binding date)        :milestone, m6, 2026-10-01, 0d
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
-
-    G --> H[Architecture Review Board]
-
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
-
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
-
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
-
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
-
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
-
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    section Retirement discipline
+    Routes return 410 Gone          :r1, 2026-10-01, 30d
+    Code removed from source repo   :r2, after r1, 30d
+    Infrastructure destroyed        :r3, after r2, 30d

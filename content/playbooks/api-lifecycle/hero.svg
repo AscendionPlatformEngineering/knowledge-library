@@ -1,0 +1,133 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+<!--
+  API Lifecycle emblem.
+
+  Visual metaphor: two API versions coexisting through their
+  lifecycles on parallel tracks. The upper track (v1) shows a
+  block sliding rightward through phase positions: GA →
+  Deprecated → Retired → fades out. The lower track (v2) shows
+  a block emerging from the left, then sliding rightward through
+  phase positions: Beta → GA. The two blocks are at DIFFERENT
+  phase positions at any given moment — this is the core
+  signature of multi-version coexistence. Cycle: 10s.
+
+  Geometry:
+    Two horizontal tracks (warm-neutral baselines, opacity 0.4):
+      Upper track v1 axis at y=32, from x=15 to x=105
+      Lower track v2 axis at y=58, from x=15 to x=105
+    Four phase markers per track (small warm-neutral circles
+    radius 1.6, opacity 0.6), positioned at x=22, 47, 72, 97
+    on each track:
+      Upper track markers represent v1 phases:
+        x=22 GA, x=47 Maintenance, x=72 Deprecated, x=97 Retired
+      Lower track markers represent v2 phases:
+        x=22 Design, x=47 Beta, x=72 GA, x=97 Maintenance
+    Two track labels (small warm-neutral text):
+      "v1" at (8, 35), "v2" at (8, 61)
+    Two version blocks (small terracotta rounded rectangles):
+      Width 14, height 6, rounded corners rx=1.5
+      Block v1 starts at upper-track x position 22 (GA phase)
+      Block v2 starts at lower-track x position 22 (Design phase)
+
+  Animation: 10-second cycle.
+    Block v1 (upper track):
+      0.0s    : centre at (29, 32) — v1 in GA phase
+      2.5s    : centre at (54, 32) — v1 entering Maintenance
+      5.0s    : centre at (79, 32) — v1 entering Deprecated
+      7.5s    : centre at (104, 32) — v1 Retired (fade begins)
+      8.5s    : centre at (104, 32) — v1 fully faded
+      9.0s    : block snaps back to (29, 32), opacity 0
+      9.5s    : block fades back in at (29, 32)
+      10.0s   : restart with v1 block back at GA
+
+    Block v2 (lower track):
+      0.0s    : centre at (29, 58), low opacity — v2 in Design
+      2.5s    : centre at (54, 58), opacity 1 — v2 entering Beta
+      5.0s    : centre at (79, 58) — v2 entering GA
+      7.5s    : centre at (104, 58) — v2 in Maintenance
+      ...
+      Block v2 snaps back to (29, 58) low opacity at cycle reset
+
+    The two blocks are always at different relative positions
+    on their tracks, encoding the coexistence: when v1 is in
+    Deprecated (block at x=79 upper), v2 is in GA (block at
+    x=79 lower) — same horizontal position, different lifecycle
+    meaning per track.
+
+    Phase-marker brightening: as a block passes over a phase
+    marker, that marker transitions from warm-neutral to
+    terracotta then back, signalling phase entry.
+
+  Implementation:
+    Two <rect> elements with x and y animated. Each has its own
+    keyTimes and values arrays. The v1 block fades briefly at
+    end-of-cycle; v2 fades briefly at start.
+
+  Motion mechanic: DUAL-TRACK PARALLEL LIFECYCLE (the fifty-
+  fourth mechanic in the catalogue). FIRST DUAL-TRACK PARALLEL
+  TIMELINE mechanic. Distinct from #51 (lifecycle progression
+  trail) which is a SINGLE TRACK with FOUR phase markers and
+  an active-state dot moving with HISTORY ACCUMULATION on the
+  same track. #54 is TWO PARALLEL tracks with TWO different
+  blocks at DIFFERENT phase positions, encoding coexistence
+  rather than progression-with-history. Distinct from #15
+  (horizontal traversal) which has a SINGLE marker traversing
+  one track. Distinct from #41 (sequential pointer descent)
+  which is VERTICAL with a pointer descending through items.
+  Distinct from #50 (branching decision flow) which has ONE
+  marker on a path with branching alternation. The
+  architectural signature is multi-version parallel lifecycle
+  with coexistence visible through different positions on
+  parallel tracks.
+
+  Two colours only: warm neutral (#D6D2C8) for tracks, phase
+  markers, and labels; terracotta (#C96330) for the two version
+  blocks and brightened phase markers.
+-->
+
+<!-- ─── Track baselines ─── -->
+<line x1="15" y1="32" x2="105" y2="32" stroke="#D6D2C8" stroke-width="1.2" opacity="0.4"/>
+<line x1="15" y1="58" x2="105" y2="58" stroke="#D6D2C8" stroke-width="1.2" opacity="0.4"/>
+
+<!-- ─── Track labels ─── -->
+<text x="8" y="35" font-family="monospace" font-size="6" fill="#D6D2C8" opacity="0.85">v1</text>
+<text x="8" y="61" font-family="monospace" font-size="6" fill="#D6D2C8" opacity="0.85">v2</text>
+
+<!-- ─── v1 phase markers (upper track) ─── -->
+<circle cx="29"  cy="32" r="1.6" fill="#D6D2C8" opacity="0.7"/>
+<circle cx="54"  cy="32" r="1.6" fill="#D6D2C8" opacity="0.7"/>
+<circle cx="79"  cy="32" r="1.6" fill="#D6D2C8" opacity="0.7"/>
+<circle cx="104" cy="32" r="1.6" fill="#D6D2C8" opacity="0.7"/>
+
+<!-- ─── v2 phase markers (lower track) ─── -->
+<circle cx="29"  cy="58" r="1.6" fill="#D6D2C8" opacity="0.7"/>
+<circle cx="54"  cy="58" r="1.6" fill="#D6D2C8" opacity="0.7"/>
+<circle cx="79"  cy="58" r="1.6" fill="#D6D2C8" opacity="0.7"/>
+<circle cx="104" cy="58" r="1.6" fill="#D6D2C8" opacity="0.7"/>
+
+<!-- ─── v1 block (upper track) — slides right through phases ─── -->
+<!-- Phases: GA (x=29) → Maintenance (x=54) → Deprecated (x=79) → Retired (x=104) → fade → reset -->
+<rect width="14" height="6" rx="1.5" fill="#C96330" x="22" y="29">
+  <animate attributeName="x"
+           values="22; 22; 47; 72; 97; 97; 22; 22"
+           keyTimes="0; 0.05; 0.30; 0.55; 0.80; 0.85; 0.90; 1"
+           dur="10s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="1; 1; 1; 1; 1; 0; 0; 1"
+           keyTimes="0; 0.05; 0.30; 0.55; 0.80; 0.88; 0.92; 1"
+           dur="10s" repeatCount="indefinite"/>
+</rect>
+
+<!-- ─── v2 block (lower track) — emerges and slides right; trails v1 by one phase ─── -->
+<!-- Phases: Design (x=29, faint) → Beta (x=54) → GA (x=79) → Maintenance (x=104) → fade → reset to Design -->
+<rect width="14" height="6" rx="1.5" fill="#C96330" x="22" y="55">
+  <animate attributeName="x"
+           values="22; 22; 47; 72; 97; 97; 22; 22"
+           keyTimes="0; 0.05; 0.30; 0.55; 0.80; 0.85; 0.90; 1"
+           dur="10s" repeatCount="indefinite"/>
+  <animate attributeName="opacity"
+           values="0.35; 0.35; 1; 1; 1; 0; 0; 0.35"
+           keyTimes="0; 0.05; 0.30; 0.55; 0.80; 0.88; 0.92; 1"
+           dur="10s" repeatCount="indefinite"/>
+</rect>
+</svg>

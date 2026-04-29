@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 # CLEANUP_v36.sh — run from the root of the knowledge-library repo.
 #
-# v36 (Architecture Templates group) added 3 new pages under content/templates/.
-# The slugs (adr-template, review-template, scorecard-template) were already
-# pre-registered in TAXONOMY, so no orphan stubs are expected.
+# Removes the five orphan stub directories under content/ai/ — these
+# were the pre-v36 placeholder seeds for AI System Architecture, AI
+# Ethics, AI Monitoring, RAG, and AI Security. The substantive
+# replacements now live under content/ai-native/ as part of v36.
 #
-# This script is idempotent: it scans content/templates/ for any
-# subdirectory that is NOT in the expected slug list and removes it.
-# Safe to re-run. After this script runs, commit any deletions:
+# Under the v29 strict build, these directories produce loud orphan
+# warnings at build time. This script removes them from the repo so
+# the build is clean.
+#
+# After this script runs, commit the deletions and push:
 #   git add -A
-#   git commit -m "chore: remove orphan templates subdirs (v36 architecture templates group)"
+#   git commit -m "chore: remove content/ai/* orphan stubs (v36 ai-native group)"
 #   git push origin main
-
 set -e
 
 if [ ! -d "content" ]; then
@@ -20,33 +22,32 @@ if [ ! -d "content" ]; then
   exit 1
 fi
 
-if [ ! -d "content/templates" ]; then
-  echo "No content/templates/ directory found — nothing to check."
+if [ ! -d "content/ai" ]; then
+  echo "No content/ai/ directory found — your repo is already clean."
   exit 0
 fi
 
-EXPECTED="adr-template review-template scorecard-template"
 REMOVED=0
-
-for sub in $(ls content/templates/ 2>/dev/null); do
-  case " $EXPECTED " in
-    *" $sub "*)
-      ;; # expected, keep
-    *)
-      echo "  removing orphan content/templates/$sub/"
-      git rm -rf "content/templates/$sub" 2>/dev/null || rm -rf "content/templates/$sub"
-      REMOVED=$((REMOVED + 1))
-      ;;
-  esac
+for orphan in architecture ethics monitoring rag security; do
+  if [ -d "content/ai/$orphan" ]; then
+    echo "  removing content/ai/$orphan/"
+    git rm -rf "content/ai/$orphan" 2>/dev/null || rm -rf "content/ai/$orphan"
+    REMOVED=$((REMOVED + 1))
+  fi
 done
 
+# If content/ai/ is now empty, remove it too
+if [ -d "content/ai" ] && [ -z "$(ls -A content/ai 2>/dev/null)" ]; then
+  echo "  removing now-empty content/ai/"
+  rmdir content/ai 2>/dev/null || true
+fi
+
 if [ $REMOVED -eq 0 ]; then
-  echo "No orphan directories found under content/templates/ — already clean."
-  echo "(Expected slugs: $EXPECTED — all present.)"
+  echo "No orphan directories found under content/ai/ — already clean."
 else
   echo
   echo "Removed $REMOVED orphan director(y/ies). Next:"
   echo "  git add -A"
-  echo "  git commit -m 'chore: remove orphan templates subdirs (v36 architecture templates group)'"
+  echo "  git commit -m 'chore: remove content/ai/* orphan stubs (v36 ai-native group)'"
   echo "  git push origin main"
 fi
