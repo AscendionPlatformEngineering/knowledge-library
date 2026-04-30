@@ -1,0 +1,154 @@
+"""T1.3 tests — lens annotation on graph page nodes.
+
+Run from repo root:
+    python3 -m pytest tools/test_compute_graph_data.py -v
+
+These tests will FAIL until compute_graph_data() is updated to attach a
+"lenses" field to page nodes. That failure is intentional — drives T1.3.
+"""
+import importlib.util
+import sys
+from pathlib import Path
+
+import pytest
+
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+TOOLS_DIR = REPO_ROOT / "tools"
+CONTENT_DIR = REPO_ROOT / "content"
+
+
+def _load(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[name] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+# Modules are not packaged — load by path so tests work from repo root.
+seed = _load("seed_content", TOOLS_DIR / "seed_content.py")
+gen = _load("generate", TOOLS_DIR / "generate.py")
+
+
+def _graph():
+    metadata = gen.collect_site_metadata(CONTENT_DIR)
+    return gen.compute_graph_data(metadata)
+
+
+def _nodes_by_id(graph):
+    return {n["id"]: n for n in graph["nodes"]}
+
+
+def test_ledger_pages_have_debt_ledger_lens():
+    """Every debt-ledger member page node must carry lenses == ['debt-ledger']."""
+    graph = _graph()
+    by_id = _nodes_by_id(graph)
+    members = seed.CONCEPT_LENSES["debt-ledger"]["members"]
+
+    assert len(members) == 8, (
+        f"Expected 8 debt-ledger members, got {len(members)}: {members}"
+    )
+
+    for member_id in members:
+        node = by_id.get(member_id)
+        assert node is not None, (
+            f"debt-ledger member '{member_id}' missing from graph nodes — "
+            f"page renamed or excluded?"
+        )
+        assert "lenses" in node, (
+            f"page node '{member_id}' missing 'lenses' field. "
+            f"compute_graph_data() needs to attach lens annotation. "
+            f"Node keys: {sorted(node.keys())}"
+        )
+        assert node["lenses"] == ["debt-ledger"], (
+            f"page node '{member_id}' has lenses={node['lenses']!r}, "
+            f"expected ['debt-ledger']."
+        )
+
+
+def test_non_ledger_pages_have_empty_lenses():
+    """Substantive pages outside any lens must have lenses == []."""
+    graph = _graph()
+    by_id = _nodes_by_id(graph)
+    sample = [
+        "principles/foundational",
+        "system-design/scalable",
+        "technology/devops",
+    ]
+
+    for page_id in sample:
+        node = by_id.get(page_id)
+        assert node is not None, (
+            f"sample page '{page_id}' missing from graph — "
+            f"check that it is substantive and registered in TAXONOMY."
+        )
+        assert node["type"] == "page", (
+            f"sample '{page_id}' is type={node['type']!r}, expected 'page'."
+        )
+        assert "lenses" in node, (
+            f"page node '{page_id}' missing 'lenses' field. "
+            f"All page nodes must have 'lenses' (empty list if no lens). "
+            f"Node keys: {sorted(node.keys())}"
+        )
+        assert node["lenses"] == [], (
+            f"page node '{page_id}' has lenses={node['lenses']!r}, "
+            f"expected [] (page is in no declared lens)."
+        )
+
+
+def test_standard_nodes_have_no_lenses_field():
+    """Standard (alignment-tag) nodes must NOT carry a lenses field — lenses
+    are a page-only concept."""
+    graph = _graph()
+    standards = [n for n in graph["nodes"] if n["type"] == "standard"]
+    assert len(standards) >= 3, (
+        f"Expected at least 3 standard nodes, got {len(standards)}."
+    )
+
+    for node in standards[:10]:
+        assert "lenses" not in node, (
+            f"standard node '{node['id']}' unexpectedly has 'lenses' field "
+            f"(value={node.get('lenses')!r}). Lenses are page-only."
+        )
+
+
+def test_node_count_unchanged_by_annotation():
+    """Lens annotation must not add or drop nodes/links."""
+    graph = _graph()
+    pages = [n for n in graph["nodes"] if n["type"] == "page"]
+    standards = [n for n in graph["nodes"] if n["type"] == "standard"]
+
+    assert len(pages) == 73, (
+        f"page node count drift: got {len(pages)}, expected 73."
+    )
+    assert len(standards) == 224, (
+        f"standard node count drift: got {len(standards)}, expected 224."
+    )
+    assert len(graph["nodes"]) == 297, (
+        f"total node count drift: got {len(graph['nodes'])}, expected 297."
+    )
+    assert len(graph["links"]) == 547, (
+        f"link count drift: got {len(graph['links'])}, expected 547."
+    )
+
+
+def test_all_lens_members_resolve_to_real_pages():
+    """Every member of every lens must appear as a page node — catches drift
+    when a page is renamed without updating CONCEPT_LENSES."""
+    graph = _graph()
+    by_id = _nodes_by_id(graph)
+
+    for lens_id, lens in seed.CONCEPT_LENSES.items():
+        for member_id in lens["members"]:
+            node = by_id.get(member_id)
+            assert node is not None, (
+                f"CONCEPT_LENSES['{lens_id}'] member '{member_id}' has no "
+                f"matching page node in the graph. Page may have been "
+                f"renamed, destubbed, or removed without updating "
+                f"seed_content.CONCEPT_LENSES."
+            )
+            assert node["type"] == "page", (
+                f"lens member '{member_id}' resolved to type "
+                f"{node['type']!r}, expected 'page'."
+            )
