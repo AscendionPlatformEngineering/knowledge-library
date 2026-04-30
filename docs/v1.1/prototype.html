@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knowledge Graph v1.1 — Prototype — Ascendion Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<style>
+:root {
+  --warm: #D6D2C8;
+  --warm-2: #E5E2DA;
+  --warm-3: #F1EFEA;
+  --terra: #C96330;
+  --terra-2: #B05524;
+  --terra-3: #E08A5A;
+  --ink: #1F1B17;
+  --ink-2: #4A433C;
+  --ink-3: #80776D;
+  --rule: #C8C2B5;
+  --rule-2: #B7B0A1;
+
+  --serif: 'Fraunces', 'Georgia', serif;
+  --sans:  'Manrope', system-ui, sans-serif;
+  --mono:  'JetBrains Mono', 'SF Mono', Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--warm);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ─── Topbar ─────────────────────────────────────────────────────── */
+.topbar {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  padding: 16px 24px 14px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--warm-3);
+}
+.brand {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.brand-mark {
+  display: inline-block;
+  width: 14px; height: 14px;
+  background: var(--terra);
+  border-radius: 2px;
+  vertical-align: -2px;
+  margin-right: 8px;
+}
+.crumbs {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+.crumbs span { color: var(--ink-2); }
+.tagline {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ─── Toolbar ────────────────────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--warm-2);
+}
+.search-wrap {
+  flex: 1;
+  position: relative;
+  max-width: 580px;
+}
+.search-input {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  border: 1px solid var(--rule-2);
+  background: #FFF;
+  border-radius: 2px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.search-input:focus {
+  border-color: var(--terra);
+}
+.search-input::placeholder {
+  color: var(--ink-3);
+  font-style: italic;
+}
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-3);
+  pointer-events: none;
+}
+
+.lens-wrap, .demo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lens-label, .demo-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+.lens-select {
+  padding: 8px 28px 8px 10px;
+  border: 1px solid var(--rule-2);
+  background: #FFF;
+  border-radius: 2px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%2380776D' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+}
+.btn {
+  padding: 8px 14px;
+  border: 1px solid var(--terra);
+  background: var(--terra);
+  color: #FFF;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn:hover {
+  background: var(--terra-2);
+  border-color: var(--terra-2);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--rule-2);
+}
+.btn-ghost:hover {
+  background: var(--warm-3);
+  border-color: var(--ink-3);
+  color: var(--ink);
+}
+.btn-small {
+  padding: 6px 10px;
+  font-size: 11px;
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ─── Main layout ────────────────────────────────────────────────── */
+.main {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  height: calc(100vh - 105px);
+}
+.canvas-wrap {
+  position: relative;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(201, 99, 48, 0.04), transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(201, 99, 48, 0.03), transparent 50%),
+    var(--warm);
+  border-right: 1px solid var(--rule);
+  overflow: hidden;
+}
+#kg-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ─── Stats overlay (bottom-left of canvas) ──────────────────────── */
+.stats {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  display: flex;
+  gap: 16px;
+  pointer-events: none;
+}
+.stats strong { color: var(--ink); font-weight: 600; }
+
+/* ─── Legend (top-left of canvas) ────────────────────────────────── */
+.legend {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(241, 239, 234, 0.85);
+  backdrop-filter: blur(4px);
+  padding: 10px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.legend-row { display: flex; align-items: center; gap: 8px; }
+.legend-dot {
+  width: 10px; height: 10px;
+  background: var(--terra);
+  border-radius: 50%;
+  display: inline-block;
+}
+.legend-diamond {
+  width: 8px; height: 8px;
+  background: var(--ink-2);
+  transform: rotate(45deg);
+  display: inline-block;
+}
+.legend-line { width: 16px; height: 1.5px; background: var(--terra); display: inline-block; }
+.legend-line-dashed {
+  width: 16px; height: 1.5px;
+  background: linear-gradient(90deg, var(--ink-2) 50%, transparent 50%);
+  background-size: 5px 1.5px;
+  display: inline-block;
+}
+
+/* ─── Side panel ─────────────────────────────────────────────────── */
+.panel {
+  background: var(--warm-3);
+  overflow-y: auto;
+  border-left: 0;
+  padding: 0;
+}
+.panel-empty {
+  padding: 40px 32px;
+  color: var(--ink-3);
+  font-style: italic;
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.6;
+}
+.panel-empty strong {
+  display: block;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.panel-empty .hint {
+  display: block;
+  margin-top: 16px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+.panel-content { padding: 28px 32px 40px; animation: fadeIn 0.25s ease-out; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.panel-breadcrumb {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+}
+.panel-title {
+  font-family: var(--serif);
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+.panel-desc {
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.panel-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+}
+.panel-section-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+}
+
+.lens-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: var(--terra);
+  color: #FFF;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 2px;
+  font-weight: 600;
+}
+.lens-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: #FFF;
+  border-radius: 50%;
+}
+
+.related-list { display: flex; flex-direction: column; gap: 0; }
+.related-item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: padding 0.15s;
+}
+.related-item:last-child { border-bottom: none; }
+.related-item:hover {
+  padding-left: 6px;
+}
+.related-item-title {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.related-item-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+.related-item-suggest .related-item-meta {
+  color: var(--terra);
+}
+
+.gold-list { display: flex; flex-direction: column; gap: 14px; }
+.gold-item {
+  border-left: 2px solid var(--terra);
+  padding: 4px 0 4px 14px;
+}
+.gold-item-title {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.gold-item-org {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  margin-bottom: 6px;
+}
+.gold-item-summary {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin-bottom: 6px;
+}
+.gold-item-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  display: flex;
+  gap: 12px;
+}
+
+.panel-cta {
+  margin-top: 28px;
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  background: var(--terra);
+  color: #FFF;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background 0.15s;
+}
+.panel-cta:hover { background: var(--terra-2); }
+
+/* ─── Search results panel ──────────────────────────────────────── */
+.results-content { padding: 28px 32px 40px; }
+.results-query {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--ink-2);
+  margin-bottom: 4px;
+}
+.results-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  margin-bottom: 24px;
+}
+.result-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: padding 0.15s;
+}
+.result-item:hover { padding-left: 6px; }
+.result-item-page {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--terra);
+  margin-bottom: 4px;
+}
+.result-item-snippet {
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.result-item-snippet em {
+  background: rgba(201, 99, 48, 0.15);
+  font-style: normal;
+  padding: 0 2px;
+}
+
+/* ─── Demo overlay ──────────────────────────────────────────────── */
+.demo-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 27, 23, 0.65);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 100;
+  padding-bottom: 80px;
+}
+.demo-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.demo-card {
+  max-width: 580px;
+  background: var(--warm-3);
+  border: 1px solid var(--rule-2);
+  padding: 28px 32px 24px;
+  border-radius: 2px;
+  box-shadow: 0 10px 40px rgba(31, 27, 23, 0.3);
+  position: relative;
+  transform: translateY(8px);
+  transition: transform 0.3s;
+}
+.demo-overlay.active .demo-card { transform: translateY(0); }
+.demo-step {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--terra);
+  margin-bottom: 8px;
+}
+.demo-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+.demo-body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin-bottom: 18px;
+}
+.demo-body code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--warm);
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: var(--ink);
+}
+.demo-controls { display: flex; gap: 8px; align-items: center; }
+.demo-controls .spacer { flex: 1; }
+.demo-progress {
+  position: absolute;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--terra);
+  width: 0;
+  transition: width 0.3s linear;
+}
+
+/* ─── Agent endpoint reveal ─────────────────────────────────────── */
+.agent-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 27, 23, 0.7);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 40px;
+}
+.agent-modal.active { display: flex; }
+.agent-card {
+  max-width: 760px;
+  width: 100%;
+  background: var(--warm-3);
+  border: 1px solid var(--rule-2);
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(31, 27, 23, 0.4);
+}
+.agent-header {
+  padding: 24px 32px 20px;
+  border-bottom: 1px solid var(--rule);
+}
+.agent-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--terra);
+  margin-bottom: 6px;
+}
+.agent-title {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+.agent-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.agent-code {
+  background: var(--ink);
+  color: #E5E2DA;
+  padding: 20px 32px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.65;
+  overflow-x: auto;
+  white-space: pre;
+}
+.agent-code .key { color: var(--terra-3); }
+.agent-code .str { color: #B8C4A8; }
+.agent-code .num { color: #D9C896; }
+.agent-code .com { color: #80776D; font-style: italic; }
+.agent-footer {
+  padding: 18px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--warm-2);
+  border-top: 1px solid var(--rule);
+}
+.agent-footer-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+
+/* ─── Toast notification ────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background: var(--ink);
+  color: var(--warm-2);
+  padding: 12px 18px;
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.25s, transform 0.25s;
+  pointer-events: none;
+  z-index: 150;
+}
+.toast.active { opacity: 1; transform: translateX(0); }
+
+/* ─── Graph styling ─────────────────────────────────────────────── */
+.kg-link {
+  stroke: var(--ink-2);
+  stroke-opacity: 0.25;
+  transition: stroke-opacity 0.4s, stroke 0.4s, stroke-width 0.4s;
+}
+.kg-link-alignment {
+  stroke-dasharray: 3 3;
+  stroke-opacity: 0.18;
+}
+.kg-link.lens-edge {
+  stroke: var(--terra);
+  stroke-opacity: 0.7;
+  stroke-width: 1.8;
+}
+.kg-link.dimmed { stroke-opacity: 0.04 !important; }
+
+.kg-node-page circle {
+  fill: var(--terra);
+  stroke: var(--warm-3);
+  stroke-width: 2;
+  cursor: pointer;
+  transition: opacity 0.4s, stroke-width 0.2s, r 0.25s;
+}
+.kg-node-page:hover circle {
+  stroke-width: 3.5;
+}
+.kg-node-page.selected circle {
+  stroke: var(--ink);
+  stroke-width: 3.5;
+}
+
+.kg-node-standard rect {
+  fill: var(--ink-2);
+  fill-opacity: 0.4;
+  stroke: var(--warm-3);
+  stroke-width: 1;
+  cursor: pointer;
+  transition: opacity 0.4s, fill-opacity 0.2s;
+}
+.kg-node-standard:hover rect { fill-opacity: 0.7; }
+
+.kg-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  fill: var(--ink);
+  pointer-events: none;
+  transition: opacity 0.4s;
+  font-weight: 500;
+}
+.kg-node-standard .kg-label {
+  fill: var(--ink-3);
+  font-size: 9px;
+  opacity: 0;
+}
+.kg-node-standard:hover .kg-label { opacity: 1; }
+
+.kg-node.dimmed circle,
+.kg-node.dimmed rect,
+.kg-node.dimmed .kg-label { opacity: 0.1 !important; }
+
+.kg-node.lit circle {
+  fill: var(--terra);
+  stroke: var(--terra-2);
+  r: 12;
+}
+.kg-node.lit .kg-label {
+  font-weight: 700;
+  fill: var(--ink);
+}
+
+/* hide overflow scrollbars in webkit while keeping scroll */
+.panel::-webkit-scrollbar { width: 6px; }
+.panel::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 3px; }
+.panel::-webkit-scrollbar-track { background: transparent; }
+
+@media (max-width: 900px) {
+  .main { grid-template-columns: 1fr; grid-template-rows: 1fr 280px; }
+  .panel { border-left: none; border-top: 1px solid var(--rule); }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="brand-mark"></span>Ascendion Engineering</div>
+  <div class="crumbs">Knowledge Graph <span>›</span> v1.1 Prototype</div>
+  <div class="tagline">Director Preview · April 2026</div>
+</div>
+
+<div class="toolbar">
+  <div class="search-wrap">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input id="search" class="search-input" type="text" placeholder="Search semantically — e.g., 'how do we treat audit findings consistently'…" autocomplete="off"/>
+  </div>
+
+  <div class="lens-wrap">
+    <span class="lens-label">Lens</span>
+    <select id="lens" class="lens-select">
+      <option value="all">All</option>
+      <option value="debt-ledger">Debt Ledger</option>
+    </select>
+  </div>
+
+  <div class="demo-wrap">
+    <button id="demo-start" class="btn">▶  Run Director Demo</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="canvas-wrap">
+    <svg id="kg-svg"></svg>
+
+    <div class="legend">
+      <div class="legend-row"><span class="legend-dot"></span> Substantive page</div>
+      <div class="legend-row"><span class="legend-diamond"></span> External standard</div>
+      <div class="legend-row"><span class="legend-line"></span> Authored relation</div>
+      <div class="legend-row"><span class="legend-line-dashed"></span> Standard alignment</div>
+    </div>
+
+    <div class="stats">
+      <span><strong id="stat-pages">15</strong> pages</span>
+      <span><strong id="stat-stds">6</strong> standards</span>
+      <span><strong id="stat-edges">38</strong> connections</span>
+      <span style="color: var(--terra);">Prototype slice · live data: 73 / 224 / 547</span>
+    </div>
+  </div>
+
+  <aside id="panel" class="panel">
+    <div class="panel-empty">
+      <strong>The knowledge graph as workspace.</strong>
+      Click any node to open a detail panel here. The page does not navigate away — you stay in the graph and explore from inside it.
+      <span class="hint">Or press <code style="font-family:var(--mono);background:var(--warm);padding:1px 5px;">Run Director Demo</code> to walk through the user journey.</span>
+    </div>
+  </aside>
+</div>
+
+<!-- Demo step overlay -->
+<div id="demo-overlay" class="demo-overlay">
+  <div class="demo-card">
+    <div id="demo-progress" class="demo-progress"></div>
+    <div id="demo-step" class="demo-step">Step 1 of 9</div>
+    <h3 id="demo-title" class="demo-title">Welcome</h3>
+    <p id="demo-body" class="demo-body">Body</p>
+    <div class="demo-controls">
+      <button id="demo-prev" class="btn btn-ghost btn-small">← Back</button>
+      <button id="demo-next" class="btn btn-small">Continue →</button>
+      <div class="spacer"></div>
+      <button id="demo-skip" class="btn btn-ghost btn-small">Skip Demo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Agent endpoint modal -->
+<div id="agent-modal" class="agent-modal">
+  <div class="agent-card">
+    <div class="agent-header">
+      <div class="agent-eyebrow">Step 8 of 9 · Machine-readable contract</div>
+      <h2 class="agent-title">External AI agents access the same graph.</h2>
+      <p class="agent-desc">No JavaScript stack. No embedding model. No authentication. The agent endpoint is schema-versioned — a future <code style="font-family:var(--mono);">v2</code> will not break agents pinned to <code style="font-family:var(--mono);">v1</code>. Discovery via <code style="font-family:var(--mono);">/llms.txt</code> at site root.</p>
+    </div>
+    <div class="agent-code"><span class="com">// GET https://ascendion.engineering/knowledge-graph/agent/v1/index.json</span>
+{
+  <span class="key">"schema_version"</span>: <span class="str">"1.0"</span>,
+  <span class="key">"generated_at"</span>:  <span class="str">"2026-04-30T08:14:22Z"</span>,
+  <span class="key">"node_count"</span>:    <span class="num">297</span>,
+  <span class="key">"edge_count"</span>:    <span class="num">547</span>,
+  <span class="key">"lenses"</span>: [
+    {
+      <span class="key">"id"</span>: <span class="str">"debt-ledger"</span>,
+      <span class="key">"label"</span>: <span class="str">"Debt Ledger"</span>,
+      <span class="key">"description"</span>: <span class="str">"Eight pages share the same architectural shape:</span>
+                      <span class="str">every well-run NFR or compliance domain produces</span>
+                      <span class="str">a debt-ledger artefact whose movement is signal."</span>,
+      <span class="key">"member_pages"</span>: [
+        <span class="str">"nfr/maintainability"</span>, <span class="str">"nfr/security"</span>,
+        <span class="str">"nfr/reliability"</span>,     <span class="str">"nfr/usability"</span>,
+        <span class="str">"compliance/bsp-afasa"</span>, <span class="str">"compliance/gdpr"</span>,
+        <span class="str">"compliance/iso27001"</span>,  <span class="str">"compliance/pci-dss"</span>
+      ]
+    }
+  ],
+  <span class="key">"nodes"</span>: [ <span class="com">/* 297 entries */</span> ],
+  <span class="key">"edges"</span>: [ <span class="com">/* 547 entries */</span> ]
+}</div>
+    <div class="agent-footer">
+      <div class="agent-footer-meta">Schema: /agent/v1/schema.json · ~200 KB · gzip-served</div>
+      <button id="agent-close" class="btn btn-small">Continue Demo →</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast">Toast</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// MOCK DATA — representative slice of the v42 library
+// ═══════════════════════════════════════════════════════════════════════
+
+const NODES = [
+  // Debt-ledger member pages (8) — these light up under the lens
+  { id: 'compliance/gdpr',           label: 'GDPR',                  type: 'page', section: 'compliance', x: 720, y: 240, lenses: ['debt-ledger'] },
+  { id: 'compliance/pci-dss',        label: 'PCI DSS',               type: 'page', section: 'compliance', x: 760, y: 320, lenses: ['debt-ledger'] },
+  { id: 'compliance/iso27001',       label: 'ISO 27001',             type: 'page', section: 'compliance', x: 800, y: 400, lenses: ['debt-ledger'] },
+  { id: 'compliance/bsp-afasa',      label: 'BSP & AFASA',           type: 'page', section: 'compliance', x: 740, y: 480, lenses: ['debt-ledger'] },
+  { id: 'nfr/maintainability',       label: 'Maintainability NFRs',  type: 'page', section: 'nfr',        x: 580, y: 200, lenses: ['debt-ledger'] },
+  { id: 'nfr/security',              label: 'Security NFRs',         type: 'page', section: 'nfr',        x: 600, y: 290, lenses: ['debt-ledger'] },
+  { id: 'nfr/reliability',           label: 'Reliability NFRs',      type: 'page', section: 'nfr',        x: 620, y: 380, lenses: ['debt-ledger'] },
+  { id: 'nfr/usability',             label: 'Usability NFRs',        type: 'page', section: 'nfr',        x: 580, y: 470, lenses: ['debt-ledger'] },
+
+  // Other pages (7)
+  { id: 'nfr/performance',           label: 'Performance NFRs',      type: 'page', section: 'nfr',        x: 460, y: 320, lenses: [] },
+  { id: 'principles/foundational',   label: 'Foundational Principles', type: 'page', section: 'principles', x: 280, y: 200, lenses: [] },
+  { id: 'patterns/structural',       label: 'Structural Patterns',   type: 'page', section: 'patterns',   x: 200, y: 320, lenses: [] },
+  { id: 'observability/sli-slo',     label: 'SLIs & SLOs',           type: 'page', section: 'observability', x: 380, y: 460, lenses: [] },
+  { id: 'security/encryption',       label: 'Encryption Architecture', type: 'page', section: 'security',  x: 320, y: 540, lenses: [] },
+  { id: 'system-design/ha-dr',       label: 'HA / DR Design',        type: 'page', section: 'system-design', x: 440, y: 600, lenses: [] },
+  { id: 'governance/checklists',     label: 'Governance Checklists', type: 'page', section: 'governance', x: 180, y: 460, lenses: [] },
+
+  // Standards (6) — diamond nodes, halo
+  { id: 'std:nist-800-53-r5',        label: 'NIST 800-53 r5',  type: 'standard', x: 880, y: 350 },
+  { id: 'std:iso-27001-2022',        label: 'ISO 27001:2022',  type: 'standard', x: 880, y: 430 },
+  { id: 'std:gdpr-art-32',           label: 'GDPR Art. 32',    type: 'standard', x: 820, y: 170 },
+  { id: 'std:pci-dss-4-0',           label: 'PCI DSS 4.0',     type: 'standard', x: 880, y: 270 },
+  { id: 'std:bsp-circ-1140',         label: 'BSP Circ. 1140',  type: 'standard', x: 820, y: 540 },
+  { id: 'std:wcag-2-2',              label: 'WCAG 2.2',        type: 'standard', x: 500, y: 540 },
+];
+
+const EDGES = [
+  // Related (page-page)
+  { source: 'compliance/gdpr',     target: 'compliance/pci-dss',    kind: 'related' },
+  { source: 'compliance/gdpr',     target: 'compliance/iso27001',   kind: 'related' },
+  { source: 'compliance/iso27001', target: 'compliance/pci-dss',    kind: 'related' },
+  { source: 'compliance/iso27001', target: 'compliance/bsp-afasa',  kind: 'related' },
+  { source: 'compliance/bsp-afasa', target: 'compliance/pci-dss',   kind: 'related' },
+  { source: 'nfr/maintainability', target: 'nfr/security',          kind: 'related' },
+  { source: 'nfr/security',        target: 'nfr/reliability',       kind: 'related' },
+  { source: 'nfr/reliability',     target: 'nfr/usability',         kind: 'related' },
+  { source: 'nfr/usability',       target: 'nfr/maintainability',   kind: 'related' },
+  { source: 'nfr/security',        target: 'compliance/iso27001',   kind: 'related' },
+  { source: 'nfr/security',        target: 'compliance/gdpr',       kind: 'related' },
+  { source: 'nfr/reliability',     target: 'observability/sli-slo', kind: 'related' },
+  { source: 'nfr/performance',     target: 'observability/sli-slo', kind: 'related' },
+  { source: 'nfr/performance',     target: 'nfr/reliability',       kind: 'related' },
+  { source: 'principles/foundational', target: 'patterns/structural', kind: 'related' },
+  { source: 'principles/foundational', target: 'nfr/maintainability', kind: 'related' },
+  { source: 'patterns/structural', target: 'system-design/ha-dr',   kind: 'related' },
+  { source: 'system-design/ha-dr', target: 'nfr/reliability',       kind: 'related' },
+  { source: 'security/encryption', target: 'nfr/security',          kind: 'related' },
+  { source: 'security/encryption', target: 'compliance/pci-dss',    kind: 'related' },
+  { source: 'security/encryption', target: 'compliance/gdpr',       kind: 'related' },
+  { source: 'governance/checklists', target: 'nfr/maintainability', kind: 'related' },
+  { source: 'governance/checklists', target: 'principles/foundational', kind: 'related' },
+  { source: 'observability/sli-slo', target: 'system-design/ha-dr', kind: 'related' },
+
+  // Alignment (page-standard)
+  { source: 'compliance/gdpr',     target: 'std:gdpr-art-32',       kind: 'alignment' },
+  { source: 'compliance/gdpr',     target: 'std:nist-800-53-r5',    kind: 'alignment' },
+  { source: 'compliance/pci-dss',  target: 'std:pci-dss-4-0',       kind: 'alignment' },
+  { source: 'compliance/pci-dss',  target: 'std:nist-800-53-r5',    kind: 'alignment' },
+  { source: 'compliance/iso27001', target: 'std:iso-27001-2022',    kind: 'alignment' },
+  { source: 'compliance/iso27001', target: 'std:nist-800-53-r5',    kind: 'alignment' },
+  { source: 'compliance/bsp-afasa', target: 'std:bsp-circ-1140',    kind: 'alignment' },
+  { source: 'nfr/security',        target: 'std:iso-27001-2022',    kind: 'alignment' },
+  { source: 'nfr/security',        target: 'std:nist-800-53-r5',    kind: 'alignment' },
+  { source: 'nfr/usability',       target: 'std:wcag-2-2',          kind: 'alignment' },
+  { source: 'security/encryption', target: 'std:nist-800-53-r5',    kind: 'alignment' },
+  { source: 'security/encryption', target: 'std:pci-dss-4-0',       kind: 'alignment' },
+  { source: 'security/encryption', target: 'std:gdpr-art-32',       kind: 'alignment' },
+];
+
+// Per-page rich content for the side panel
+const PAGE_CONTENT = {
+  'compliance/gdpr': {
+    breadcrumb: 'compliance / gdpr',
+    title: 'GDPR Compliance',
+    desc: 'The strategic guide for General Data Protection Regulation compliance posture — recognising lawful-basis selection per processing activity, data-protection-by-design, the data-subject-rights pipeline, and the discipline of treating every supervisory authority finding as architectural signal rather than as a public-relations problem.',
+    related: [
+      { id: 'compliance/iso27001', label: 'ISO 27001 ISMS', kind: 'authored' },
+      { id: 'compliance/pci-dss',  label: 'PCI DSS Compliance', kind: 'authored' },
+      { id: 'nfr/security',        label: 'Security NFRs', kind: 'authored' },
+      { id: 'security/encryption', label: 'Encryption Architecture', kind: 'authored' },
+    ],
+    suggestions: [
+      { id: 'compliance/bsp-afasa', label: 'BSP & AFASA Compliance', similarity: 0.71 },
+      { id: 'governance/checklists', label: 'Governance Checklists', similarity: 0.58 },
+    ],
+    refs: [
+      { id: 'gdpr-art-32', label: 'GDPR Article 32', org: 'European Union', license: 'public', date: '2026-03-12', summary: 'The processor and controller obligation to implement appropriate technical and organisational measures. Cited because it is the regulation\'s explicit architectural mandate, not a guideline.' },
+      { id: 'nist-800-53', label: 'NIST SP 800-53 r5', org: 'NIST · U.S.', license: 'public-domain', date: '2026-03-12', summary: 'The control catalogue used as a structural basis for many GDPR Art. 32 implementations. Cross-walks between Art. 32 and 800-53 are well-established and free to redistribute.' },
+    ],
+  },
+  'compliance/pci-dss': {
+    breadcrumb: 'compliance / pci-dss',
+    title: 'PCI DSS Compliance',
+    desc: 'The strategic guide for Payment Card Industry Data Security Standard — cardholder-data-environment scope drawn deliberately to minimise systems in scope, network-segmentation effectiveness validated through quarterly testing, and the compensating-control discipline that justifies deviations with explicit risk analysis rather than ad-hoc exception processes.',
+    related: [
+      { id: 'compliance/gdpr',     label: 'GDPR Compliance', kind: 'authored' },
+      { id: 'compliance/iso27001', label: 'ISO 27001 ISMS', kind: 'authored' },
+      { id: 'compliance/bsp-afasa', label: 'BSP & AFASA Compliance', kind: 'authored' },
+      { id: 'security/encryption', label: 'Encryption Architecture', kind: 'authored' },
+    ],
+    suggestions: [
+      { id: 'nfr/security',        label: 'Security NFRs', similarity: 0.69 },
+    ],
+    refs: [
+      { id: 'pci-dss-4', label: 'PCI DSS v4.0', org: 'PCI Security Standards Council', license: 'link-only', date: '2026-03-12', summary: 'The current revision of the standard. Linked, not reproduced, as the standard text is licensed.' },
+      { id: 'nist-800-53', label: 'NIST SP 800-53 r5', org: 'NIST · U.S.', license: 'public-domain', date: '2026-03-12', summary: 'Used to map PCI DSS requirement families onto a broader control vocabulary. Useful when multiple regimes apply to the same workload.' },
+    ],
+  },
+  'compliance/iso27001': {
+    breadcrumb: 'compliance / iso27001',
+    title: 'ISO 27001 ISMS',
+    desc: 'The strategic guide for ISO 27001 information security management system compliance — risk-driven Statement of Applicability that names which Annex A controls are in scope and which are excluded with rationale, and the management-system architecture that operates as continuous discipline rather than as triennial certification ritual.',
+    related: [
+      { id: 'compliance/gdpr',     label: 'GDPR Compliance', kind: 'authored' },
+      { id: 'compliance/pci-dss',  label: 'PCI DSS Compliance', kind: 'authored' },
+      { id: 'compliance/bsp-afasa', label: 'BSP & AFASA Compliance', kind: 'authored' },
+      { id: 'nfr/security',        label: 'Security NFRs', kind: 'authored' },
+    ],
+    suggestions: [],
+    refs: [
+      { id: 'iso-27001', label: 'ISO/IEC 27001:2022', org: 'ISO', license: 'link-only', date: '2026-03-12', summary: 'The standard itself is paid; we link to the official ISO catalogue page. Annex A control numbering is a stable reference shape.' },
+    ],
+  },
+  'compliance/bsp-afasa': {
+    breadcrumb: 'compliance / bsp-afasa',
+    title: 'BSP & AFASA Compliance',
+    desc: 'The strategic guide for Bangko Sentral ng Pilipinas regulation and the Anti-Financial Account Scamming Act compliance posture — supervised-institution status governs which circulars apply, AFASA verification-and-victim-protection obligations require concrete architectural patterns rather than after-the-fact policy statements.',
+    related: [
+      { id: 'compliance/iso27001', label: 'ISO 27001 ISMS', kind: 'authored' },
+      { id: 'compliance/pci-dss',  label: 'PCI DSS Compliance', kind: 'authored' },
+    ],
+    suggestions: [
+      { id: 'compliance/gdpr',     label: 'GDPR Compliance', similarity: 0.71 },
+    ],
+    refs: [
+      { id: 'bsp-1140', label: 'BSP Circular 1140', org: 'Bangko Sentral ng Pilipinas', license: 'public', date: '2026-03-12', summary: 'The information security circular for BSP-supervised institutions. Public and freely linkable.' },
+    ],
+  },
+  'nfr/maintainability': {
+    breadcrumb: 'nfr / maintainability',
+    title: 'Maintainability NFRs',
+    desc: 'Code health, deployability, observability of internal state. The discipline is to treat every threshold breach as a small architectural decision with a recorded outcome — the aggregate becomes the architectural debt ledger, itself a key maintainability artefact.',
+    related: [
+      { id: 'nfr/security',     label: 'Security NFRs', kind: 'authored' },
+      { id: 'nfr/usability',    label: 'Usability NFRs', kind: 'authored' },
+      { id: 'principles/foundational', label: 'Foundational Principles', kind: 'authored' },
+      { id: 'governance/checklists', label: 'Governance Checklists', kind: 'authored' },
+    ],
+    suggestions: [
+      { id: 'compliance/iso27001', label: 'ISO 27001 ISMS', similarity: 0.62 },
+    ],
+    refs: [],
+  },
+  'nfr/security': {
+    breadcrumb: 'nfr / security',
+    title: 'Security NFRs',
+    desc: 'The strategic guide for security non-functional requirements — recognising threats enumerated explicitly via threat-modelling rather than treating security as a uniform "make it secure" requirement, and the security-budget-violation interpretation that treats every audit failure or threat-model finding as architectural signal rather than as a defect to suppress.',
+    related: [
+      { id: 'nfr/maintainability', label: 'Maintainability NFRs', kind: 'authored' },
+      { id: 'nfr/reliability',     label: 'Reliability NFRs', kind: 'authored' },
+      { id: 'compliance/iso27001', label: 'ISO 27001 ISMS', kind: 'authored' },
+      { id: 'compliance/gdpr',     label: 'GDPR Compliance', kind: 'authored' },
+    ],
+    suggestions: [
+      { id: 'security/encryption', label: 'Encryption Architecture', similarity: 0.74 },
+    ],
+    refs: [
+      { id: 'iso-27001', label: 'ISO/IEC 27001:2022', org: 'ISO', license: 'link-only', date: '2026-03-12', summary: 'Linked as the canonical management-system reference for security requirements.' },
+      { id: 'nist-800-53', label: 'NIST SP 800-53 r5', org: 'NIST · U.S.', license: 'public-domain', date: '2026-03-12', summary: 'The control catalogue. Free to redistribute; we link rather than embed for currency.' },
+    ],
+  },
+  'nfr/reliability': {
+    breadcrumb: 'nfr / reliability',
+    title: 'Reliability NFRs',
+    desc: 'The discipline is the burn-rate review: when burn-rate exceeds threshold, an architectural review examines the failure-mode trajectory and either schedules hardening work, revises the SLO with rationale, or decides the burn is within acceptable risk envelope. The decision is recorded; the trajectory across reviews becomes the meta-signal.',
+    related: [
+      { id: 'nfr/security',          label: 'Security NFRs', kind: 'authored' },
+      { id: 'nfr/usability',         label: 'Usability NFRs', kind: 'authored' },
+      { id: 'observability/sli-slo', label: 'SLIs & SLOs', kind: 'authored' },
+      { id: 'system-design/ha-dr',   label: 'HA / DR Design', kind: 'authored' },
+    ],
+    suggestions: [
+      { id: 'nfr/performance', label: 'Performance NFRs', similarity: 0.66 },
+    ],
+    refs: [],
+  },
+  'nfr/usability': {
+    breadcrumb: 'nfr / usability',
+    title: 'Usability NFRs',
+    desc: 'The discipline is the usability-finding ledger: every finding has decision (close / accept / revise), owner, and trajectory. Same shape as the security-finding ledger and the maintainability suppression ledger and the reliability burn-rate review. The cross-cutting NFR pattern: every well-run NFR domain produces a debt-ledger artefact whose movement is architectural signal.',
+    related: [
+      { id: 'nfr/reliability',     label: 'Reliability NFRs', kind: 'authored' },
+      { id: 'nfr/maintainability', label: 'Maintainability NFRs', kind: 'authored' },
+    ],
+    suggestions: [
+      { id: 'compliance/gdpr',     label: 'GDPR Compliance', similarity: 0.59 },
+    ],
+    refs: [
+      { id: 'wcag-22', label: 'WCAG 2.2', org: 'W3C', license: 'cc-by-4.0', date: '2026-03-12', summary: 'The current accessibility recommendation. Freely linkable; the success criteria are the canonical reference for usability-finding instrumentation.' },
+    ],
+  },
+  'nfr/performance': {
+    breadcrumb: 'nfr / performance',
+    title: 'Performance NFRs',
+    desc: 'Throughput, latency, and resource-budget targets specified as observable requirements with explicit acceptance thresholds rather than as adjectives. Performance budgets enter the architecture early; budget-violation triggers the same decision discipline as the other NFR domains.',
+    related: [
+      { id: 'nfr/reliability',       label: 'Reliability NFRs', kind: 'authored' },
+      { id: 'observability/sli-slo', label: 'SLIs & SLOs', kind: 'authored' },
+    ],
+    suggestions: [],
+    refs: [],
+  },
+  'principles/foundational': {
+    breadcrumb: 'principles / foundational',
+    title: 'Foundational Principles',
+    desc: 'Core architecture principles that guide all designs. Six numbered principles each with architectural implications and a quick test, framing the library\'s overall posture against the prevalent industry default of design-by-imitation.',
+    related: [
+      { id: 'patterns/structural',     label: 'Structural Patterns', kind: 'authored' },
+      { id: 'nfr/maintainability',     label: 'Maintainability NFRs', kind: 'authored' },
+      { id: 'governance/checklists',   label: 'Governance Checklists', kind: 'authored' },
+    ],
+    suggestions: [],
+    refs: [],
+  },
+  'patterns/structural': {
+    breadcrumb: 'patterns / structural',
+    title: 'Structural Patterns',
+    desc: 'Canonical structural patterns for system organisation — composition over inheritance applied at module boundaries, dependency direction discipline, and the explicit treatment of seams as architectural artefacts rather than as accidents of refactoring history.',
+    related: [
+      { id: 'principles/foundational', label: 'Foundational Principles', kind: 'authored' },
+      { id: 'system-design/ha-dr',     label: 'HA / DR Design', kind: 'authored' },
+    ],
+    suggestions: [],
+    refs: [],
+  },
+  'observability/sli-slo': {
+    breadcrumb: 'observability / sli-slo',
+    title: 'SLIs & SLOs',
+    desc: 'Service Level Indicators as ratios of good-to-valid events, SLO calibration grounded in the user\'s actual experience, error budget policy, and multi-window multi-burn-rate alerting. The SLI-SLO-SLA chain treated as an architectural instrument rather than as a reporting artefact.',
+    related: [
+      { id: 'nfr/reliability',     label: 'Reliability NFRs', kind: 'authored' },
+      { id: 'nfr/performance',     label: 'Performance NFRs', kind: 'authored' },
+      { id: 'system-design/ha-dr', label: 'HA / DR Design', kind: 'authored' },
+    ],
+    suggestions: [],
+    refs: [],
+  },
+  'security/encryption': {
+    breadcrumb: 'security / encryption',
+    title: 'Encryption Architecture',
+    desc: 'Encryption-at-rest and encryption-in-transit specified with key-management lifecycle, custodian separation, rotation cadence, and explicit treatment of envelope encryption as architectural pattern rather than as platform default.',
+    related: [
+      { id: 'nfr/security',        label: 'Security NFRs', kind: 'authored' },
+      { id: 'compliance/pci-dss',  label: 'PCI DSS Compliance', kind: 'authored' },
+      { id: 'compliance/gdpr',     label: 'GDPR Compliance', kind: 'authored' },
+    ],
+    suggestions: [],
+    refs: [
+      { id: 'nist-800-57', label: 'NIST SP 800-57', org: 'NIST · U.S.', license: 'public-domain', date: '2026-03-12', summary: 'Key management recommendations. Public-domain and free to redistribute; cited as the lifecycle reference.' },
+    ],
+  },
+  'system-design/ha-dr': {
+    breadcrumb: 'system-design / ha-dr',
+    title: 'HA / DR Design',
+    desc: 'High-availability and disaster-recovery design grounded in measurable RPO/RTO targets, blast-radius analysis, and the explicit cost trade-off between active-active and active-passive postures rather than imitative adoption.',
+    related: [
+      { id: 'nfr/reliability',         label: 'Reliability NFRs', kind: 'authored' },
+      { id: 'observability/sli-slo',   label: 'SLIs & SLOs', kind: 'authored' },
+      { id: 'patterns/structural',     label: 'Structural Patterns', kind: 'authored' },
+    ],
+    suggestions: [],
+    refs: [],
+  },
+  'governance/checklists': {
+    breadcrumb: 'governance / checklists',
+    title: 'Governance Checklists',
+    desc: 'Architecture-review checklists treated as decision instruments rather than as compliance theatre — each item maps to a specific architectural concern with a quick-test that exposes whether the concern was actually addressed or merely acknowledged.',
+    related: [
+      { id: 'principles/foundational', label: 'Foundational Principles', kind: 'authored' },
+      { id: 'nfr/maintainability',     label: 'Maintainability NFRs', kind: 'authored' },
+    ],
+    suggestions: [],
+    refs: [],
+  },
+};
+
+const STANDARD_CONTENT = {
+  'std:nist-800-53-r5':  { label: 'NIST SP 800-53 r5', org: 'NIST · U.S. Department of Commerce', license: 'public-domain', verified: '2026-03-12', summary: 'Security and Privacy Controls for Information Systems and Organizations. The most widely cross-walked control catalogue; freely redistributable.' },
+  'std:iso-27001-2022':  { label: 'ISO/IEC 27001:2022', org: 'International Organization for Standardization', license: 'link-only', verified: '2026-03-12', summary: 'Information security management system standard. Standard text is paid; we link to the catalogue page.' },
+  'std:gdpr-art-32':     { label: 'GDPR Article 32', org: 'European Union', license: 'public', verified: '2026-03-12', summary: 'Security of processing. The regulation\'s explicit architectural mandate.' },
+  'std:pci-dss-4-0':     { label: 'PCI DSS v4.0', org: 'PCI Security Standards Council', license: 'link-only', verified: '2026-03-12', summary: 'The current major revision of the payment-card data security standard.' },
+  'std:bsp-circ-1140':   { label: 'BSP Circular 1140', org: 'Bangko Sentral ng Pilipinas', license: 'public', verified: '2026-03-12', summary: 'Information security framework for BSP-supervised institutions.' },
+  'std:wcag-2-2':        { label: 'WCAG 2.2', org: 'W3C', license: 'cc-by-4.0', verified: '2026-03-12', summary: 'Web Content Accessibility Guidelines. The canonical reference for usability-finding instrumentation.' },
+};
+
+// Mock semantic-search results — pre-baked for the demo query
+const SEMANTIC_RESULTS = {
+  'audit findings': [
+    { page_id: 'nfr/usability',        snippet: 'The discipline is the usability-finding ledger: every <em>finding</em> has decision (close / accept / revise), owner, and trajectory. Same shape as the security-finding ledger and the maintainability suppression ledger.' },
+    { page_id: 'nfr/security',         snippet: 'Treat every <em>audit finding</em> and threat-model gap as architectural signal — close the gap, accept the residual with documented rationale, or revise the threat model.' },
+    { page_id: 'compliance/gdpr',      snippet: 'Treat every data subject complaint and supervisory authority <em>finding</em> as architectural signal rather than as a public-relations problem.' },
+    { page_id: 'compliance/iso27001',  snippet: 'The <em>finding</em>-trajectory interpretation that treats audit observations as architectural signal rather than as administrative defects to suppress.' },
+    { page_id: 'compliance/pci-dss',   snippet: 'The budget-violation interpretation that treats every PCI Report on Compliance <em>finding</em> as architectural signal rather than as administrative defect to remediate.' },
+    { page_id: 'compliance/bsp-afasa', snippet: 'The budget-violation interpretation that treats every regulatory <em>finding</em> as architectural signal rather than as administrative defect to remediate.' },
+    { page_id: 'nfr/reliability',      snippet: 'The burn-rate review: when burn-rate exceeds threshold, an architectural review either schedules hardening work, revises the SLO, or decides the burn is within acceptable risk envelope.' },
+    { page_id: 'nfr/maintainability',  snippet: 'The aggregate of these decisions becomes the architectural debt ledger, which is itself a key maintainability artefact.' },
+  ],
+};
+
+// ═══════════════════════════════════════════════════════════════════════
+// GRAPH RENDERER (D3)
+// ═══════════════════════════════════════════════════════════════════════
+
+const svg = d3.select('#kg-svg');
+const W = 1100, H = 720;
+svg.attr('viewBox', `0 0 ${W} ${H}`).attr('preserveAspectRatio', 'xMidYMid meet');
+
+const root = svg.append('g').attr('class', 'kg-root');
+
+// Initialize node positions
+NODES.forEach(n => { n.x = n.x || W/2; n.y = n.y || H/2; });
+
+// Resolve edge endpoints
+const nodeById = Object.fromEntries(NODES.map(n => [n.id, n]));
+const edgeData = EDGES.map(e => ({
+  ...e,
+  source: nodeById[e.source],
+  target: nodeById[e.target],
+}));
+
+// Force simulation — gentle, settles fast
+const sim = d3.forceSimulation(NODES)
+  .force('link', d3.forceLink(edgeData)
+    .id(d => d.id)
+    .distance(d => d.kind === 'alignment' ? 65 : 95)
+    .strength(0.35))
+  .force('charge', d3.forceManyBody().strength(-260))
+  .force('center', d3.forceCenter(W/2, H/2).strength(0.04))
+  .force('collide', d3.forceCollide().radius(d => d.type === 'page' ? 30 : 18))
+  .alpha(0.8).alphaDecay(0.04);
+
+const linkSel = root.append('g').attr('class', 'kg-links').selectAll('line')
+  .data(edgeData).enter().append('line')
+  .attr('class', d => `kg-link kg-link-${d.kind}`)
+  .attr('data-source', d => d.source.id)
+  .attr('data-target', d => d.target.id);
+
+const nodeSel = root.append('g').attr('class', 'kg-nodes').selectAll('g')
+  .data(NODES).enter().append('g')
+  .attr('class', d => `kg-node kg-node-${d.type}`)
+  .attr('data-id', d => d.id)
+  .style('cursor', 'pointer')
+  .call(d3.drag()
+    .on('start', (e, d) => { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+    .on('drag',  (e, d) => { d.fx = e.x; d.fy = e.y; })
+    .on('end',   (e, d) => { if (!e.active) sim.alphaTarget(0); d.fx = null; d.fy = null; }));
+
+nodeSel.each(function(d) {
+  const sel = d3.select(this);
+  if (d.type === 'page') {
+    sel.append('circle').attr('r', 9);
+  } else {
+    sel.append('rect').attr('width', 11).attr('height', 11).attr('x', -5.5).attr('y', -5.5).attr('transform', 'rotate(45)');
+  }
+});
+
+nodeSel.append('text')
+  .attr('class', 'kg-label')
+  .attr('dy', d => d.type === 'page' ? 22 : 16)
+  .attr('text-anchor', 'middle')
+  .text(d => d.label);
+
+nodeSel.on('click', (e, d) => {
+  if (e.defaultPrevented) return;
+  selectNode(d.id);
+});
+
+sim.on('tick', () => {
+  linkSel
+    .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+    .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+  nodeSel.attr('transform', d => `translate(${d.x},${d.y})`);
+});
+
+// Pan/zoom
+svg.call(d3.zoom().scaleExtent([0.5, 3]).on('zoom', e => root.attr('transform', e.transform)));
+
+// ═══════════════════════════════════════════════════════════════════════
+// SIDE PANEL
+// ═══════════════════════════════════════════════════════════════════════
+
+let selectedId = null;
+
+function selectNode(id) {
+  selectedId = id;
+  d3.selectAll('.kg-node').classed('selected', false);
+  d3.select(`[data-id="${CSS.escape(id)}"]`).classed('selected', true);
+  if (id.startsWith('std:')) renderStandardPanel(id);
+  else renderPagePanel(id);
+}
+
+function renderPagePanel(id) {
+  const c = PAGE_CONTENT[id];
+  if (!c) return;
+  const node = nodeById[id];
+  const inLens = (node.lenses || []).length > 0;
+  const lensBadge = inLens
+    ? `<div class="panel-section" style="border-top:none;padding-top:0;margin-top:0;"><span class="lens-badge">Debt Ledger lens</span></div>`
+    : '';
+
+  const relatedHtml = c.related.length ? `
+    <div class="panel-section">
+      <div class="panel-section-label">Authored relations</div>
+      <div class="related-list">
+        ${c.related.map(r => `
+          <div class="related-item" onclick="selectNode('${r.id}')">
+            <div class="related-item-title">${r.label}</div>
+            <div class="related-item-meta">${r.id}</div>
+          </div>`).join('')}
+      </div>
+    </div>` : '';
+
+  const suggestHtml = c.suggestions.length ? `
+    <div class="panel-section">
+      <div class="panel-section-label">Adjacent suggestions · semantic</div>
+      <div class="related-list">
+        ${c.suggestions.map(s => `
+          <div class="related-item related-item-suggest" onclick="selectNode('${s.id}')">
+            <div class="related-item-title">${s.label}</div>
+            <div class="related-item-meta">similarity ${s.similarity.toFixed(2)} · not explicitly linked</div>
+          </div>`).join('')}
+      </div>
+    </div>` : '';
+
+  const refsHtml = c.refs.length ? `
+    <div class="panel-section">
+      <div class="panel-section-label">Gold references · linked, not republished</div>
+      <div class="gold-list">
+        ${c.refs.map(r => `
+          <div class="gold-item">
+            <div class="gold-item-title">${r.label}</div>
+            <div class="gold-item-org">${r.org} · ${r.license}</div>
+            <div class="gold-item-summary">${r.summary}</div>
+            <div class="gold-item-meta"><span>verified ${r.date}</span></div>
+          </div>`).join('')}
+      </div>
+    </div>` : '';
+
+  document.getElementById('panel').innerHTML = `
+    <div class="panel-content">
+      <div class="panel-breadcrumb">${c.breadcrumb}</div>
+      <h2 class="panel-title">${c.title}</h2>
+      <p class="panel-desc">${c.desc}</p>
+      ${lensBadge}
+      ${relatedHtml}
+      ${suggestHtml}
+      ${refsHtml}
+      <button class="panel-cta">Open page →</button>
+    </div>`;
+}
+
+function renderStandardPanel(id) {
+  const s = STANDARD_CONTENT[id];
+  if (!s) return;
+  document.getElementById('panel').innerHTML = `
+    <div class="panel-content">
+      <div class="panel-breadcrumb">external standard</div>
+      <h2 class="panel-title">${s.label}</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px;">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.08em;">${s.org}</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);">License: ${s.license} · Verified ${s.verified}</div>
+      </div>
+      <p class="panel-desc">${s.summary}</p>
+      <button class="panel-cta">Open source ↗</button>
+    </div>`;
+}
+
+window.selectNode = selectNode; // expose for inline onclick
+
+// ═══════════════════════════════════════════════════════════════════════
+// SEARCH (mocked — real impl uses Transformers.js + hnswlib-wasm)
+// ═══════════════════════════════════════════════════════════════════════
+
+function runSearch(query) {
+  const q = query.toLowerCase().trim();
+  if (!q) { clearHighlights(); return; }
+
+  // Find matching results — mock match against any keyword
+  let results = null;
+  if (q.includes('audit') || q.includes('finding') || q.includes('ledger') || q.includes('regime')) {
+    results = SEMANTIC_RESULTS['audit findings'];
+  }
+  if (!results) return;
+
+  // Highlight matched pages, dim others
+  const litIds = new Set(results.map(r => r.page_id));
+  d3.selectAll('.kg-node').each(function(d) {
+    const sel = d3.select(this);
+    if (litIds.has(d.id)) {
+      sel.classed('lit', true).classed('dimmed', false);
+    } else {
+      sel.classed('lit', false).classed('dimmed', true);
+    }
+  });
+  d3.selectAll('.kg-link').each(function(d) {
+    const sel = d3.select(this);
+    if (litIds.has(d.source.id) && litIds.has(d.target.id)) {
+      sel.classed('dimmed', false);
+    } else {
+      sel.classed('dimmed', true);
+    }
+  });
+
+  // Update side panel with results
+  document.getElementById('panel').innerHTML = `
+    <div class="results-content">
+      <div class="results-query">"${query}"</div>
+      <div class="results-count">${results.length} chunks · ranked by cosine similarity</div>
+      ${results.map(r => `
+        <div class="result-item" onclick="selectNode('${r.page_id}')">
+          <div class="result-item-page">${r.page_id}</div>
+          <div class="result-item-snippet">${r.snippet}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function clearHighlights() {
+  d3.selectAll('.kg-node').classed('lit', false).classed('dimmed', false);
+  d3.selectAll('.kg-link').classed('dimmed', false).classed('lens-edge', false);
+}
+
+document.getElementById('search').addEventListener('input', e => {
+  clearTimeout(window._searchT);
+  window._searchT = setTimeout(() => runSearch(e.target.value), 250);
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// CONCEPT LENS
+// ═══════════════════════════════════════════════════════════════════════
+
+function applyLens(lensId) {
+  if (lensId === 'all') { clearHighlights(); return; }
+
+  const memberIds = new Set(NODES.filter(n => (n.lenses || []).includes(lensId)).map(n => n.id));
+
+  d3.selectAll('.kg-node').each(function(d) {
+    const sel = d3.select(this);
+    if (memberIds.has(d.id)) {
+      sel.classed('lit', true).classed('dimmed', false);
+    } else {
+      sel.classed('lit', false).classed('dimmed', true);
+    }
+  });
+
+  d3.selectAll('.kg-link').each(function(d) {
+    const sel = d3.select(this);
+    const inLens = memberIds.has(d.source.id) && memberIds.has(d.target.id);
+    sel.classed('lens-edge', inLens).classed('dimmed', !inLens);
+  });
+}
+
+document.getElementById('lens').addEventListener('change', e => {
+  applyLens(e.target.value);
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// DEMO CONTROLLER
+// ═══════════════════════════════════════════════════════════════════════
+
+const STEPS = [
+  {
+    title: 'The library, rendered as a graph.',
+    body:  'v42 of the library: <code>73</code> substantive pages, <code>224</code> external standards, <code>547</code> authored connections. The prototype below shows a representative slice. Today the graph is read-only — clicking a node hard-navigates away and the user loses context.',
+    action: () => { clearHighlights(); resetPanel(); },
+  },
+  {
+    title: 'An architect arrives with a question.',
+    body:  '<em>"Across regimes, how do we treat audit findings consistently?"</em><br><br>This is the kind of question that doesn\'t have a single canonical page. The answer is a <em>pattern</em> spread across the library — and finding it traditionally means knowing which pages to read.',
+    action: () => { clearHighlights(); resetPanel(); animateTypeQuery('how do we treat audit findings consistently across regimes'); },
+  },
+  {
+    title: 'Semantic search runs locally in the browser.',
+    body:  'No server call. The query is embedded by <code>all-MiniLM-L6-v2</code> running in the user\'s browser via Transformers.js. Vector search uses <code>hnswlib-wasm</code> against a pre-built 730-chunk index. Eight pages light up — the rest fade.',
+    action: () => { runSearch('how do we treat audit findings consistently across regimes'); },
+  },
+  {
+    title: 'The library calls this the Debt Ledger pattern.',
+    body:  'The eight highlighted pages share an architectural shape: every well-run NFR or compliance domain produces a debt-ledger artefact — suppression ledger, finding ledger, burn-rate review — whose movement is architectural signal. The library asserts this cross-cutting pattern explicitly. v1.1 surfaces it as a first-class <em>concept lens</em>.',
+    action: () => { document.getElementById('lens').value = 'debt-ledger'; applyLens('debt-ledger'); },
+  },
+  {
+    title: 'Click a node — open, don\'t navigate.',
+    body:  'In v42, clicking GDPR opens the GDPR page and ends the graph session. In v1.1, clicking opens a side panel. The graph stays. The user keeps their orientation.',
+    action: () => { selectNode('compliance/gdpr'); },
+  },
+  {
+    title: 'Provenance, not republication.',
+    body:  'External standards — NIST 800-53, GDPR Article 32 — are <em>linked</em>, never republished. Each gold reference carries an organization, a license, a verification date, and a Jeril-authored summary explaining why it is canonical. The portal cites; it does not absorb.',
+    action: () => { /* panel already shows gold refs */ },
+  },
+  {
+    title: 'Adjacent suggestion — pattern recognition at the boundary.',
+    body:  '<em>BSP &amp; AFASA</em> appears as an adjacent suggestion in the GDPR panel. The two pages share vocabulary but are not authored as related. Sometimes the connection is real and worth following. v1.1 surfaces these adjacencies as a clearly-labelled inference, not as ground truth.',
+    action: () => { selectNode('compliance/bsp-afasa'); },
+  },
+  {
+    title: 'AI agents read the same graph, machine-natively.',
+    body:  'A schema-versioned JSON contract at <code>/agent/v1/index.json</code>. Discoverable through a standard <code>/llms.txt</code>. No JavaScript required. No authentication. Future <code>v2</code> never breaks <code>v1</code>.',
+    action: () => { document.getElementById('agent-modal').classList.add('active'); },
+  },
+  {
+    title: 'A workspace, not a launchpad.',
+    body:  'That is v1.1 in one sentence. Build-time intelligence, browser-side execution, zero ongoing cost. The full specification covers ten implementation phases (A–J) and six open architectural calls awaiting sign-off.<br><br><strong>Questions?</strong>',
+    action: () => { document.getElementById('agent-modal').classList.remove('active'); },
+  },
+];
+
+let stepIdx = 0;
+const overlay = document.getElementById('demo-overlay');
+const stepLbl = document.getElementById('demo-step');
+const titleEl = document.getElementById('demo-title');
+const bodyEl  = document.getElementById('demo-body');
+const progEl  = document.getElementById('demo-progress');
+
+function showStep(i) {
+  if (i < 0 || i >= STEPS.length) return;
+  stepIdx = i;
+  const s = STEPS[i];
+  stepLbl.textContent = `Step ${i+1} of ${STEPS.length}`;
+  titleEl.textContent = s.title;
+  bodyEl.innerHTML = s.body;
+  progEl.style.width = `${((i+1) / STEPS.length) * 100}%`;
+  overlay.classList.add('active');
+  document.getElementById('demo-prev').disabled = i === 0;
+  document.getElementById('demo-next').textContent = i === STEPS.length - 1 ? 'Finish' : 'Continue →';
+  // Run side effect
+  setTimeout(() => s.action && s.action(), 100);
+}
+
+function startDemo() { showStep(0); }
+function endDemo()   {
+  overlay.classList.remove('active');
+  document.getElementById('agent-modal').classList.remove('active');
+  document.getElementById('demo-start').textContent = '↻  Replay Demo';
+}
+
+document.getElementById('demo-start').addEventListener('click', startDemo);
+document.getElementById('demo-next').addEventListener('click', () => {
+  if (stepIdx === STEPS.length - 1) endDemo();
+  else showStep(stepIdx + 1);
+});
+document.getElementById('demo-prev').addEventListener('click', () => showStep(stepIdx - 1));
+document.getElementById('demo-skip').addEventListener('click', endDemo);
+document.getElementById('agent-close').addEventListener('click', () => {
+  document.getElementById('agent-modal').classList.remove('active');
+  showStep(stepIdx + 1);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') endDemo();
+  if (overlay.classList.contains('active')) {
+    if (e.key === 'ArrowRight') document.getElementById('demo-next').click();
+    if (e.key === 'ArrowLeft')  document.getElementById('demo-prev').click();
+  }
+});
+
+// Animated typing for step 2
+function animateTypeQuery(text) {
+  const input = document.getElementById('search');
+  input.value = '';
+  input.focus();
+  let i = 0;
+  const t = setInterval(() => {
+    if (i >= text.length) { clearInterval(t); return; }
+    input.value += text[i++];
+  }, 28);
+}
+
+function resetPanel() {
+  document.getElementById('panel').innerHTML = `
+    <div class="panel-empty">
+      <strong>The knowledge graph as workspace.</strong>
+      Click any node to open a detail panel here. The page does not navigate away — you stay in the graph and explore from inside it.
+      <span class="hint">Or press <code style="font-family:var(--mono);background:var(--warm);padding:1px 5px;">Run Director Demo</code> to walk through the user journey.</span>
+    </div>`;
+  document.getElementById('search').value = '';
+  document.getElementById('lens').value = 'all';
+  d3.selectAll('.kg-node').classed('selected', false);
+}
+
+// Toast utility
+function showToast(msg, ms = 2000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('active');
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(() => t.classList.remove('active'), ms);
+}
+
+// Initial settle of force layout
+sim.tick(120);
+</script>
+</body>
+</html>
