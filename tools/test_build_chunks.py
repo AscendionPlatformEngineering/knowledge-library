@@ -59,7 +59,8 @@ def chunks():
     if not CHUNKS_PATH.parent.exists():
         pytest.skip("dist/ directory not produced — build infra issue, not a chunk-content issue")
     with open(CHUNKS_PATH) as f:
-        return json.load(f)
+        data = json.load(f)
+    return data["chunks"]
 
 
 @pytest.fixture(scope="session")
@@ -184,6 +185,17 @@ def test_chunk_text_length_recorded(chunks):
     assert not mismatches, (
         f"{len(mismatches)} chunks have text_length mismatch: {mismatches[:5]}"
     )
+
+
+def test_schema_version_present(chunks):
+    """Output must be a wrapped object with schema_version='1.0' and a chunks key.
+
+    The `chunks` fixture is a dependency only to ensure the builder has run;
+    we re-read the raw file here to inspect the wrapper."""
+    with open(CHUNKS_PATH) as f:
+        data = json.load(f)
+    assert data["schema_version"] == "1.0"
+    assert "chunks" in data
 
 
 def test_chunks_reference_standards_correctly(chunks):
