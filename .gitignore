@@ -27,3 +27,4 @@ tools/migrate_repo.sh
 tools/stage_v*.sh
 tools/CLEANUP_v*.sh
 tools/migrate_repo.sh
+dist_baseline/
