@@ -104,15 +104,24 @@ interface Lens {
 **Chunks** are sub-page units that semantic search operates over. Each chunk has a stable ID and a kind.
 
 ```ts
-type ChunkKind = "caption" | "principle" | "pitfalls" | "checklist" | "references"
+type ChunkType = "caption" | "principle" | "pitfalls" | "checklist" | "references"
+
+interface ChunksFile {
+  schema_version: "1.0"     // present at top level; additive metadata
+                            // fields (e.g. build_date, embedding_model)
+                            // can be added without bumping
+  chunks: Chunk[]           // sorted by id for byte-determinism
+}
 
 interface Chunk {
-  id: string                // "<page_id>#<kind>[_<n>]"
+  id: string                // "<page_id>:<chunk_type>" or
+                            // "<page_id>:principle:<n>" (n is 0-based)
   page_id: string
-  kind: ChunkKind
-  ordinal?: number          // for principle_1..6
-  text: string              // raw text, ≤ 1500 chars
-  embedding_idx: number     // index into vector.bin
+  chunk_type: ChunkType
+  chunk_index: number       // 0-based ordinal within the page
+  text: string              // raw text
+  text_length: number       // len(text), precomputed for consumers
+  references: string[]      // gold-reference IDs cited in this chunk
 }
 ```
 
@@ -137,7 +146,7 @@ interface GoldReference {
 | File | Purpose | Approx size at v1.1 |
 |---|---|---|
 | `index.json` | Graph: nodes + edges + lenses. No chunk text, no embeddings. The minimal contract for agents that want structure without bulk. | ~200 KB |
-| `chunks.json` | Chunk metadata + text. Paired with `vector.bin` by chunk ordinal. | ~600 KB |
+| `chunks.json` | JSON object `{schema_version: "1.0", chunks: [...]}`. Chunk metadata + text, sorted by id. `schema_version` allows additive metadata (build_date, embedding_model) without breaking v1.0 consumers. Paired with `vector.bin` by chunk-list index. | ~600 KB |
 | `vector.bin` | HNSW binary index, 384-dim, ~730 chunks. | ~500 KB |
 | `gold_references.json` | Gold reference registry. | ~80 KB |
 | `schema.json` | JSON Schema describing `index.json`. The machine-readable contract. | ~10 KB |
