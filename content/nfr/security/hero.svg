@@ -1,0 +1,143 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stacked control-layer verification with descending packet">
+<!--
+  Security NFRs emblem.
+
+  Visual metaphor: defence-in-depth as a stack of control layers
+  (network, application, data, identity). A "verification packet" — a
+  small terracotta marker — descends through the stack from top to
+  bottom. As the packet exits each layer's lower boundary, a "check
+  stamp" (small filled circle) appears at the right edge of that
+  layer encoding the verification was completed for that layer. After
+  the packet exits the last layer (bottom), all four stamps remain
+  visible and pulse on independent sub-cycles encoding ongoing
+  verification of the entire stack. The visual narrative: each
+  request passes through four layers of control, each layer verifies
+  independently, the request is approved only if all four stamps
+  are produced.
+
+  Mechanic #68: STACKED CONTROL-LAYER VERIFICATION.
+  First mechanic to use horizontal layer-bands stacked vertically
+  with a TOP-TO-BOTTOM traveling marker that emits a per-layer
+  verification stamp at the right edge as it traverses each layer.
+  Distinct from #11 vertical bars rising (continuous bar fills, no
+  layer structure, no traveling marker), #46 concentric ring
+  activation (rings expanding from centre, not horizontal stacked
+  layers), #57 stair-step ascent (zig-zag staircase, single path,
+  no layer-emit pattern), #60 stacked horizontal bar-fill cascade
+  (bars filling left-to-right, not a marker descending vertically
+  through layers). The architectural signature is defence-in-depth-
+  with-explicit-verification: each layer produces evidence of having
+  inspected the request, and the system can prove approval came
+  from the full stack rather than a single layer.
+
+  Geometry:
+    Four horizontal layer bands at y intervals of 16, separated by
+    faint warm-neutral horizontal divider lines at y=22, 38, 54, 70.
+    Layer bands occupy: y=14-22, y=22-38, y=38-54, y=54-70, y=70-78.
+    Actually 4 layer bands: y=14-26 (network), y=26-42 (application),
+                            y=42-58 (data), y=58-74 (identity).
+    Divider lines (warm-neutral): horizontal at y=26, 42, 58, 74,
+                                   from x=14 to x=88.
+    Descending packet: small terracotta circle r=2.6 starting at
+                       (24, 14), descends to (24, 78).
+    Layer stamps: at the right side, x=98, y matching mid-layer
+                  y=20, 34, 50, 66.
+
+  Cycle: 8s; sub-cycles 1.2/1.4/1.6/1.8s for stamp pulses.
+    0.00–0.05  Empty / reset
+    0.05–0.10  Layer dividers fade in
+    0.10–0.20  Packet descends y=14 to y=26 (through network layer)
+    0.20–0.22  Stamp 1 appears at (98, 20)
+    0.22–0.32  Packet descends y=26 to y=42 (through app layer)
+    0.32–0.34  Stamp 2 appears at (98, 34)
+    0.34–0.44  Packet descends y=42 to y=58 (through data layer)
+    0.44–0.46  Stamp 3 appears at (98, 50)
+    0.46–0.56  Packet descends y=58 to y=78 (through identity layer)
+    0.56–0.58  Stamp 4 appears at (98, 66)
+    0.58–0.85  All four stamps held; each pulses on independent
+               sub-cycle (1.2s, 1.4s, 1.6s, 1.8s)
+    0.85–0.95  Fade out
+    0.95–1.00  Cleared, reset
+
+  Colour: warm-neutral #D6D2C8 + terracotta #C96330.
+-->
+
+  <!-- Layer divider lines (faint warm-neutral horizontals) -->
+  <line x1="14" y1="26" x2="88" y2="26" stroke="#D6D2C8" stroke-width="1" stroke-linecap="round" opacity="0">
+    <animate attributeName="opacity" values="0;0;0.5;0.5;0" keyTimes="0;0.05;0.10;0.85;0.95" dur="8s" repeatCount="indefinite"/>
+  </line>
+  <line x1="14" y1="42" x2="88" y2="42" stroke="#D6D2C8" stroke-width="1" stroke-linecap="round" opacity="0">
+    <animate attributeName="opacity" values="0;0;0.5;0.5;0" keyTimes="0;0.05;0.10;0.85;0.95" dur="8s" repeatCount="indefinite"/>
+  </line>
+  <line x1="14" y1="58" x2="88" y2="58" stroke="#D6D2C8" stroke-width="1" stroke-linecap="round" opacity="0">
+    <animate attributeName="opacity" values="0;0;0.5;0.5;0" keyTimes="0;0.05;0.10;0.85;0.95" dur="8s" repeatCount="indefinite"/>
+  </line>
+  <line x1="14" y1="74" x2="88" y2="74" stroke="#D6D2C8" stroke-width="1" stroke-linecap="round" opacity="0">
+    <animate attributeName="opacity" values="0;0;0.5;0.5;0" keyTimes="0;0.05;0.10;0.85;0.95" dur="8s" repeatCount="indefinite"/>
+  </line>
+
+  <!-- Top boundary -->
+  <line x1="14" y1="14" x2="88" y2="14" stroke="#D6D2C8" stroke-width="1" stroke-linecap="round" opacity="0">
+    <animate attributeName="opacity" values="0;0;0.5;0.5;0" keyTimes="0;0.05;0.10;0.85;0.95" dur="8s" repeatCount="indefinite"/>
+  </line>
+
+  <!-- Descending packet — animates cy from 14 down to 78 -->
+  <circle cx="24" r="2.6" fill="#C96330" opacity="0">
+    <animate attributeName="opacity"
+             values="0;0;1;1;0"
+             keyTimes="0;0.10;0.15;0.58;0.62"
+             dur="8s" repeatCount="indefinite"/>
+    <animate attributeName="cy"
+             values="14;14;26;42;58;78;78;14"
+             keyTimes="0;0.10;0.20;0.32;0.44;0.56;0.62;1"
+             dur="8s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Stamp 1 (network layer verified) — appears after packet exits at t=0.20 -->
+  <circle cx="98" cy="20" r="3" fill="#C96330" opacity="0">
+    <animate attributeName="opacity"
+             values="0;0;1;1;0"
+             keyTimes="0;0.20;0.22;0.85;0.92"
+             dur="8s" repeatCount="indefinite"/>
+    <animate attributeName="r"
+             values="3;4;3"
+             keyTimes="0;0.5;1"
+             dur="1.2s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Stamp 2 (application layer) -->
+  <circle cx="98" cy="34" r="3" fill="#C96330" opacity="0">
+    <animate attributeName="opacity"
+             values="0;0;1;1;0"
+             keyTimes="0;0.32;0.34;0.85;0.92"
+             dur="8s" repeatCount="indefinite"/>
+    <animate attributeName="r"
+             values="3;4;3"
+             keyTimes="0;0.5;1"
+             dur="1.4s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Stamp 3 (data layer) -->
+  <circle cx="98" cy="50" r="3" fill="#C96330" opacity="0">
+    <animate attributeName="opacity"
+             values="0;0;1;1;0"
+             keyTimes="0;0.44;0.46;0.85;0.92"
+             dur="8s" repeatCount="indefinite"/>
+    <animate attributeName="r"
+             values="3;4;3"
+             keyTimes="0;0.5;1"
+             dur="1.6s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Stamp 4 (identity layer) -->
+  <circle cx="98" cy="66" r="3" fill="#C96330" opacity="0">
+    <animate attributeName="opacity"
+             values="0;0;1;1;0"
+             keyTimes="0;0.56;0.58;0.85;0.92"
+             dur="8s" repeatCount="indefinite"/>
+    <animate attributeName="r"
+             values="3;4;3"
+             keyTimes="0;0.5;1"
+             dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+</svg>

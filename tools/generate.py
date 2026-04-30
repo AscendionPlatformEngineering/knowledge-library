@@ -1684,6 +1684,198 @@ EMBLEM MOTION MECHANICS (each page must use a DISTINCT mechanic):
                            structures genuinely differ, and a survey
                            across them must respect that difference
                            rather than averaging it away)
+  #65 SAWTOOTH DEGRADATION-RECOVERY TRACE
+                          (nfr/maintainability: a fixed warm-neutral
+                           target band runs horizontally at y=58 from
+                           x=10 to x=110; a single terracotta
+                           polyline draws left-to-right via
+                           stroke-dashoffset (220→0) shaped as a
+                           sawtooth wave with three peaks — rises
+                           from y=58 to y=22 (degradation), drops
+                           back to y=58 (refactor), repeats two
+                           more times, ending at (110,58); during
+                           the held phase, two terracotta recovery
+                           markers (r=2.4) pulse at the trough
+                           positions (48,58) and (82,58) on 1.2s
+                           sub-cycles encoding the refactor moments;
+                           distinct from #15 horizontal traversal —
+                           single dot moving along straight track
+                           with no shape information; distinct from
+                           #51 lifecycle progression — single track
+                           with a moving marker plus historical
+                           trail along a flat line, no waveform;
+                           distinct from #57 stair-step ascent —
+                           ascending vertical staircase with equal-
+                           sized steps in 2D, not a horizontal
+                           waveform; distinct from #60 stacked
+                           horizontal bar-fill cascade — multiple
+                           horizontal bars filling, not a single
+                           shaped polyline; #65 is the first mechanic
+                           to use a hand-shaped polyline drawn left-
+                           to-right via stroke-dashoffset that
+                           visibly exhibits both drift (upward
+                           degradation) and recovery (downward
+                           refactor) phases — the architectural
+                           signature is cyclical-degradation-and-
+                           recovery: code-health is a trajectory
+                           shaped by the interplay of feature
+                           delivery and refactor investment, neither
+                           a steady decline nor a fixed equilibrium)
+  #66 PERCENTILE TAIL FAN-OUT
+                          (nfr/performance: three concurrent
+                           horizontal traces share a common origin
+                           at x=12 and grow rightward (via x2
+                           animation) at the same rate over t=0.10
+                           to t=0.20 but terminate at DIFFERENT
+                           endpoints — P50 trace at y=24 ends at
+                           x=42, P95 trace at y=46 ends at x=78,
+                           P99 trace at y=68 ends at x=98; a fixed
+                           warm-neutral budget marker (vertical
+                           dashed line) sits at x=104 from y=14 to
+                           y=78 showing the latency ceiling; the
+                           three traces visibly fan out from a shared
+                           origin to different endpoints encoding
+                           distribution percentiles; after extension,
+                           three terracotta endpoint markers (r=2.6)
+                           pulse on independent sub-cycles 1.0s,
+                           1.4s, 1.8s; distinct from #60 stacked
+                           horizontal bar-fill cascade — that has
+                           four sequential bars, not three concurrent;
+                           no shared origin; distinct from #61
+                           paired-marker gap-arrow — paired markers
+                           with connecting line, no shared origin,
+                           no fan-out shape; distinct from #65
+                           sawtooth trace — single shaped polyline
+                           not three traces; distinct from #63
+                           iterative convergence — single marker
+                           jumping toward fixed target, not three
+                           markers fanning out; #66 is the first
+                           mechanic to use three concurrent left-
+                           to-right traces from a SHARED ORIGIN to
+                           DIFFERENT endpoints encoding distribution
+                           percentiles with a fixed budget threshold
+                           visible — the architectural signature is
+                           distribution-shape-exposure: averages
+                           hide tail behaviour, the fan-out makes
+                           the distinction visible)
+  #67 DUAL-NODE FAILOVER ALTERNATION
+                          (nfr/reliability: two discrete circular
+                           nodes side-by-side — primary at (32,45)
+                           with r=8, standby at (88,45) with r=8 —
+                           connected by a horizontal heartbeat line
+                           at y=45 from x=40 to x=80; each node has
+                           a warm-neutral background circle (always
+                           visible, opacity 0.4) layered with a
+                           terracotta active overlay whose opacity
+                           switches between full and zero; primary
+                           active 0.10–0.40, then failover at 0.40–
+                           0.45 simultaneously fades primary to dim
+                           and brightens standby; standby active
+                           0.45–0.75; recovery at 0.75–0.80 brightens
+                           primary and fades standby; primary again
+                           active 0.80–0.90; both nodes pulse via r
+                           animation 8→9.5→8 on 1.0s sub-cycle while
+                           active; the heartbeat line pulses stroke-
+                           width 1.2→2.0→1.2 on 0.8s sub-cycle
+                           continuously; distinct from #62 spoke
+                           convergence to centre — multiple spokes
+                           converging to one node, not alternating
+                           roles between two; distinct from #65
+                           sawtooth trace — single trace shape, no
+                           two-node structure; distinct from #66
+                           percentile fan-out — three traces from
+                           shared origin, not alternation; #67 is
+                           the first mechanic to use TWO DISCRETE
+                           NODES that ALTERNATE active/inactive
+                           states with simultaneous opposite
+                           transitions, connected by a continuous
+                           heartbeat line — the architectural
+                           signature is reliability-as-redundancy:
+                           traffic moves between nodes, individual
+                           node failure does not cause system
+                           failure, the system maintains availability
+                           through alternation)
+  #68 STACKED CONTROL-LAYER VERIFICATION
+                          (nfr/security: four faint warm-neutral
+                           horizontal divider lines at y=14, 26, 42,
+                           58, 74 (from x=14 to x=88) define four
+                           stacked layer bands; a terracotta packet
+                           (r=2.6) at cx=24 descends top-to-bottom
+                           via cy animation through the keyTimes
+                           sequence 14→26→42→58→78 over t=0.10 to
+                           t=0.56; as the packet exits each layer's
+                           lower boundary, a terracotta verification
+                           stamp (r=3) appears at the right edge at
+                           x=98 with cy matching the layer middle
+                           y=20, 34, 50, 66; stamps appear sequentially
+                           at t=0.20, 0.32, 0.44, 0.56 and pulse on
+                           independent sub-cycles 1.2s, 1.4s, 1.6s,
+                           1.8s during the held phase; distinct from
+                           #11 vertical bars rising — continuous bar
+                           fills with no layer structure or traveling
+                           marker; distinct from #46 concentric ring
+                           activation — rings expanding from centre,
+                           not horizontal stacked layers; distinct
+                           from #57 stair-step ascent — zig-zag
+                           staircase with single path, no per-layer
+                           emit pattern; distinct from #60 stacked
+                           horizontal bar-fill cascade — bars filling
+                           left-to-right, not a marker descending
+                           through layers emitting stamps; distinct
+                           from #64 parallel ladders with rungs —
+                           parallel vertical ladders with horizontal
+                           rungs, not a single descending packet;
+                           #68 is the first mechanic to use horizontal
+                           layer-bands stacked vertically with a
+                           top-to-bottom traveling marker that emits
+                           a per-layer verification stamp at the
+                           right edge as it traverses each layer —
+                           the architectural signature is defence-
+                           in-depth-with-explicit-verification: each
+                           layer produces evidence of having
+                           inspected the request, the system can
+                           prove approval came from the full stack
+                           rather than a single layer)
+  #69 TASK-FLOW MARKER WITH FRICTION COMPRESSION
+                          (nfr/usability: a horizontal warm-neutral
+                           path baseline at y=45 from x=10 to x=110;
+                           two warm-neutral vertical friction markers
+                           at x=46 and x=80, each running from y=38
+                           to y=52 (visible obstacles in the flow);
+                           a terracotta ellipse marker (cx=16, cy=45,
+                           rx=4, ry=4) traverses the path via cx
+                           animation through five phases — start at
+                           x=16, cross to x=46 (friction zone 1),
+                           cross to x=80 (friction zone 2), cross
+                           to x=104 (endpoint); at each friction
+                           zone the ellipse COMPRESSES — rx animates
+                           4→3 (slowed forward motion) and ry
+                           animates 4→2 (squeezed vertically) over
+                           a brief window, then relaxes back; after
+                           reaching x=104, a terracotta completion
+                           marker (r=2.6) appears at the endpoint
+                           and pulses r 2.6→4→2.6 on 0.8s sub-cycle;
+                           distinct from #15 horizontal traversal —
+                           single dot moving across uniform track
+                           with no compression events; distinct
+                           from #51 lifecycle progression — single
+                           track with marker AND historical trail,
+                           no friction encoding; distinct from #67
+                           dual-node failover — two static nodes
+                           alternating, not a single moving marker;
+                           distinct from #65 sawtooth trace — single
+                           shaped polyline drawn via stroke-
+                           dashoffset, not a moving ellipse with
+                           shape compression; #69 is the first
+                           mechanic to use ellipse rx/ry compression
+                           to encode friction along a traversal
+                           path — the architectural signature is
+                           task-flow-with-friction: usability is not
+                           the absence of friction but the ratio of
+                           progress to friction across the path,
+                           and the compression-and-resume rhythm
+                           encodes that good UX acknowledges friction
+                           explicitly rather than hiding it)
   Future pages must invent a new mechanic, not reuse one.
   Two colours only: warm neutral (#D6D2C8) + terracotta (#C96330).
   Basic SMIL primitives only (animate, animateTransform with type=rotate or translate; stroke-dasharray and opacity animations also valid via animate).

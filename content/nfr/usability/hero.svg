@@ -1,0 +1,117 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Task-flow marker traversing path with friction compression at obstacle points">
+<!--
+  Usability NFRs emblem.
+
+  Visual metaphor: a user task is a journey across a flow path, with
+  friction points where the user encounters difficulty before
+  proceeding. A horizontal warm-neutral path runs at y=45 from x=10
+  to x=110. Two warm-neutral "friction marker" verticals at x=46
+  and x=80 mark the friction zones. A terracotta ellipse marker
+  starts at (16, 45) and travels rightward across the path. As it
+  reaches each friction marker, it COMPRESSES — rx shrinks (briefly
+  slowed forward motion) and ry shrinks (visibly squeezed) — then
+  expands back and continues. The compressions encode user friction
+  points: places where task progress slows because of UX obstacles.
+  After reaching the end at (104, 45), the marker pulses encoding
+  task completion.
+
+  Mechanic #69: TASK-FLOW MARKER WITH FRICTION COMPRESSION.
+  First mechanic to use ellipse rx/ry compression to encode friction
+  along a traversal path. Distinct from #15 horizontal traversal
+  (single dot moving across uniform track, no compression events),
+  #51 lifecycle progression (single track with marker AND historical
+  trail, no friction encoding), #67 dual-node failover (two static
+  nodes alternating, not a single moving marker), #65 sawtooth trace
+  (single shaped polyline, not a moving ellipse). The architectural
+  signature is task-flow-with-friction: usability is not the absence
+  of friction but the ratio of progress to friction across the path,
+  and the compression-and-resume rhythm encodes that good UX
+  acknowledges friction explicitly rather than hiding it.
+
+  Geometry:
+    Path baseline (warm-neutral horizontal): x=10 to x=110, y=45.
+    Friction markers (warm-neutral verticals): x=46 and x=80,
+                                                from y=38 to y=52.
+    Marker ellipse: starts at (16, 45) with rx=4, ry=4. Travels
+                    rightward to x=104. At x=46 and x=80, briefly
+                    compresses to rx=3, ry=2 (squeezed), then back.
+    Completion marker: filled circle r=2.6 appears at (104, 45)
+                       after the ellipse arrives.
+
+  Cycle: 8s.
+    0.00–0.05  Empty / reset
+    0.05–0.10  Path and friction markers fade in
+    0.10–0.12  Ellipse marker fades in at (16, 45)
+    0.12–0.32  Ellipse moves x=16 to x=46 (smooth)
+    0.32–0.36  Compression at first friction zone (rx 4→3, ry 4→2,
+                cx held at 46), then expansion back
+    0.36–0.56  Ellipse moves x=46 to x=80
+    0.56–0.60  Compression at second friction zone, then expansion
+    0.60–0.78  Ellipse moves x=80 to x=104
+    0.78–0.85  Completion marker pulses at endpoint
+    0.85–0.95  Fade out
+    0.95–1.00  Cleared, reset
+
+  Colour: warm-neutral #D6D2C8 + terracotta #C96330.
+-->
+
+  <!-- Path baseline (faint warm-neutral) -->
+  <line x1="10" y1="45" x2="110" y2="45" stroke="#D6D2C8" stroke-width="1.2" stroke-linecap="round" opacity="0">
+    <animate attributeName="opacity"
+             values="0;0;0.6;0.6;0"
+             keyTimes="0;0.05;0.10;0.85;0.95"
+             dur="8s" repeatCount="indefinite"/>
+  </line>
+
+  <!-- Friction marker 1 (vertical, warm-neutral, at x=46) -->
+  <line x1="46" y1="38" x2="46" y2="52" stroke="#D6D2C8" stroke-width="1.4" stroke-linecap="round" opacity="0">
+    <animate attributeName="opacity"
+             values="0;0;0.7;0.7;0"
+             keyTimes="0;0.05;0.10;0.85;0.95"
+             dur="8s" repeatCount="indefinite"/>
+  </line>
+
+  <!-- Friction marker 2 (vertical, warm-neutral, at x=80) -->
+  <line x1="80" y1="38" x2="80" y2="52" stroke="#D6D2C8" stroke-width="1.4" stroke-linecap="round" opacity="0">
+    <animate attributeName="opacity"
+             values="0;0;0.7;0.7;0"
+             keyTimes="0;0.05;0.10;0.85;0.95"
+             dur="8s" repeatCount="indefinite"/>
+  </line>
+
+  <!-- Task-flow ellipse marker — animates cx, rx, ry to encode traversal-with-friction -->
+  <ellipse cx="16" cy="45" rx="4" ry="4" fill="#C96330" opacity="0">
+    <!-- Visibility envelope -->
+    <animate attributeName="opacity"
+             values="0;0;1;1;0"
+             keyTimes="0;0.10;0.12;0.78;0.85"
+             dur="8s" repeatCount="indefinite"/>
+    <!-- cx: travel through 5 phases (start, friction1, friction2, end, return) -->
+    <animate attributeName="cx"
+             values="16;16;46;46;80;80;104;104;16"
+             keyTimes="0;0.12;0.32;0.36;0.56;0.60;0.78;0.85;1"
+             dur="8s" repeatCount="indefinite"/>
+    <!-- rx: 4 → 3 during friction zones (slowed forward) → back to 4 -->
+    <animate attributeName="rx"
+             values="4;4;4;3;4;4;3;4;4"
+             keyTimes="0;0.30;0.32;0.34;0.36;0.54;0.56;0.58;1"
+             dur="8s" repeatCount="indefinite"/>
+    <!-- ry: 4 → 2 during friction zones (squeezed vertically) → back to 4 -->
+    <animate attributeName="ry"
+             values="4;4;4;2;4;4;2;4;4"
+             keyTimes="0;0.30;0.32;0.34;0.36;0.54;0.56;0.58;1"
+             dur="8s" repeatCount="indefinite"/>
+  </ellipse>
+
+  <!-- Completion marker — appears at endpoint after task complete -->
+  <circle cx="104" cy="45" r="2.6" fill="#C96330" opacity="0">
+    <animate attributeName="opacity"
+             values="0;0;1;1;0"
+             keyTimes="0;0.78;0.80;0.85;0.92"
+             dur="8s" repeatCount="indefinite"/>
+    <animate attributeName="r"
+             values="2.6;4;2.6"
+             keyTimes="0;0.5;1"
+             dur="0.8s" repeatCount="indefinite"/>
+  </circle>
+</svg>

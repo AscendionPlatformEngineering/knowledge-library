@@ -1,0 +1,96 @@
+<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sawtooth degradation-recovery trace">
+<!--
+  Maintainability NFRs emblem.
+
+  Visual metaphor: code-health trajectory drifts upward (worse) over
+  time as features are added and entropy accumulates, then JUMPS back
+  down (better) at refactor moments, then resumes drifting. The visible
+  shape is a sawtooth wave — degradation interspersed with recovery.
+
+  Implementation: a single polyline drawn as a long horizontal trace
+  via stroke-dashoffset animation. The polyline is hand-shaped to
+  produce three sawtooth peaks: rises gradually from y=58 to y=22 over
+  ~30% of length, then drops back to y=58, repeats twice more. A
+  fixed warm-neutral target band (horizontal line) sits at y=58
+  showing the maintainability target. The animation reveals the
+  trace left-to-right via dashoffset; after the trace completes, two
+  small terracotta markers pulse at the recovery troughs (x≈48, x≈82)
+  encoding the deliberate refactor moments.
+
+  Mechanic #65: SAWTOOTH DEGRADATION-RECOVERY TRACE.
+  First mechanic to use a hand-shaped polyline drawn left-to-right
+  via stroke-dashoffset that visibly exhibits both drift (upward) and
+  recovery (downward) phases. Distinct from #15 horizontal traversal
+  (single dot moving along straight track), #51 lifecycle progression
+  (single track with marker + trail, no waveform shape), #57 stair-
+  step ascent (vertical staircase, equal steps), #60 horizontal
+  bar-fill cascade (multiple horizontal bars filling, not a single
+  shaped polyline), #61 paired-marker gap-arrow (paired markers with
+  connecting line, no waveform). The architectural signature is
+  cyclical degradation-and-recovery: the trace itself encodes that
+  maintainability is a trajectory shaped by the interplay of feature
+  delivery and refactor investment.
+
+  Geometry:
+    Target band (warm-neutral): horizontal line y=58, x=10 to x=110.
+    Polyline path: starts at (10, 58), rises to (38, 22), drops to
+                   (48, 58), rises to (72, 22), drops to (82, 58),
+                   rises to (104, 22), drops to (110, 58).
+    Path total length ≈ 220 svg units (computed empirically).
+    Recovery markers (terracotta): r=2.4 at (48, 58) and (82, 58).
+
+  Cycle: 8s.
+    0.00–0.05  Empty / reset
+    0.05–0.10  Target band fades in
+    0.10–0.85  Polyline draws via stroke-dashoffset (220 → 0)
+    0.50–0.85  First recovery marker pulses on 1.2s sub-cycle
+    0.65–0.85  Second recovery marker pulses on 1.2s sub-cycle
+    0.85–0.95  Fade out
+    0.95–1.00  Cleared, reset
+
+  Colour: warm-neutral #D6D2C8 + terracotta #C96330.
+-->
+
+  <!-- Target band (faint warm-neutral horizontal line) -->
+  <line x1="10" y1="58" x2="110" y2="58" stroke="#D6D2C8" stroke-width="1.2" stroke-linecap="round" opacity="0">
+    <animate attributeName="opacity"
+             values="0;0;0.6;0.6;0"
+             keyTimes="0;0.05;0.10;0.85;0.95"
+             dur="8s" repeatCount="indefinite"/>
+  </line>
+
+  <!-- Sawtooth polyline: 3 peaks of degradation interrupted by recovery troughs -->
+  <polyline points="10,58 38,22 48,58 72,22 82,58 104,22 110,58"
+            fill="none" stroke="#C96330" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round"
+            stroke-dasharray="220 220" stroke-dashoffset="220">
+    <animate attributeName="stroke-dashoffset"
+             values="220;220;0;0;220"
+             keyTimes="0;0.10;0.85;0.92;1"
+             dur="8s" repeatCount="indefinite"/>
+  </polyline>
+
+  <!-- Recovery marker 1 (at x=48, first refactor moment) -->
+  <circle cx="48" cy="58" r="2.4" fill="#C96330" opacity="0">
+    <animate attributeName="opacity"
+             values="0;0;1;1;0"
+             keyTimes="0;0.42;0.50;0.85;0.92"
+             dur="8s" repeatCount="indefinite"/>
+    <animate attributeName="r"
+             values="2.4;3.6;2.4"
+             keyTimes="0;0.5;1"
+             dur="1.2s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Recovery marker 2 (at x=82, second refactor moment) -->
+  <circle cx="82" cy="58" r="2.4" fill="#C96330" opacity="0">
+    <animate attributeName="opacity"
+             values="0;0;1;1;0"
+             keyTimes="0;0.60;0.68;0.85;0.92"
+             dur="8s" repeatCount="indefinite"/>
+    <animate attributeName="r"
+             values="2.4;3.6;2.4"
+             keyTimes="0;0.5;1"
+             dur="1.2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

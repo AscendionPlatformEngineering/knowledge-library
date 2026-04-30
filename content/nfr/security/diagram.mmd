@@ -1,49 +1,89 @@
-flowchart TD
-    A([🚀 Start: Security NFRs]) --> B[Assessment & Discovery]
+requirementDiagram
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    requirement DataClassification {
+        id: DC-1
+        text: Data is classified by sensitivity (public/internal/confidential/restricted)
+        risk: high
+        verifymethod: inspection
+    }
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    requirement ThreatModel {
+        id: TM-1
+        text: Threat model exists per significant subsystem
+        risk: high
+        verifymethod: inspection
+    }
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    requirement AuthMFA {
+        id: AC-1
+        text: MFA enforcement at 100% for confidential-data access
+        risk: high
+        verifymethod: test
+    }
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    requirement AuthSession {
+        id: AC-2
+        text: Session lifetime ceiling enforced per population
+        risk: medium
+        verifymethod: test
+    }
 
-    G --> H[Architecture Review Board]
+    requirement SecretsRotation {
+        id: SM-1
+        text: Secrets rotated per scheduled cadence with audit
+        risk: high
+        verifymethod: test
+    }
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    requirement AuditTrail {
+        id: AT-1
+        text: Privileged actions logged immutably with regulatory retention
+        risk: high
+        verifymethod: inspection
+    }
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    requirement EncryptionAtRest {
+        id: EN-1
+        text: Restricted data encrypted at rest with managed keys
+        risk: high
+        verifymethod: test
+    }
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    requirement FindingLedger {
+        id: FL-1
+        text: Security findings tracked with close/accept/revise decisions
+        risk: medium
+        verifymethod: inspection
+    }
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    element ApplicationCode {
+        type: software
+    }
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    element AuthenticationService {
+        type: service
+    }
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    element SecretsStore {
+        type: platform
+    }
+
+    element AuditPipeline {
+        type: platform
+    }
+
+    element ComplianceProgram {
+        type: process
+    }
+
+    ThreatModel - traces -> DataClassification
+    DataClassification - satisfies -> ApplicationCode
+    DataClassification - satisfies -> EncryptionAtRest
+    AuthMFA - satisfies -> AuthenticationService
+    AuthSession - satisfies -> AuthenticationService
+    SecretsRotation - satisfies -> SecretsStore
+    AuditTrail - satisfies -> AuditPipeline
+    EncryptionAtRest - satisfies -> ApplicationCode
+    FindingLedger - traces -> ComplianceProgram
+    AuthMFA - traces -> ThreatModel
+    SecretsRotation - traces -> ThreatModel

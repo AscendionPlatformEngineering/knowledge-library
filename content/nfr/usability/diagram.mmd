@@ -1,49 +1,26 @@
-flowchart TD
-    A([🚀 Start: Usability NFRs]) --> B[Assessment & Discovery]
+journey
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    title Critical Task Flow — Account Setup with Friction Points and Recovery Paths
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    section Discovery
+        Land on signup page : 5 : New User
+        Read value proposition : 4 : New User
+        Click signup CTA : 5 : New User
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    section Account Creation
+        Enter email and password : 4 : New User
+        Encounter password complexity error : 2 : New User
+        Recover via inline guidance : 4 : New User
+        Submit form : 4 : New User
+        Verify email (out-of-band) : 3 : New User
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    section First Configuration
+        Choose primary use case : 4 : New User
+        Skip optional setup : 5 : New User, Expert User
+        Encounter required field too far in flow : 1 : New User
+        Use back-navigation to recover : 3 : New User
 
-    G --> H[Architecture Review Board]
-
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
-
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
-
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
-
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
-
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
-
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    section First Success
+        Complete first meaningful task : 5 : New User
+        Receive confirmation : 5 : New User, Expert User
+        See related-feature suggestion : 4 : Expert User

@@ -1,49 +1,42 @@
-flowchart TD
-    A([🚀 Start: Reliability NFRs]) --> B[Assessment & Discovery]
+stateDiagram-v2
 
-    B --> C{Current State\nDocumented?}
-    C -->|No| B
-    C -->|Yes| D[Apply Architecture Principles]
+    [*] --> FullyFunctional
 
-    D --> D1[Design for Change]
-    D --> D2[Least Privilege]
-    D --> D3[Observability First]
-    D --> D4[AI Augmentation Readiness]
+    FullyFunctional : Fully Functional<br/>--------<br/>All dependencies healthy<br/>SLO: 99.95% in window<br/>All features available<br/>Error budget: positive
 
-    D1 & D2 & D3 & D4 --> E[Select Design Patterns]
+    CoreFlowsOnly : Core Flows Only<br/>--------<br/>Non-essential dependencies degraded<br/>Critical paths still complete<br/>Notification, audit-log degraded<br/>Feature flags disable non-essentials
 
-    E --> F{NFR Targets\nDefined?}
-    F -->|No| F1[Define NFRs in nfr/]
-    F1 --> F
-    F -->|Yes| G[Document ADRs]
+    ReadOnly : Read-Only Mode<br/>--------<br/>Primary write path unavailable<br/>Reads served from cache or replica<br/>Writes queued for replay<br/>Users see "saving disabled" banner
 
-    G --> H[Architecture Review Board]
+    SeverelyDegraded : Severely Degraded<br/>--------<br/>Multiple critical dependencies out<br/>Static fallback content served<br/>Cached responses with stale-warning<br/>Best-effort only
 
-    H --> I{Security\nReview Passed?}
-    I -->|No| I1[Revise Design]
-    I1 --> H
-    I -->|Yes| J{ARB\nApproval?}
+    Unavailable : Unavailable<br/>--------<br/>Critical-path dependencies all out<br/>RTO timer started<br/>Failover procedure invoked<br/>Status page reflects state
 
-    J -->|Rejected| J1[Address Feedback]
-    J1 --> H
-    J -->|Approved| K[Implementation]
+    FullyFunctional --> CoreFlowsOnly : Cache cluster failure<br/>OR notification service out
+    FullyFunctional --> ReadOnly : Primary database write path failure
+    FullyFunctional --> SeverelyDegraded : Multiple dependency failures<br/>(rare event)
 
-    K --> L[CI/CD Pipeline]
-    L --> L1[SAST / DAST Scan]
-    L --> L2[Architecture Lint]
-    L --> L3[NFR Validation]
+    CoreFlowsOnly --> ReadOnly : Database write path also fails
+    CoreFlowsOnly --> FullyFunctional : Degraded dependency recovers
 
-    L1 & L2 & L3 --> M{All Gates\nPassed?}
-    M -->|No| M1[Fix & Rerun]
-    M1 --> L
-    M -->|Yes| N[Deploy to Production]
+    ReadOnly --> SeverelyDegraded : Read replicas also fail
+    ReadOnly --> FullyFunctional : Primary write path restored<br/>queued writes replayed
 
-    N --> O[Observability Validation]
-    O --> P[Post-Deployment Review]
-    P --> Q([✅ Governance Record Closed])
+    SeverelyDegraded --> Unavailable : Last-resort fallback exhausted
+    SeverelyDegraded --> ReadOnly : Reads recover, writes still down
+    SeverelyDegraded --> FullyFunctional : Full recovery (RTO met)
 
-    style A fill:#4f8ef7,color:#fff
-    style Q fill:#10b981,color:#fff
-    style I1 fill:#fef3c7
-    style J1 fill:#fef3c7
-    style M1 fill:#fef3c7
+    Unavailable --> SeverelyDegraded : Failover completes,<br/>limited service restored
+    Unavailable --> FullyFunctional : Full failover successful<br/>(within RTO target)
+
+    note right of CoreFlowsOnly
+      Feature flags activate
+      bulkheads isolate
+      non-essential deps
+    end note
+
+    note right of ReadOnly
+      RPO clock running:
+      time-of-failure recorded
+      writes preserved in queue
+    end note
