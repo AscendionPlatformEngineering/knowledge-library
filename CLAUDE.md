@@ -33,3 +33,9 @@ Spec at docs/v1.1/spec.md. Director prototype at docs/v1.1/prototype.html.
 - Short bash audits to verify state before each major action
 - Clean commits with verified outputs
 - Substantive tone, no marketing voice
+
+## AWS deployment
+- ascendion.engineering is hosted in **Ascendion Corporate** AWS account (852973339602)
+- SSO profile: `PowerUserAccess-852973339602` (set up via `aws configure sso`)
+- Existing CloudFront distribution and S3 bucket continue from v42 — no infra changes for v1.1
+- Mediarmor account ([REDACTED_MALAYSIAN_BANK_ACCOUNT_NUMBER_1]) is a separate context (Balangos, VoForma) — NOT used for ascendion.engineering
