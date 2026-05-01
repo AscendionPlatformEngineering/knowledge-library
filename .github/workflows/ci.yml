@@ -1,0 +1,46 @@
+name: CI — validate build pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Cache HuggingFace models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: huggingface-bge-small-en-v1.5
+
+      - name: Install dependencies
+        run: pip install -r tools/requirements-build.txt
+
+      - name: Seed taxonomy stubs
+        run: python tools/seed_content.py
+
+      - name: Build static site
+        run: python tools/generate.py --src content --out dist --clean
+
+      - name: Run fast tests
+        run: python -m pytest tools/ -v
+        # pytest.ini excludes -m slow by default
