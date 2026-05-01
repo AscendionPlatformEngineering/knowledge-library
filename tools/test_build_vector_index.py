@@ -28,6 +28,7 @@ import numpy as np
 import pytest
 
 
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TOOLS_DIR = REPO_ROOT / "tools"
 AGENT_DIR = REPO_ROOT / "dist" / "knowledge-graph" / "agent" / "v1"
@@ -178,6 +179,7 @@ def test_known_chunk_self_match(hnsw_index, bge_model, chunks):
     )
 
 
+@pytest.mark.slow
 def test_byte_deterministic_vectors():
     _rebuild_clean()
     h1 = hashlib.sha256(VECTORS_PATH.read_bytes()).hexdigest()
@@ -186,6 +188,7 @@ def test_byte_deterministic_vectors():
     assert h1 == h2, f"vectors.bin not byte-deterministic: {h1} vs {h2}"
 
 
+@pytest.mark.slow
 def test_byte_deterministic_index():
     _rebuild_clean()
     h1 = hashlib.sha256(INDEX_PATH.read_bytes()).hexdigest()
