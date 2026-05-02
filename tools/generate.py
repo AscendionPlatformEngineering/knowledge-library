@@ -7412,6 +7412,30 @@ def compute_graph_data(metadata):
             if target in substantive_ids and target != pid:
                 edges.append({"source": pid, "target": target, "kind": "related"})
 
+    # 4) Add section nodes — derived from already-emitted page nodes
+    #    (EPIC-4 T4.1: section nodes + contains-edges).
+    substantive_sections = sorted({
+        n["id"].split("/")[0]
+        for n in nodes.values()
+        if n["type"] == "page"
+    })
+    for section_id in substantive_sections:
+        title, description = SECTIONS.get(section_id, (section_id.title(), ""))
+        nodes[section_id] = {
+            "id": section_id,
+            "type": "section",
+            "label": title,
+            "description": description,
+        }
+
+    # 5) Add contains-edges: one per substantive page (section → page).
+    for pid in sorted_substantive:
+        edges.append({
+            "source": pid.split("/")[0],
+            "target": pid,
+            "kind": "contains",
+        })
+
     # Final sort guarantees byte-deterministic output across runs.
     sorted_nodes = sorted(nodes.values(), key=lambda n: n["id"])
     sorted_edges = sorted(edges, key=lambda e: (e["source"], e["target"], e["kind"]))
@@ -7825,6 +7849,10 @@ def gen_knowledge_graph_page(graph_data, out_root):
               <span>Standard / concept</span>
             </div>
             <div class="kg-legend-item">
+              <span class="kg-legend-swatch kg-swatch-section"></span>
+              <span>Topic group</span>
+            </div>
+            <div class="kg-legend-item">
               <span class="kg-legend-line kg-line-alignment"></span>
               <span>Alignment</span>
             </div>
@@ -7876,7 +7904,11 @@ const GRAPH_DATA = {graph_json};
       .strength(0.4))
     .force('charge', d3.forceManyBody().strength(-420))
     .force('center', d3.forceCenter(width / 2, height / 2))
-    .force('collision', d3.forceCollide().radius(d => d.type === 'page' ? 36 : 24));
+    .force('collision', d3.forceCollide().radius(d => {{
+      if (d.type === 'page') return 36;
+      if (d.type === 'section') return 30;
+      return 24;
+    }}));
 
   // Edges (lines)
   const link = root.append('g')
@@ -7911,18 +7943,35 @@ const GRAPH_DATA = {graph_json};
     const sel = d3.select(this);
     if (d.type === 'page') {{
       sel.append('circle').attr('r', 14);
+    }} else if (d.type === 'section') {{
+      // hexagon at radius 14: 6 vertices on a flat-top regular hexagon
+      const r = 14;
+      const points = [];
+      for (let i = 0; i < 6; i++) {{
+        const angle = Math.PI / 3 * i; // 60° increments
+        points.push((r * Math.cos(angle)).toFixed(2) + ',' + (r * Math.sin(angle)).toFixed(2));
+      }}
+      sel.append('polygon').attr('points', points.join(' '));
     }} else {{
       // diamond
       sel.append('rect')
-        .attr('width', 16).attr('height', 16)
-        .attr('x', -8).attr('y', -8)
+        .attr('width', 8).attr('height', 8)
+        .attr('x', -4).attr('y', -4)
         .attr('transform', 'rotate(45)');
     }}
   }});
 
+  // Native SVG tooltip — shown on mouse hover via the browser's default behavior
+  node.append('title')
+    .text(d => d.label);
+
   node.append('text')
     .attr('class', 'kg-label')
-    .attr('dy', d => d.type === 'page' ? 28 : 20)
+    .attr('dy', d => {{
+      if (d.type === 'page') return 28;
+      if (d.type === 'section') return 24;
+      return 20;
+    }})
     .attr('text-anchor', 'middle')
     .text(d => d.label);
 
@@ -7946,6 +7995,11 @@ const GRAPH_DATA = {graph_json};
   // Click navigation
   node.on('click', function(event, d) {{
     if (event.defaultPrevented) return;  // ignore drag-end clicks
+    if (d.type === 'section') {{
+      // T4.3 stub — EPIC-5 replaces this with side-panel rendering
+      console.log('section click:', d.id);
+      return;
+    }}
     if (!d.url) return;
     if (d.type === 'standard') {{
       window.open(d.url, '_blank', 'noopener');

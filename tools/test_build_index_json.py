@@ -67,18 +67,25 @@ def test_top_level_keys(index):
 def test_node_counts(index):
     pages = [n for n in index["nodes"] if n["type"] == "page"]
     standards = [n for n in index["nodes"] if n["type"] == "standard"]
+    sections = [n for n in index["nodes"] if n["type"] == "section"]
     assert len(pages) == 73
     assert len(standards) == 224
-    assert len(index["nodes"]) == 297
+    assert len(sections) == 18
+    assert len(index["nodes"]) == 315
 
 
 def test_edge_count_and_shape(index):
-    assert len(index["edges"]) == 547
+    assert len(index["edges"]) == 620
     node_ids = {n["id"] for n in index["nodes"]}
+    edge_kinds = set()
     for edge in index["edges"]:
         assert set(edge.keys()) == {"source", "target", "kind"}
         assert edge["source"] in node_ids
         assert edge["target"] in node_ids
+        edge_kinds.add(edge["kind"])
+    assert "contains" in edge_kinds
+    assert "alignment" in edge_kinds
+    assert "related" in edge_kinds
 
 
 def test_page_node_required_fields(index):
@@ -131,6 +138,18 @@ def test_lens_members_resolve_to_pages(index):
             assert member in page_ids, (
                 f"lens {lens['id']!r} member {member!r} not found as page node"
             )
+
+
+def test_section_nodes_present_in_published_index(index):
+    """The published index.json includes 18 section nodes with label and description."""
+    section_nodes = [n for n in index["nodes"] if n["type"] == "section"]
+    assert len(section_nodes) == 18
+    for n in section_nodes:
+        assert n["id"] and isinstance(n["id"], str)
+        assert n["label"] and isinstance(n["label"], str)
+        assert n["description"] and isinstance(n["description"], str)
+        # No lenses on sections
+        assert "lenses" not in n
 
 
 def test_byte_deterministic_index_json():

@@ -20,7 +20,7 @@ def build_schema():
         "$id": "https://ascendion.engineering/knowledge-graph/agent/v1/schema.json",
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "title": "Ascendion Knowledge Library v1.1 — Agent Endpoint Index Schema",
-        "description": "Structural graph contract for the v1.1 agent endpoint.",
+        "description": "Knowledge graph schema for the Ascendion Engineering Library. v1.1 schema is evolving across EPICs 4-10; backward-incompatible changes possible until EPICs 4-10 ship.",
         "type": "object",
         "additionalProperties": False,
         "required": ["schema_version", "nodes", "edges", "lenses"],
@@ -44,6 +44,7 @@ def build_schema():
                 "oneOf": [
                     {"$ref": "#/$defs/page_node"},
                     {"$ref": "#/$defs/standard_node"},
+                    {"$ref": "#/$defs/section_node"},
                 ],
             },
             "page_node": {
@@ -72,6 +73,17 @@ def build_schema():
                     "description": {"type": "string"},
                 },
             },
+            "section_node": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["id", "type", "label", "description"],
+                "properties": {
+                    "id":          {"type": "string", "minLength": 1},
+                    "type":        {"const": "section"},
+                    "label":       {"type": "string", "minLength": 1},
+                    "description": {"type": "string"},
+                },
+            },
             "edge": {
                 "type": "object",
                 "additionalProperties": False,
@@ -79,7 +91,7 @@ def build_schema():
                 "properties": {
                     "source": {"type": "string", "minLength": 1},
                     "target": {"type": "string", "minLength": 1},
-                    "kind":   {"enum": ["alignment", "related"]},
+                    "kind":   {"enum": ["alignment", "related", "contains"]},
                 },
             },
             "lens": {

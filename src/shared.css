@@ -868,6 +868,11 @@ a.hero-tag:focus-visible {
   background: #B8B5AC;
   transform: rotate(45deg);
 }
+.kg-swatch-section {
+  background: var(--ink-2);
+  /* Hexagon-ish hint for the swatch — using clip-path for visual consistency */
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
 .kg-legend-line {
   width: 24px;
   height: 1.5px;
@@ -945,12 +950,22 @@ a.hero-tag:focus-visible {
   stroke-width: 3px;
   filter: drop-shadow(0 0 6px rgba(201, 99, 48, 0.5));
 }
+.kg-node-section polygon {
+  fill: var(--ink-2);
+  stroke: var(--ink);
+  stroke-width: 1;
+  transition: stroke-width var(--t);
+}
+.kg-node-section:hover polygon {
+  stroke-width: 2.5;
+}
 .kg-node-standard rect {
   fill: #B8B5AC;
+  fill-opacity: 0.4;
+  transition: fill-opacity var(--t);
 }
 .kg-node-standard:hover rect {
-  fill: #8E8B82;
-  stroke-width: 3px;
+  fill-opacity: 1;
 }
 .kg-label {
   font-family: var(--font);
@@ -960,6 +975,20 @@ a.hero-tag:focus-visible {
   user-select: none;
 }
 .kg-node-page .kg-label { font-weight: 600; font-size: 12px; }
+.kg-node-section .kg-label {
+  font-weight: 500;
+  font-size: 11px;
+  fill: var(--ink-2);
+}
+.kg-node-standard .kg-label {
+  opacity: 0;
+  transition: opacity var(--t);
+  font-size: 10px;
+  font-weight: 400;
+}
+.kg-node-standard:hover .kg-label {
+  opacity: 1;
+}
 
 /* ── EXTERNAL-LINK INDICATOR — subtle "↗" after links that open new tab ── */
 .article-body a[target="_blank"]::after {

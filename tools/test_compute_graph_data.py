@@ -114,10 +114,19 @@ def test_standard_nodes_have_no_lenses_field():
 
 
 def test_node_count_unchanged_by_annotation():
-    """Lens annotation must not add or drop nodes/links."""
+    """Graph data shape regression guard.
+
+    The total node count must equal the sum of typed components (pages, standards, sections),
+    and total links must equal the sum of typed kinds (alignment, related, contains).
+    Catches accidental orphan node types or edge kinds.
+    """
     graph = _graph()
     pages = [n for n in graph["nodes"] if n["type"] == "page"]
     standards = [n for n in graph["nodes"] if n["type"] == "standard"]
+    sections = [n for n in graph["nodes"] if n["type"] == "section"]
+    contains_edges = [e for e in graph["links"] if e["kind"] == "contains"]
+    alignment_edges = [e for e in graph["links"] if e["kind"] == "alignment"]
+    related_edges = [e for e in graph["links"] if e["kind"] == "related"]
 
     assert len(pages) == 73, (
         f"page node count drift: got {len(pages)}, expected 73."
@@ -125,11 +134,17 @@ def test_node_count_unchanged_by_annotation():
     assert len(standards) == 224, (
         f"standard node count drift: got {len(standards)}, expected 224."
     )
-    assert len(graph["nodes"]) == 297, (
-        f"total node count drift: got {len(graph['nodes'])}, expected 297."
+    # Total nodes must equal pages + standards + sections (no orphan node types).
+    assert len(graph["nodes"]) == len(pages) + len(standards) + len(sections), (
+        f"total node count drift: got {len(graph['nodes'])}, "
+        f"expected pages({len(pages)}) + standards({len(standards)}) + sections({len(sections)}) "
+        f"= {len(pages) + len(standards) + len(sections)}. Possible orphan node type."
     )
-    assert len(graph["links"]) == 547, (
-        f"link count drift: got {len(graph['links'])}, expected 547."
+    # Total links must equal alignment + related + contains (no orphan edge kinds).
+    assert len(graph["links"]) == len(alignment_edges) + len(related_edges) + len(contains_edges), (
+        f"total link count drift: got {len(graph['links'])}, "
+        f"expected alignment({len(alignment_edges)}) + related({len(related_edges)}) + contains({len(contains_edges)}) "
+        f"= {len(alignment_edges) + len(related_edges) + len(contains_edges)}. Possible orphan edge kind."
     )
 
 
@@ -152,3 +167,105 @@ def test_all_lens_members_resolve_to_real_pages():
                 f"lens member '{member_id}' resolved to type "
                 f"{node['type']!r}, expected 'page'."
             )
+
+
+# ─────────────────────── T4.1 — section nodes + contains edges ─────────────────────
+
+
+@pytest.fixture(scope="module")
+def graph():
+    """Module-scoped graph build — reused across the T4.1 tests below."""
+    return _graph()
+
+
+def test_section_nodes_count_is_eighteen(graph):
+    """Exactly 18 section nodes — one per substantive section."""
+    section_nodes = [n for n in graph["nodes"] if n["type"] == "section"]
+    assert len(section_nodes) == 18, (
+        f"Expected 18 sections, got {len(section_nodes)}"
+    )
+
+
+def test_section_node_ids_match_expected_set(graph):
+    """The 18 section IDs are exactly the substantive sections."""
+    EXPECTED = {
+        "ai-native", "checklists", "compliance", "governance", "maturity",
+        "nfr", "observability", "patterns", "playbooks", "principles",
+        "runbooks", "scorecards", "security", "strategy", "system-design",
+        "technology", "templates", "tools",
+    }
+    section_ids = {n["id"] for n in graph["nodes"] if n["type"] == "section"}
+    assert section_ids == EXPECTED
+
+
+def test_no_section_node_for_stub_only_sections(graph):
+    """The 13 stub-only sections must NOT have section nodes."""
+    EXCLUDED = {
+        "adrs", "ai", "anti-patterns", "cloud", "data", "ddd", "design",
+        "frameworks", "infra", "integration", "roadmaps", "tech", "views",
+    }
+    section_ids = {n["id"] for n in graph["nodes"] if n["type"] == "section"}
+    overlap = section_ids & EXCLUDED
+    assert not overlap, f"Stub-only sections leaked into graph: {overlap}"
+
+
+def test_each_section_has_required_fields(graph):
+    """Section nodes have exactly: id, type, label, description. No extras, no lenses."""
+    REQUIRED = {"id", "type", "label", "description"}
+    for n in graph["nodes"]:
+        if n["type"] == "section":
+            assert set(n.keys()) == REQUIRED, (
+                f"Section {n['id']!r} fields = {set(n.keys())}, "
+                f"expected exactly {REQUIRED}"
+            )
+            assert isinstance(n["label"], str) and n["label"], (
+                f"empty label on {n['id']}"
+            )
+            assert isinstance(n["description"], str) and n["description"], (
+                f"empty description on {n['id']}"
+            )
+
+
+def test_contains_edges_count_equals_substantive_page_count(graph):
+    """Exactly 73 contains-edges — one per substantive page."""
+    contains_edges = [e for e in graph["links"] if e["kind"] == "contains"]
+    assert len(contains_edges) == 73, (
+        f"Expected 73 contains-edges, got {len(contains_edges)}"
+    )
+
+
+def test_contains_edges_source_is_section_target_is_page(graph):
+    """Every contains-edge: source is a section, target is a page. Never reversed."""
+    section_ids = {n["id"] for n in graph["nodes"] if n["type"] == "section"}
+    page_ids = {n["id"] for n in graph["nodes"] if n["type"] == "page"}
+    for e in graph["links"]:
+        if e["kind"] == "contains":
+            assert e["source"] in section_ids, (
+                f"contains-edge source {e['source']!r} is not a section"
+            )
+            assert e["target"] in page_ids, (
+                f"contains-edge target {e['target']!r} is not a page"
+            )
+            # Page must belong to the section by ID prefix (regression guard).
+            assert e["target"].startswith(e["source"] + "/"), (
+                f"page {e['target']!r} does not belong to section {e['source']!r}"
+            )
+
+
+def test_existing_page_node_shape_unchanged(graph):
+    """Regression guard: page nodes keep their pre-T4.1 field set.
+
+    EPIC-3 published index.json with a specific page-node field set. Adding
+    section nodes must not add or remove fields on page nodes."""
+    EXPECTED_PAGE_FIELDS = {
+        "id", "label", "section", "type", "url", "description", "lenses",
+    }
+    page_nodes = [n for n in graph["nodes"] if n["type"] == "page"]
+    assert len(page_nodes) == 73, (
+        f"page count drift: expected 73, got {len(page_nodes)}"
+    )
+    for n in page_nodes:
+        assert set(n.keys()) == EXPECTED_PAGE_FIELDS, (
+            f"page {n['id']!r} fields = {set(n.keys())}, "
+            f"expected exactly {EXPECTED_PAGE_FIELDS}"
+        )

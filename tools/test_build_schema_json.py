@@ -93,6 +93,57 @@ def test_edge_with_invalid_kind_is_rejected(schema, index):
         jsonschema.validate(instance=bad, schema=schema)
 
 
+def test_schema_accepts_section_node(schema):
+    """Schema validates a minimal section node."""
+    valid_doc = {
+        "schema_version": "1.0",
+        "nodes": [
+            {
+                "id": "compliance",
+                "type": "section",
+                "label": "Compliance & Regulatory Frameworks",
+                "description": "Mapping regulatory requirements to architecture...",
+            }
+        ],
+        "edges": [],
+        "lenses": [],
+    }
+    jsonschema.validate(instance=valid_doc, schema=schema)
+
+
+def test_schema_accepts_contains_edge(schema):
+    """Schema validates an edge with kind 'contains'."""
+    valid_doc = {
+        "schema_version": "1.0",
+        "nodes": [
+            {
+                "id": "compliance",
+                "type": "section",
+                "label": "Compliance",
+                "description": "x",
+            },
+            {
+                "id": "compliance/pci-dss",
+                "type": "page",
+                "label": "PCI DSS",
+                "section": "compliance",
+                "url": "/compliance/pci-dss/",
+                "description": "x",
+                "lenses": [],
+            },
+        ],
+        "edges": [
+            {
+                "source": "compliance",
+                "target": "compliance/pci-dss",
+                "kind": "contains",
+            }
+        ],
+        "lenses": [],
+    }
+    jsonschema.validate(instance=valid_doc, schema=schema)
+
+
 def test_byte_deterministic_schema_json():
     _rebuild_clean()
     first = hashlib.sha256(SCHEMA_PATH.read_bytes()).hexdigest()
