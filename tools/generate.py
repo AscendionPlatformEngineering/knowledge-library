@@ -7961,6 +7961,10 @@ const GRAPH_DATA = {graph_json};
     }}
   }});
 
+  // Native SVG tooltip — shown on mouse hover via the browser's default behavior
+  node.append('title')
+    .text(d => d.label);
+
   node.append('text')
     .attr('class', 'kg-label')
     .attr('dy', d => {{
@@ -7991,6 +7995,11 @@ const GRAPH_DATA = {graph_json};
   // Click navigation
   node.on('click', function(event, d) {{
     if (event.defaultPrevented) return;  // ignore drag-end clicks
+    if (d.type === 'section') {{
+      // T4.3 stub — EPIC-5 replaces this with side-panel rendering
+      console.log('section click:', d.id);
+      return;
+    }}
     if (!d.url) return;
     if (d.type === 'standard') {{
       window.open(d.url, '_blank', 'noopener');
