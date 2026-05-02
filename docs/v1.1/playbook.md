@@ -516,6 +516,26 @@ When clicked, section node opens a panel listing its member pages. Stub for EPIC
 
 **Tool routing:** Claude Code.
 
+#### EPIC-4 retrospective (added after shipping)
+
+**Pre-flight introspection.** EPIC-4's three sub-tasks each converged
+single-iteration because the design conversation read the actual code 
+(compute_graph_data, gen_knowledge_graph_page, SECTIONS dict, existing 
+kg-* CSS conventions in shared.css) before any prompt was written. 
+Earlier EPICs occasionally re-iterated because we wrote prompts against 
+assumed code shapes. The pattern: introspect, lock decisions against 
+data, then prompt. Spend 10 minutes reading instead of 30 minutes 
+re-prompting.
+
+**Visual work uses checklist-driven verification, not test-driven.** T4.2 
+had no pytest assertion for "the standards form a halo." Instead, the 
+spec criteria became a checklist that gets verified by looking at 
+rendered output between every edit. The discipline: one narrow change 
+per iteration, build, view, evaluate against criteria, then proceed. 
+This pattern applies to EPIC-5 (panel layouts), EPIC-6 (lens UI), 
+EPIC-10 (mobile polish) — all visual work where "looks right" is 
+the success criterion.
+
 ---
 
 ### EPIC-5 — Side-panel workspace
