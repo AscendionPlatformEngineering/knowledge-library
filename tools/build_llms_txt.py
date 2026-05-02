@@ -63,6 +63,8 @@ def main():
     refs = json.loads(gold_refs_path.read_text(encoding="utf-8"))
     ref_count = len(refs["references"])
 
+    lens_word = "lens" if lens_count == 1 else "lenses"
+
     lines = []
     lines.append("# Ascendion Engineering Knowledge Library")
     lines.append("")
@@ -70,7 +72,7 @@ def main():
         f"> Production engineering knowledge graph for the Ascendion Platform "
         f"Engineering practice. {page_count} substantive pages, {edge_count} edges "
         f"between concepts, {ref_count} gold-tier external references, and "
-        f"{lens_count} cross-cutting lens(es). Designed for both human readers "
+        f"{lens_count} cross-cutting {lens_word}. Designed for both human readers "
         f"(rendered HTML) and AI agents (structured JSON plus binary vector embeddings)."
     )
     lines.append("")
