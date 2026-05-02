@@ -31,26 +31,16 @@ jobs:
       - name: Install build dependencies
         run: pip install -r tools/requirements-build.txt
 
-      - name: Seed taxonomy stubs
-        # seed_content.py is idempotent — never overwrites authored READMEs.
-        # It creates the 154 stub READMEs that exist in TAXONOMY but aren't
-        # committed to the repo, so the build produces the full navigation.
-        run: python tools/seed_content.py
-
-      - name: Build static site
-        run: python tools/generate.py --src content --out dist --clean
-
       - name: Cache HuggingFace models
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
           key: huggingface-bge-small-en-v1.5
 
-      - name: Build chunks
-        run: python tools/build_chunks.py
-
-      - name: Build vector index
-        run: python tools/build_vector_index.py
+      - name: Run full build
+        # build_all.py orchestrates 8 steps: seed stubs, build static site,
+        # chunks, vectors, index.json, schema.json, gold refs, llms.txt
+        run: python tools/build_all.py
 
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4

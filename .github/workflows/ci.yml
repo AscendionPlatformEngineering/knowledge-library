@@ -35,12 +35,12 @@ jobs:
       - name: Install dependencies
         run: pip install -r tools/requirements-build.txt
 
-      - name: Seed taxonomy stubs
-        run: python tools/seed_content.py
-
-      - name: Build static site
-        run: python tools/generate.py --src content --out dist --clean
+      - name: Run full build
+        # build_all.py orchestrates 8 steps: seed stubs, build static site,
+        # chunks, vectors, index.json, schema.json, gold refs, llms.txt
+        run: python tools/build_all.py
 
       - name: Run fast tests
         run: python -m pytest tools/ -v
         # pytest.ini excludes -m slow by default
+        # build_all.py already produced all artifacts; tests verify them
