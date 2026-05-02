@@ -7849,6 +7849,10 @@ def gen_knowledge_graph_page(graph_data, out_root):
               <span>Standard / concept</span>
             </div>
             <div class="kg-legend-item">
+              <span class="kg-legend-swatch kg-swatch-section"></span>
+              <span>Topic group</span>
+            </div>
+            <div class="kg-legend-item">
               <span class="kg-legend-line kg-line-alignment"></span>
               <span>Alignment</span>
             </div>
@@ -7900,7 +7904,11 @@ const GRAPH_DATA = {graph_json};
       .strength(0.4))
     .force('charge', d3.forceManyBody().strength(-420))
     .force('center', d3.forceCenter(width / 2, height / 2))
-    .force('collision', d3.forceCollide().radius(d => d.type === 'page' ? 36 : 24));
+    .force('collision', d3.forceCollide().radius(d => {{
+      if (d.type === 'page') return 36;
+      if (d.type === 'section') return 30;
+      return 24;
+    }}));
 
   // Edges (lines)
   const link = root.append('g')
@@ -7935,18 +7943,31 @@ const GRAPH_DATA = {graph_json};
     const sel = d3.select(this);
     if (d.type === 'page') {{
       sel.append('circle').attr('r', 14);
+    }} else if (d.type === 'section') {{
+      // hexagon at radius 14: 6 vertices on a flat-top regular hexagon
+      const r = 14;
+      const points = [];
+      for (let i = 0; i < 6; i++) {{
+        const angle = Math.PI / 3 * i; // 60° increments
+        points.push((r * Math.cos(angle)).toFixed(2) + ',' + (r * Math.sin(angle)).toFixed(2));
+      }}
+      sel.append('polygon').attr('points', points.join(' '));
     }} else {{
       // diamond
       sel.append('rect')
-        .attr('width', 16).attr('height', 16)
-        .attr('x', -8).attr('y', -8)
+        .attr('width', 8).attr('height', 8)
+        .attr('x', -4).attr('y', -4)
         .attr('transform', 'rotate(45)');
     }}
   }});
 
   node.append('text')
     .attr('class', 'kg-label')
-    .attr('dy', d => d.type === 'page' ? 28 : 20)
+    .attr('dy', d => {{
+      if (d.type === 'page') return 28;
+      if (d.type === 'section') return 24;
+      return 20;
+    }})
     .attr('text-anchor', 'middle')
     .text(d => d.label);
 
