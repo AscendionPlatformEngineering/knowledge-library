@@ -550,6 +550,23 @@ The single most important behavior change in v1.1: clicking a node opens a panel
 | Unblocks | EPIC-6, EPIC-7, EPIC-8 |
 | Branch | `feature/kg-v1.1/side-panel` |
 
+#### EPIC-5 architectural decisions (locked before implementation)
+
+These decisions cascade through T5.1 - T5.6 and were made before T5.1 started to avoid late-stage redo.
+
+| # | Decision | Choice | Rationale |
+|---|----------|--------|-----------|
+| 1 | Layout strategy | CSS Grid with named areas, columns: 1fr 400px | Express 2D layout directly; mobile collapse is one media query |
+| 2 | State management | URL hash as single source of truth (`#node=<id>`); hashchange listener mirrors into JS | Back button + deep linking spec criteria; avoids sync bugs |
+| 3 | Panel rendering | Dynamic per-selection via innerHTML; ~5ms per render | 315 pre-rendered templates would bloat DOM; runtime cost negligible |
+| 4 | Deep linking + force sim | Page loads with default layout + highlight CSS class on deep-linked node | Force sim is non-deterministic; pre-positioning would distort layout |
+| 5 | Mobile breakpoint | 880px (reuses existing breakpoint vocabulary, minor deviation from spec's 900px) | Avoids adding a third nearby breakpoint with no semantic distinction |
+| 6 | "Open page →" navigation | Plain `<a href>` with full reload | Preserves right-click/middle-click/prefetch; more accessible than JS handler |
+| 7 | Empty state copy | "Click any node to open it here. Pages, standards, and topic groups — explore relationships without losing your place." | Workspace-model framing per spec §7.7 |
+| 8 | Panel width (desktop) | 400px (single value, between spec's 380-480 range) | Common reading-column width, sits comfortably in available space |
+
+These decisions apply to all of T5.1 - T5.6. Subsequent tasks reference them rather than re-deriving them.
+
 #### Task T5.1 — Panel shell and layout
 
 The structural change to `gen_knowledge_graph_page`'s HTML output.
