@@ -1,0 +1,1 @@
+{"sections":{"desktop":{"labels":{"d-empty":"01 · Empty (default)"},"title":"Desktop (≥881px) · 5 states + collapsed rail"},"mobile":{"title":"Mobile (≤880px) · drawer states","labels":{"m-page":"02b · Page · open (~60%)"}},"portal":{"labels":{"p-page":"01 · Portal · page selected (default state)"},"title":"Standalone workspace · header-less, full-bleed"}}}

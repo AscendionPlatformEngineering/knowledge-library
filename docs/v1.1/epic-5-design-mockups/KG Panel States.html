@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>KG Panel States — EPIC-5</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #EFEEE7; }
+  body { font-family: "IBM Plex Sans", system-ui, sans-serif; color: #0E0E0E; }
+  * { box-sizing: border-box; }
+  mark { background: rgba(217,122,60,0.22); color: #A85420; padding: 0 2px; }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="panel-shared.jsx"></script>
+<script type="text/babel" src="panel-graph-bg.jsx"></script>
+<script type="text/babel" src="panel-desktop.jsx"></script>
+<script type="text/babel" src="panel-mobile.jsx"></script>
+<script type="text/babel" src="portal-workspace.jsx"></script>
+<script type="text/babel" src="wireframe-layout.jsx"></script>
+
+<script type="text/babel">
+  const DESKTOP_W = 1440;
+  const DESKTOP_H = 900;
+  const PORTAL_W = 1440;
+  const PORTAL_H = 900;
+  const WIRE_W = 1280;
+  const WIRE_H = 1100;
+
+  function App() {
+    const noop = () => {};
+    return (
+      <DesignCanvas
+        title="KG v1.1 · EPIC-5 Panel States"
+        subtitle="Laws-of-UX-aligned · collapse, sort, ergonomic targets · ascendion.engineering"
+      >
+        <DCSection id="desktop" title="Desktop (≥881px) · 5 states + collapsed rail">
+          <DCArtboard id="d-empty" label="01 · Empty (default + keyboard hints)" width={DESKTOP_W} height={DESKTOP_H}>
+            <GraphFrame width={DESKTOP_W} height={DESKTOP_H} variant="empty">
+              <PanelEmpty onCollapse={noop} />
+            </GraphFrame>
+          </DCArtboard>
+
+          <DCArtboard id="d-page" label="02 · Page selected" width={DESKTOP_W} height={DESKTOP_H}>
+            <GraphFrame width={DESKTOP_W} height={DESKTOP_H} variant="page">
+              <PanelPage onCollapse={noop} />
+            </GraphFrame>
+          </DCArtboard>
+
+          <DCArtboard id="d-standard" label="03 · Standard selected" width={DESKTOP_W} height={DESKTOP_H}>
+            <GraphFrame width={DESKTOP_W} height={DESKTOP_H} variant="standard">
+              <PanelStandard onCollapse={noop} />
+            </GraphFrame>
+          </DCArtboard>
+
+          <DCArtboard id="d-topic" label="04 · Topic group selected" width={DESKTOP_W} height={DESKTOP_H}>
+            <GraphFrame width={DESKTOP_W} height={DESKTOP_H} variant="topic">
+              <PanelTopic onCollapse={noop} />
+            </GraphFrame>
+          </DCArtboard>
+
+          <DCArtboard id="d-search" label="05 · Search (sort + filter, placeholder)" width={DESKTOP_W} height={DESKTOP_H}>
+            <GraphFrame width={DESKTOP_W} height={DESKTOP_H} variant="search">
+              <PanelSearch onCollapse={noop} />
+            </GraphFrame>
+          </DCArtboard>
+
+          <DCArtboard id="d-collapsed" label="06 · Collapsed rail (panel hidden, graph wide)" width={DESKTOP_W} height={DESKTOP_H}>
+            <div style={{
+              width: DESKTOP_W, height: DESKTOP_H,
+              background: "#FAFAF7", position: "relative", overflow: "hidden",
+            }}>
+              <div style={{ position: "absolute", inset: 0, right: 56 }}>
+                <GraphBackdrop width={DESKTOP_W - 56} height={DESKTOP_H} variant="page" />
+                <div style={{
+                  position: "absolute", top: 22, left: 28,
+                  fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
+                  fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase",
+                  color: "#6B6B6B", fontWeight: 500,
+                }}>ascendion.engineering · knowledge graph</div>
+                <div style={{
+                  position: "absolute", bottom: 22, left: 28,
+                  fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
+                  fontSize: 11, color: "#6B6B6B", letterSpacing: "0.04em",
+                  fontVariantNumeric: "tabular-nums",
+                }}>73 pages · 224 standards · 18 groups</div>
+              </div>
+              <CollapsedRail />
+            </div>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="wireframe" title="Layout context · panel in real position (placeholders elsewhere)">
+          <DCArtboard id="w-page" label="01 · Wireframe · page selected" width={WIRE_W} height={WIRE_H}>
+            <WireframeLayout width={WIRE_W} height={WIRE_H} panelState="page" />
+          </DCArtboard>
+          <DCArtboard id="w-empty" label="02 · Wireframe · empty" width={WIRE_W} height={WIRE_H}>
+            <WireframeLayout width={WIRE_W} height={WIRE_H} panelState="empty" />
+          </DCArtboard>
+          <DCArtboard id="w-standard" label="03 · Wireframe · standard" width={WIRE_W} height={WIRE_H}>
+            <WireframeLayout width={WIRE_W} height={WIRE_H} panelState="standard" />
+          </DCArtboard>
+          <DCArtboard id="w-topic" label="04 · Wireframe · topic group" width={WIRE_W} height={WIRE_H}>
+            <WireframeLayout width={WIRE_W} height={WIRE_H} panelState="topic" />
+          </DCArtboard>
+          <DCArtboard id="w-search" label="05 · Wireframe · search" width={WIRE_W} height={WIRE_H}>
+            <WireframeLayout width={WIRE_W} height={WIRE_H} panelState="search" />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="portal" title="Standalone workspace · header-less, full-bleed">
+          <DCArtboard id="p-page" label="01 · Workspace · page selected" width={PORTAL_W} height={PORTAL_H}>
+            <StandaloneWorkspace width={PORTAL_W} height={PORTAL_H} panelState="page" />
+          </DCArtboard>
+          <DCArtboard id="p-empty" label="02 · Workspace · empty" width={PORTAL_W} height={PORTAL_H}>
+            <StandaloneWorkspace width={PORTAL_W} height={PORTAL_H} panelState="empty" />
+          </DCArtboard>
+          <DCArtboard id="p-search" label="03 · Workspace · search" width={PORTAL_W} height={PORTAL_H}>
+            <StandaloneWorkspace width={PORTAL_W} height={PORTAL_H} panelState="search" />
+          </DCArtboard>
+          <DCArtboard id="p-collapsed" label="04 · Workspace · panel collapsed (graph wide)" width={PORTAL_W} height={PORTAL_H}>
+            <StandaloneWorkspace width={PORTAL_W} height={PORTAL_H} panelState="collapsed" />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="mobile" title="Mobile (≤880px) · drawer states">
+          <DCArtboard id="m-empty" label="01 · Empty (no drawer)" width={PHONE_W} height={PHONE_H}>
+            <MobileEmpty />
+          </DCArtboard>
+
+          <DCArtboard id="m-peek" label="02a · Page · peek (60px)" width={PHONE_W} height={PHONE_H}>
+            <MobilePagePeek />
+          </DCArtboard>
+
+          <DCArtboard id="m-page" label="02b · Page · open (~60%)" width={PHONE_W} height={PHONE_H}>
+            <MobilePageOpen />
+          </DCArtboard>
+
+          <DCArtboard id="m-standard" label="03 · Standard · open" width={PHONE_W} height={PHONE_H}>
+            <MobileStandard />
+          </DCArtboard>
+
+          <DCArtboard id="m-topic" label="04 · Topic · full (~95%)" width={PHONE_W} height={PHONE_H}>
+            <MobileTopicFull />
+          </DCArtboard>
+
+          <DCArtboard id="m-search" label="05 · Search · full" width={PHONE_W} height={PHONE_H}>
+            <MobileSearchFull />
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
